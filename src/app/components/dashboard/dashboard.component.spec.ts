@@ -14,6 +14,7 @@ import { PieChartComponent } from '../pie-chart/pie-chart.component';
 import { GoalTrackerComponent } from '../goal-tracker/goal-tracker.component';
 import { DateRangePickerComponent } from '../date-range-picker/date-range-picker.component';
 import { InsightsPanelComponent } from '../insights-panel/insights-panel.component';
+import { ChartDetailModalComponent } from '../chart-detail-modal/chart-detail-modal.component';
 import { CountUpDirective } from '../../directives/count-up.directive';
 import { NgChartsModule } from 'ng2-charts';
 import { FormsModule } from '@angular/forms';
@@ -45,6 +46,7 @@ describe('DashboardComponent', () => {
         GoalTrackerComponent,
         DateRangePickerComponent,
         InsightsPanelComponent,
+        ChartDetailModalComponent,
         CountUpDirective
       ],
       imports: [NgChartsModule, BrowserAnimationsModule, RouterTestingModule, FormsModule],
