@@ -29,6 +29,8 @@ import { EmailSchedulerComponent } from './components/email-scheduler/email-sche
 import { OAuthLoginComponent } from './components/oauth-login/oauth-login.component';
 import { OrganizationSelectorComponent } from './components/organization-selector/organization-selector.component';
 import { BrandingSettingsComponent } from './components/branding-settings/branding-settings.component';
+import { CommentsPanelComponent } from './components/comments-panel/comments-panel.component';
+import { UserManagementComponent } from './components/user-management/user-management.component';
 import { CountUpDirective } from './directives/count-up.directive';
 
 @NgModule({
@@ -54,6 +56,8 @@ import { CountUpDirective } from './directives/count-up.directive';
     OAuthLoginComponent,
     OrganizationSelectorComponent,
     BrandingSettingsComponent,
+    CommentsPanelComponent,
+    UserManagementComponent,
     CountUpDirective
   ],
   imports: [

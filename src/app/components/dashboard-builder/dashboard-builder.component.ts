@@ -1,8 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
 import { DashboardLayoutService, WidgetConfig } from '../../services/dashboard-layout.service';
 import { DashboardTemplatesService, DashboardTemplate } from '../../services/dashboard-templates.service';
+import { Router } from '@angular/router';
+
+interface ResizeHandle {
+  widgetId: string;
+  direction: 'nw' | 'ne' | 'sw' | 'se' | 'n' | 's' | 'e' | 'w';
+  startX: number;
+  startY: number;
+  startWidth: number;
+  startHeight: number;
+}
 
 @Component({
   selector: 'app-dashboard-builder',
@@ -25,7 +35,17 @@ export class DashboardBuilderComponent implements OnInit {
   editMode = true;
   showTemplateSelector = false;
   showWidgetPicker = false;
+  showGridOverlay = true;
   templates: DashboardTemplate[] = [];
+  
+  // Grid system constants
+  readonly GRID_COLUMNS = 12;
+  readonly GRID_ROWS = 20;
+  readonly CELL_HEIGHT = 80; // pixels
+  
+  // Resize state
+  private resizing: ResizeHandle | null = null;
+  private draggingWidget: string | null = null;
 
   availableWidgets = [
     { type: 'kpi', label: 'KPI Cards', icon: '📊' },
@@ -39,18 +59,49 @@ export class DashboardBuilderComponent implements OnInit {
 
   constructor(
     private layoutService: DashboardLayoutService,
-    private templatesService: DashboardTemplatesService
+    private templatesService: DashboardTemplatesService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     const layout = this.layoutService.getCurrentLayout();
     this.widgets = [...layout.widgets];
     this.templates = this.templatesService.getTemplates();
+    
+    // Ensure all widgets have proper grid positions
+    this.widgets.forEach((widget, index) => {
+      if (!widget.position) {
+        widget.position = { row: Math.floor(index / 2) * 2, col: (index % 2) * 6 };
+      }
+      if (!widget.size) {
+        widget.size = { width: 6, height: 2 };
+      }
+    });
   }
 
-  drop(event: CdkDragDrop<WidgetConfig[]>): void {
-    moveItemInArray(this.widgets, event.previousIndex, event.currentIndex);
+  onDragMoved(event: CdkDragMove, widget: WidgetConfig): void {
+    // Calculate grid position from pixel position
+    const element = event.source.element.nativeElement;
+    const rect = element.getBoundingClientRect();
+    const container = element.parentElement!;
+    const containerRect = container.getBoundingClientRect();
+    
+    const relativeX = rect.left - containerRect.left + event.distance.x;
+    const relativeY = rect.top - containerRect.top + event.distance.y;
+    
+    // Snap to grid
+    const cellWidth = containerRect.width / this.GRID_COLUMNS;
+    const newCol = Math.max(0, Math.min(this.GRID_COLUMNS - widget.size.width, Math.round(relativeX / cellWidth)));
+    const newRow = Math.max(0, Math.round(relativeY / this.CELL_HEIGHT));
+    
+    widget.position = { row: newRow, col: newCol };
+  }
+
+  onDragEnded(event: CdkDragEnd, widget: WidgetConfig): void {
+    this.draggingWidget = null;
     this.saveLayout();
+    // Reset the drag position to prevent CDK from applying transform
+    event.source.reset();
   }
 
   toggleWidget(widgetId: string): void {
@@ -62,11 +113,28 @@ export class DashboardBuilderComponent implements OnInit {
   }
 
   addWidget(type: string): void {
+    // Find the first available spot in the grid
+    let row = 0;
+    let col = 0;
+    const width = 6;
+    const height = 2;
+    
+    // Simple placement algorithm - find first available spot
+    outerLoop: for (let r = 0; r < this.GRID_ROWS; r++) {
+      for (let c = 0; c <= this.GRID_COLUMNS - width; c++) {
+        if (this.isSpaceAvailable(r, c, width, height)) {
+          row = r;
+          col = c;
+          break outerLoop;
+        }
+      }
+    }
+    
     const newWidget: WidgetConfig = {
       id: `${type}-${Date.now()}`,
       type: type as any,
-      position: { row: this.widgets.length, col: 0 },
-      size: { width: 4, height: 1 },
+      position: { row, col },
+      size: { width, height },
       visible: true
     };
     this.widgets.push(newWidget);
@@ -79,6 +147,112 @@ export class DashboardBuilderComponent implements OnInit {
       this.widgets = this.widgets.filter(w => w.id !== widgetId);
       this.saveLayout();
     }
+  }
+
+  // Resize handle methods
+  onResizeStart(event: MouseEvent, widget: WidgetConfig, direction: ResizeHandle['direction']): void {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    this.resizing = {
+      widgetId: widget.id,
+      direction,
+      startX: event.clientX,
+      startY: event.clientY,
+      startWidth: widget.size.width,
+      startHeight: widget.size.height
+    };
+    
+    document.addEventListener('mousemove', this.onResizeMove);
+    document.addEventListener('mouseup', this.onResizeEnd);
+  }
+
+  private onResizeMove = (event: MouseEvent): void => {
+    if (!this.resizing) return;
+    
+    const widget = this.widgets.find(w => w.id === this.resizing!.widgetId);
+    if (!widget) return;
+    
+    const container = document.querySelector('.grid-container') as HTMLElement;
+    if (!container) return;
+    
+    const cellWidth = container.offsetWidth / this.GRID_COLUMNS;
+    const deltaX = event.clientX - this.resizing.startX;
+    const deltaY = event.clientY - this.resizing.startY;
+    
+    const deltaColumns = Math.round(deltaX / cellWidth);
+    const deltaRows = Math.round(deltaY / this.CELL_HEIGHT);
+    
+    const direction = this.resizing.direction;
+    
+    // Handle horizontal resizing
+    if (direction.includes('e')) {
+      const newWidth = Math.max(2, Math.min(this.GRID_COLUMNS - widget.position.col, this.resizing.startWidth + deltaColumns));
+      widget.size.width = newWidth;
+    } else if (direction.includes('w')) {
+      const newWidth = Math.max(2, this.resizing.startWidth - deltaColumns);
+      const widthDiff = this.resizing.startWidth - newWidth;
+      if (widget.position.col + widthDiff >= 0) {
+        widget.size.width = newWidth;
+        widget.position.col += widthDiff;
+      }
+    }
+    
+    // Handle vertical resizing
+    if (direction.includes('s')) {
+      const newHeight = Math.max(1, this.resizing.startHeight + deltaRows);
+      widget.size.height = newHeight;
+    } else if (direction.includes('n')) {
+      const newHeight = Math.max(1, this.resizing.startHeight - deltaRows);
+      const heightDiff = this.resizing.startHeight - newHeight;
+      if (widget.position.row + heightDiff >= 0) {
+        widget.size.height = newHeight;
+        widget.position.row += heightDiff;
+      }
+    }
+  };
+
+  private onResizeEnd = (): void => {
+    if (this.resizing) {
+      this.resizing = null;
+      this.saveLayout();
+    }
+    
+    document.removeEventListener('mousemove', this.onResizeMove);
+    document.removeEventListener('mouseup', this.onResizeEnd);
+  };
+
+  private isSpaceAvailable(row: number, col: number, width: number, height: number, excludeId?: string): boolean {
+    for (const widget of this.widgets) {
+      if (excludeId && widget.id === excludeId) continue;
+      if (!widget.visible) continue;
+      
+      const widgetRight = widget.position.col + widget.size.width;
+      const widgetBottom = widget.position.row + widget.size.height;
+      const checkRight = col + width;
+      const checkBottom = row + height;
+      
+      const horizontalOverlap = col < widgetRight && checkRight > widget.position.col;
+      const verticalOverlap = row < widgetBottom && checkBottom > widget.position.row;
+      
+      if (horizontalOverlap && verticalOverlap) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  toggleGridOverlay(): void {
+    this.showGridOverlay = !this.showGridOverlay;
+  }
+
+  getWidgetStyle(widget: WidgetConfig): any {
+    const cellWidth = 100 / this.GRID_COLUMNS; // percentage
+    return {
+      'grid-column': `${widget.position.col + 1} / span ${widget.size.width}`,
+      'grid-row': `${widget.position.row + 1} / span ${widget.size.height}`,
+      'min-height': `${widget.size.height * this.CELL_HEIGHT}px`
+    };
   }
 
   applyTemplate(templateId: string): void {

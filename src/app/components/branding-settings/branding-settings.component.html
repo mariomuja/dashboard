@@ -124,6 +124,20 @@
       </div>
     </div>
 
+    <!-- Custom CSS (Advanced) -->
+    <div class="section-card advanced-section">
+      <h2>🎨 Custom CSS (Advanced)</h2>
+      <p class="section-description">Inject custom CSS for complete control over styling</p>
+      <textarea 
+        [(ngModel)]="customCss"
+        placeholder="/* Enter custom CSS here */&#10;.kpi-card { border-radius: 1rem; }"
+        class="css-editor"
+        rows="8"></textarea>
+      <button class="mat-btn mat-btn-outlined" (click)="applyCustomCss()">
+        <span>🎨</span> Apply Custom CSS
+      </button>
+    </div>
+
     <!-- Preview -->
     <div class="section-card preview-section">
       <h2>Preview</h2>

@@ -11,6 +11,8 @@ export class BrandingSettingsComponent implements OnInit {
   branding: OrganizationSettings['branding'] | null = null;
   logoPreview: string | null = null;
   isSaving = false;
+  customCss = '';
+  private customStyleElement: HTMLStyleElement | null = null;
 
   constructor(
     private orgService: OrganizationService,
@@ -30,6 +32,12 @@ export class BrandingSettingsComponent implements OnInit {
         companyName: 'KPI Dashboard',
         theme: 'auto'
       };
+    }
+    
+    // Load saved custom CSS
+    const savedCss = localStorage.getItem('custom_css');
+    if (savedCss) {
+      this.customCss = savedCss;
     }
   }
 
@@ -87,6 +95,29 @@ export class BrandingSettingsComponent implements OnInit {
   previewBranding(): void {
     if (this.branding) {
       this.orgService.updateBranding(this.branding);
+    }
+  }
+
+  applyCustomCss(): void {
+    // Remove existing custom style if present
+    if (this.customStyleElement) {
+      this.customStyleElement.remove();
+    }
+
+    if (this.customCss.trim()) {
+      // Create new style element
+      this.customStyleElement = document.createElement('style');
+      this.customStyleElement.setAttribute('data-custom-branding', 'true');
+      this.customStyleElement.textContent = this.customCss;
+      document.head.appendChild(this.customStyleElement);
+      
+      // Save to localStorage
+      localStorage.setItem('custom_css', this.customCss);
+      
+      alert('Custom CSS applied! Changes are visible immediately.');
+    } else {
+      localStorage.removeItem('custom_css');
+      alert('Custom CSS cleared.');
     }
   }
 

@@ -348,6 +348,34 @@
   background-color: var(--hover-bg);
 }
 
+.advanced-section {
+  border-left: 4px solid #8b5cf6;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, transparent 100%);
+}
+
+.css-editor {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  resize: vertical;
+  margin-bottom: 1rem;
+}
+
+.css-editor:focus {
+  outline: none;
+  border-color: #8b5cf6;
+}
+
+.css-editor::placeholder {
+  color: #6b7280;
+}
+
 @media (max-width: 768px) {
   .branding-header {
     padding: 1rem;

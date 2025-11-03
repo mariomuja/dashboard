@@ -1,0 +1,104 @@
+<div class="comments-container">
+  <!-- Toggle Button -->
+  <button class="comments-toggle" (click)="togglePanel()" [class.has-comments]="unresolvedCount > 0">
+    <span class="icon">💬</span>
+    <span class="count" *ngIf="unresolvedCount > 0">{{ unresolvedCount }}</span>
+  </button>
+
+  <!-- Comments Panel -->
+  <div class="comments-panel" *ngIf="showPanel">
+    <div class="panel-header">
+      <h3>💬 Comments</h3>
+      <button class="close-btn" (click)="togglePanel()">✕</button>
+    </div>
+
+    <!-- New Comment Input -->
+    <div class="new-comment">
+      <textarea 
+        [(ngModel)]="newCommentText"
+        placeholder="Add a comment..."
+        class="comment-input"
+        rows="3"></textarea>
+      <button 
+        class="btn-primary" 
+        (click)="addComment()"
+        [disabled]="!newCommentText.trim()">
+        💬 Add Comment
+      </button>
+    </div>
+
+    <!-- Comments List -->
+    <div class="comments-list">
+      <div *ngIf="comments.length === 0" class="empty-state">
+        <span class="empty-icon">📭</span>
+        <p>No comments yet</p>
+      </div>
+
+      <div *ngFor="let comment of comments" 
+           class="comment-item"
+           [class.resolved]="comment.resolved">
+        <div class="comment-header">
+          <div class="comment-author">
+            <span class="author-avatar">{{ comment.userName.charAt(0) }}</span>
+            <div class="author-info">
+              <span class="author-name">{{ comment.userName }}</span>
+              <span class="comment-time">{{ getTimeAgo(comment.timestamp) }}</span>
+            </div>
+          </div>
+          <div class="comment-actions">
+            <button 
+              class="action-btn"
+              (click)="resolveComment(comment.id)"
+              *ngIf="!comment.resolved"
+              title="Mark as resolved">
+              ✓
+            </button>
+            <button 
+              class="action-btn danger"
+              (click)="deleteComment(comment.id)"
+              title="Delete">
+              🗑️
+            </button>
+          </div>
+        </div>
+
+        <div class="comment-text">{{ comment.text }}</div>
+
+        <div class="comment-footer">
+          <button class="reply-btn" (click)="toggleReplyInput(comment.id)">
+            💬 Reply
+          </button>
+          <span class="resolved-badge" *ngIf="comment.resolved">✓ Resolved</span>
+        </div>
+
+        <!-- Reply Input -->
+        <div class="reply-input" *ngIf="showReplyInput[comment.id]">
+          <textarea 
+            [(ngModel)]="replyText[comment.id]"
+            placeholder="Write a reply..."
+            class="reply-textarea"
+            rows="2"></textarea>
+          <div class="reply-actions">
+            <button class="btn-secondary" (click)="toggleReplyInput(comment.id)">Cancel</button>
+            <button class="btn-primary" (click)="addReply(comment.id)">Send</button>
+          </div>
+        </div>
+
+        <!-- Replies List -->
+        <div class="replies-list" *ngIf="comment.replies.length > 0">
+          <div *ngFor="let reply of comment.replies" class="reply-item">
+            <div class="reply-header">
+              <span class="reply-avatar">{{ reply.userName.charAt(0) }}</span>
+              <div class="reply-info">
+                <span class="reply-author">{{ reply.userName }}</span>
+                <span class="reply-time">{{ getTimeAgo(reply.timestamp) }}</span>
+              </div>
+            </div>
+            <div class="reply-text">{{ reply.text }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

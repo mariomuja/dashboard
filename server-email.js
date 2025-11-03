@@ -27,6 +27,7 @@ const transporter = nodemailer.createTransporter({
 
 // In-memory schedule storage (use database in production)
 let schedules = [];
+let reportHistory = [];
 
 // Endpoint to create email schedule
 app.post('/api/email/schedule', async (req, res) => {
@@ -161,7 +162,7 @@ async function sendScheduledReport(schedule) {
   try {
     const emailHtml = generateEmailHTML(schedule.dashboardData);
 
-    await transporter.sendMail({
+    const info = await transporter.sendMail({
       from: '"KPI Dashboard" <noreply@dashboard.com>',
       to: schedule.recipients.join(', '),
       subject: `KPI Dashboard ${schedule.frequency.charAt(0).toUpperCase() + schedule.frequency.slice(1)} Report`,
@@ -169,8 +170,35 @@ async function sendScheduledReport(schedule) {
     });
 
     console.log(`Report sent to ${schedule.recipients.length} recipients`);
+    
+    // Log to history
+    reportHistory.push({
+      id: `report-${Date.now()}`,
+      scheduleId: schedule.id,
+      scheduleName: `${schedule.frequency} Report`,
+      sentAt: new Date(),
+      recipients: schedule.recipients,
+      status: 'success',
+      messageId: info.messageId
+    });
+    
+    // Keep only last 100 reports in history
+    if (reportHistory.length > 100) {
+      reportHistory = reportHistory.slice(-100);
+    }
   } catch (error) {
     console.error('Error sending scheduled report:', error);
+    
+    // Log error to history
+    reportHistory.push({
+      id: `report-${Date.now()}`,
+      scheduleId: schedule.id,
+      scheduleName: `${schedule.frequency} Report`,
+      sentAt: new Date(),
+      recipients: schedule.recipients,
+      status: 'failed',
+      error: error.message
+    });
   }
 }
 
@@ -259,12 +287,35 @@ app.post('/api/email/test', async (req, res) => {
   }
 });
 
+// Get report history
+app.get('/api/email/history', (req, res) => {
+  res.json({
+    history: reportHistory.slice(-50).reverse() // Last 50, newest first
+  });
+});
+
+// Get schedule statistics
+app.get('/api/email/stats', (req, res) => {
+  const totalSent = reportHistory.filter(r => r.status === 'success').length;
+  const totalFailed = reportHistory.filter(r => r.status === 'failed').length;
+  const lastSent = reportHistory.length > 0 ? reportHistory[reportHistory.length - 1] : null;
+  
+  res.json({
+    activeSchedules: schedules.length,
+    totalReportsSent: totalSent,
+    totalReportsFailed: totalFailed,
+    lastReport: lastSent,
+    uptime: process.uptime()
+  });
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
     service: 'Email Service',
-    activeSchedules: schedules.length
+    activeSchedules: schedules.length,
+    totalReports: reportHistory.length
   });
 });
 

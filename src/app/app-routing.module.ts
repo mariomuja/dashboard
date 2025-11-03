@@ -8,6 +8,7 @@ import { DashboardBuilderComponent } from './components/dashboard-builder/dashbo
 import { EmailSchedulerComponent } from './components/email-scheduler/email-scheduler.component';
 import { OAuthLoginComponent } from './components/oauth-login/oauth-login.component';
 import { BrandingSettingsComponent } from './components/branding-settings/branding-settings.component';
+import { UserManagementComponent } from './components/user-management/user-management.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'oauth-login', component: OAuthLoginComponent },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   { path: 'branding', component: BrandingSettingsComponent, canActivate: [AuthGuard] },
+  { path: 'users', component: UserManagementComponent, canActivate: [AuthGuard] },
   { path: '2fa-setup', component: TwoFactorSetupComponent, canActivate: [AuthGuard] },
   { path: 'email-scheduler', component: EmailSchedulerComponent, canActivate: [AuthGuard] },
   { path: 'builder', component: DashboardBuilderComponent },
