@@ -123,10 +123,10 @@ export class ExportService {
       pdf.setLineWidth(0.3);
       pdf.roundedRect(xPosition, yPosition, cardWidth, cardHeight, 2, 2);
       
-      // Icon and Title
+      // Title (without emoji)
       pdf.setFontSize(10);
       pdf.setTextColor(102, 102, 102);
-      pdf.text(`${kpi.icon} ${kpi.title}`, xPosition + 5, yPosition + 8);
+      pdf.text(kpi.title, xPosition + 5, yPosition + 8);
       
       // Value
       pdf.setFontSize(16);
@@ -135,7 +135,7 @@ export class ExportService {
       pdf.setTextColor(color.r, color.g, color.b);
       pdf.text(kpi.value, xPosition + 5, yPosition + 20);
       
-      // Change indicator
+      // Change indicator (using simple ASCII characters)
       pdf.setFontSize(10);
       pdf.setFont('helvetica', 'normal');
       const changeColor = kpi.trend === 'up' 
@@ -144,8 +144,18 @@ export class ExportService {
           ? { r: 239, g: 68, b: 68 } 
           : { r: 102, g: 102, b: 102 };
       pdf.setTextColor(changeColor.r, changeColor.g, changeColor.b);
-      const arrow = kpi.trend === 'up' ? '↑' : kpi.trend === 'down' ? '↓' : '→';
-      const changeText = `${arrow} ${kpi.change > 0 ? '+' : ''}${kpi.change}%`;
+      
+      // Use simple text instead of Unicode arrows
+      let trendText = '';
+      if (kpi.trend === 'up') {
+        trendText = 'UP';
+      } else if (kpi.trend === 'down') {
+        trendText = 'DOWN';
+      } else {
+        trendText = 'STABLE';
+      }
+      
+      const changeText = `${trendText} ${kpi.change > 0 ? '+' : ''}${kpi.change}%`;
       pdf.text(changeText, xPosition + 5, yPosition + 29);
       
       // Move to next row after every 2 cards
