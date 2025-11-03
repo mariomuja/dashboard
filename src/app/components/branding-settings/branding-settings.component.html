@@ -1,0 +1,162 @@
+<div class="branding-container">
+  <div class="branding-header">
+    <div class="header-content">
+      <h1>🎨 Branding & White-Label</h1>
+      <p>Customize the dashboard appearance for your organization</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="goBack()">← Back</button>
+      <button class="btn-primary" (click)="saveBranding()" [disabled]="isSaving">
+        {{ isSaving ? 'Saving...' : '💾 Save Changes' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="branding-content" *ngIf="branding">
+    <!-- Logo Upload -->
+    <div class="section-card">
+      <h2>Company Logo</h2>
+      <p class="section-description">Upload your company logo (max 1MB, PNG/JPG)</p>
+      
+      <div class="logo-upload">
+        <div class="logo-preview" *ngIf="logoPreview">
+          <img [src]="logoPreview" alt="Company Logo">
+          <button class="remove-logo-btn" (click)="removeLogo()">✕</button>
+        </div>
+        <div class="logo-placeholder" *ngIf="!logoPreview">
+          <span class="placeholder-icon">🖼️</span>
+          <span>No logo uploaded</span>
+        </div>
+        <input 
+          type="file" 
+          id="logo-input"
+          accept="image/png,image/jpeg,image/jpg"
+          (change)="onLogoSelect($event)"
+          hidden>
+        <label for="logo-input" class="upload-btn">
+          📤 Upload Logo
+        </label>
+      </div>
+    </div>
+
+    <!-- Company Name -->
+    <div class="section-card">
+      <h2>Company Name</h2>
+      <p class="section-description">Displayed in page title and reports</p>
+      <input 
+        type="text" 
+        [(ngModel)]="branding.companyName"
+        class="text-input"
+        placeholder="Enter company name">
+    </div>
+
+    <!-- Color Scheme -->
+    <div class="section-card">
+      <h2>Color Scheme</h2>
+      <p class="section-description">Choose your brand colors</p>
+      
+      <div class="color-inputs">
+        <div class="color-group">
+          <label>Primary Color</label>
+          <div class="color-picker">
+            <input 
+              type="color" 
+              [(ngModel)]="branding.primaryColor"
+              class="color-input">
+            <span class="color-value">{{ branding.primaryColor }}</span>
+          </div>
+        </div>
+
+        <div class="color-group">
+          <label>Secondary Color</label>
+          <div class="color-picker">
+            <input 
+              type="color" 
+              [(ngModel)]="branding.secondaryColor"
+              class="color-input">
+            <span class="color-value">{{ branding.secondaryColor }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Theme Preference -->
+    <div class="section-card">
+      <h2>Default Theme</h2>
+      <p class="section-description">Choose default color theme</p>
+      
+      <div class="theme-options">
+        <label class="theme-option">
+          <input 
+            type="radio" 
+            name="theme"
+            value="light"
+            [(ngModel)]="branding.theme">
+          <span class="theme-label">
+            <span class="theme-icon">☀️</span>
+            Light
+          </span>
+        </label>
+
+        <label class="theme-option">
+          <input 
+            type="radio" 
+            name="theme"
+            value="dark"
+            [(ngModel)]="branding.theme">
+          <span class="theme-label">
+            <span class="theme-icon">🌙</span>
+            Dark
+          </span>
+        </label>
+
+        <label class="theme-option">
+          <input 
+            type="radio" 
+            name="theme"
+            value="auto"
+            [(ngModel)]="branding.theme">
+          <span class="theme-label">
+            <span class="theme-icon">🔄</span>
+            Auto (System)
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="section-card preview-section">
+      <h2>Preview</h2>
+      <p class="section-description">See how your branding looks</p>
+      
+      <div class="preview-box">
+        <div class="preview-header" [style.background-color]="branding.primaryColor">
+          <img *ngIf="logoPreview" [src]="logoPreview" alt="Logo" class="preview-logo">
+          <h3>{{ branding.companyName }}</h3>
+        </div>
+        <div class="preview-content">
+          <div class="preview-kpi" [style.border-left-color]="branding.primaryColor">
+            <div class="preview-title">Sample KPI</div>
+            <div class="preview-value" [style.color]="branding.secondaryColor">$12,345</div>
+            <div class="preview-change">↑ +12.5%</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-preview" (click)="previewBranding()">
+        👀 Apply Preview to Dashboard
+      </button>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-section">
+      <button class="btn-secondary" (click)="resetToDefault()">
+        🔄 Reset to Default
+      </button>
+      <button class="btn-primary" (click)="saveBranding()" [disabled]="isSaving">
+        {{ isSaving ? 'Saving...' : '💾 Save & Apply' }}
+      </button>
+    </div>
+  </div>
+</div>
+

@@ -1,22 +1,25 @@
 <div class="admin-container">
-  <header class="admin-header">
-    <div class="header-content">
-      <div>
-        <h1>Dashboard Admin</h1>
-        <p>Upload the complete dashboard data file</p>
+  <header class="clean-header">
+    <div class="clean-header-content">
+      <div class="clean-header-title">
+        <h1><span style="opacity: 0.8;">⚙️</span> Dashboard Admin</h1>
+        <p>Manage dashboard settings and data</p>
       </div>
-      <div class="header-actions">
-        <button class="btn-secondary" routerLink="/">
-          ← Back to Dashboard
+      <div class="clean-header-actions">
+        <button class="mat-btn mat-btn-text" routerLink="/">
+          <span>←</span> Dashboard
         </button>
-        <button class="btn-primary" routerLink="/2fa-setup">
-          🔐 2FA Setup
+        <button class="mat-btn mat-btn-outlined" routerLink="/branding">
+          <span>🎨</span> Branding
         </button>
-        <button class="btn-primary" routerLink="/email-scheduler">
-          📧 Email Reports
+        <button class="mat-btn mat-btn-outlined" routerLink="/2fa-setup">
+          <span>🔐</span> 2FA
         </button>
-        <button class="btn-danger" (click)="logout()">
-          🔒 Logout
+        <button class="mat-btn mat-btn-outlined" routerLink="/email-scheduler">
+          <span>📧</span> Email
+        </button>
+        <button class="mat-btn mat-btn-danger mat-btn-outlined" (click)="logout()">
+          <span>🚪</span> Logout
         </button>
       </div>
     </div>

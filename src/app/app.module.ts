@@ -27,6 +27,8 @@ import { ChartDetailModalComponent } from './components/chart-detail-modal/chart
 import { DashboardBuilderComponent } from './components/dashboard-builder/dashboard-builder.component';
 import { EmailSchedulerComponent } from './components/email-scheduler/email-scheduler.component';
 import { OAuthLoginComponent } from './components/oauth-login/oauth-login.component';
+import { OrganizationSelectorComponent } from './components/organization-selector/organization-selector.component';
+import { BrandingSettingsComponent } from './components/branding-settings/branding-settings.component';
 import { CountUpDirective } from './directives/count-up.directive';
 
 @NgModule({
@@ -50,6 +52,8 @@ import { CountUpDirective } from './directives/count-up.directive';
     DashboardBuilderComponent,
     EmailSchedulerComponent,
     OAuthLoginComponent,
+    OrganizationSelectorComponent,
+    BrandingSettingsComponent,
     CountUpDirective
   ],
   imports: [

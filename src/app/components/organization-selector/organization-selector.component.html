@@ -1,0 +1,32 @@
+<div class="org-selector">
+  <button class="org-btn" (click)="toggleSelector()" *ngIf="currentOrg">
+    {{ getOrgIcon(currentOrg.type) }} {{ currentOrg.name }}
+    <span class="dropdown-arrow">{{ showSelector ? '▲' : '▼' }}</span>
+  </button>
+
+  <button class="org-btn" (click)="toggleSelector()" *ngIf="!currentOrg">
+    🏢 Select Organization
+    <span class="dropdown-arrow">▼</span>
+  </button>
+
+  <div class="org-dropdown" *ngIf="showSelector">
+    <div class="org-header">
+      <h3>Switch Organization</h3>
+    </div>
+    <div class="org-list">
+      <div *ngFor="let org of organizations"
+           class="org-item"
+           [class.active]="currentOrg?.id === org.id"
+           [class.child]="org.parentId"
+           (click)="selectOrganization(org.id)">
+        <span class="org-icon">{{ getOrgIcon(org.type) }}</span>
+        <div class="org-info">
+          <div class="org-name">{{ org.name }}</div>
+          <div class="org-type">{{ org.type }}</div>
+        </div>
+        <span class="check-icon" *ngIf="currentOrg?.id === org.id">✓</span>
+      </div>
+    </div>
+  </div>
+</div>
+

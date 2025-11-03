@@ -1,63 +1,71 @@
 <div class="dashboard-container">
   <!-- Header -->
-  <header class="dashboard-header">
-    <div class="header-content">
-      <div>
-        <h1>KPI Dashboard</h1>
+  <header class="clean-header">
+    <div class="clean-header-content">
+      <div class="clean-header-title">
+        <h1><span style="opacity: 0.8;">📊</span> KPI Dashboard</h1>
         <p>Monitor your key performance indicators</p>
       </div>
-      <div class="header-controls">
+      <div class="clean-header-actions">
+        <app-organization-selector></app-organization-selector>
+        
+        <div class="period-selector" role="group" aria-label="Select time period">
+          <button
+            class="mat-btn mat-btn-text"
+            [class.mat-btn-filled]="selectedPeriod === 'week'"
+            (click)="onPeriodChange('week')"
+            [attr.aria-pressed]="selectedPeriod === 'week'"
+            aria-label="View weekly data">
+            Week
+          </button>
+          <button
+            class="mat-btn mat-btn-text"
+            [class.mat-btn-filled]="selectedPeriod === 'month'"
+            (click)="onPeriodChange('month')"
+            [attr.aria-pressed]="selectedPeriod === 'month'"
+            aria-label="View monthly data">
+            Month
+          </button>
+          <button
+            class="mat-btn mat-btn-text"
+            [class.mat-btn-filled]="selectedPeriod === 'year'"
+            (click)="onPeriodChange('year')"
+            [attr.aria-pressed]="selectedPeriod === 'year'"
+            aria-label="View yearly data">
+            Year
+          </button>
+        </div>
+
         <app-date-range-picker (dateRangeSelected)="onDateRangeSelected($event)"></app-date-range-picker>
-        <button class="customize-btn" routerLink="/builder" aria-label="Customize dashboard">
-          🎨 Customize
-        </button>
+        
         <div class="export-dropdown">
           <button 
-            class="export-btn" 
+            class="mat-btn mat-btn-outlined" 
             (click)="toggleExportMenu()"
             aria-label="Export dashboard data"
             aria-haspopup="true"
             [attr.aria-expanded]="showExportMenu">
-            📥 Export
+            <span>📥</span> Export
           </button>
           <div class="export-menu" *ngIf="showExportMenu" role="menu">
-            <button (click)="exportToCSV()" role="menuitem">📄 Export to CSV</button>
-            <button (click)="exportToExcel()" role="menuitem">📊 Export to Excel</button>
-            <button (click)="exportToPDF()" role="menuitem">📑 Export to PDF</button>
+            <button class="mat-btn mat-btn-text" (click)="exportToCSV()" role="menuitem">
+              <span>📄</span> CSV
+            </button>
+            <button class="mat-btn mat-btn-text" (click)="exportToExcel()" role="menuitem">
+              <span>📊</span> Excel
+            </button>
+            <button class="mat-btn mat-btn-text" (click)="exportToPDF()" role="menuitem">
+              <span>📑</span> PDF
+            </button>
           </div>
         </div>
-        <button class="admin-btn" routerLink="/admin" aria-label="Go to admin panel">
-          ⚙️ Admin
+
+        <button class="mat-icon-btn" routerLink="/builder" aria-label="Customize dashboard" title="Customize">
+          🎨
         </button>
-        <div class="period-selector" role="group" aria-label="Select time period">
-          <button
-            class="period-btn"
-            [class.active]="selectedPeriod === 'week'"
-            (click)="onPeriodChange('week')"
-            [attr.aria-pressed]="selectedPeriod === 'week'"
-            aria-label="View weekly data"
-          >
-            Week
-          </button>
-          <button
-            class="period-btn"
-            [class.active]="selectedPeriod === 'month'"
-            (click)="onPeriodChange('month')"
-            [attr.aria-pressed]="selectedPeriod === 'month'"
-            aria-label="View monthly data"
-          >
-            Month
-          </button>
-          <button
-            class="period-btn"
-            [class.active]="selectedPeriod === 'year'"
-            (click)="onPeriodChange('year')"
-            [attr.aria-pressed]="selectedPeriod === 'year'"
-            aria-label="View yearly data"
-          >
-            Year
-          </button>
-        </div>
+        <button class="mat-icon-btn" routerLink="/admin" aria-label="Admin panel" title="Admin">
+          ⚙️
+        </button>
       </div>
     </div>
   </header>

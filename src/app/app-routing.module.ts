@@ -7,6 +7,7 @@ import { TwoFactorSetupComponent } from './components/two-factor-setup/two-facto
 import { DashboardBuilderComponent } from './components/dashboard-builder/dashboard-builder.component';
 import { EmailSchedulerComponent } from './components/email-scheduler/email-scheduler.component';
 import { OAuthLoginComponent } from './components/oauth-login/oauth-login.component';
+import { BrandingSettingsComponent } from './components/branding-settings/branding-settings.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'oauth-login', component: OAuthLoginComponent },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
+  { path: 'branding', component: BrandingSettingsComponent, canActivate: [AuthGuard] },
   { path: '2fa-setup', component: TwoFactorSetupComponent, canActivate: [AuthGuard] },
   { path: 'email-scheduler', component: EmailSchedulerComponent, canActivate: [AuthGuard] },
   { path: 'builder', component: DashboardBuilderComponent },
