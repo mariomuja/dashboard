@@ -46,9 +46,12 @@ export class ThemeService {
   }
 
   private applyTheme(theme: Theme): void {
+    console.log('Applying theme:', theme); // Debug log
     document.documentElement.setAttribute('data-theme', theme);
     document.body.classList.remove('light-theme', 'dark-theme');
     document.body.classList.add(`${theme}-theme`);
+    console.log('Body classes:', document.body.className); // Debug log
+    console.log('Data-theme attribute:', document.documentElement.getAttribute('data-theme')); // Debug log
   }
 }
 
