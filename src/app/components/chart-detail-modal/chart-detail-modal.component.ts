@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { ChartDataPoint } from '../../services/data.service';
 
@@ -6,6 +7,7 @@ import { ChartDataPoint } from '../../services/data.service';
   selector: 'app-chart-detail-modal',
   templateUrl: './chart-detail-modal.component.html',
   styleUrls: ['./chart-detail-modal.component.css'],
+  standalone: false,
   animations: [
     trigger('modalAnimation', [
       transition(':enter', [
