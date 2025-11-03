@@ -1,0 +1,22 @@
+<div class="kpi-card">
+  <div class="kpi-header">
+    <span class="kpi-icon">{{ kpi.icon }}</span>
+    <span class="kpi-change" [ngClass]="{
+      'positive': kpi.trend === 'up',
+      'negative': kpi.trend === 'down',
+      'neutral': kpi.trend === 'stable'
+    }">
+      <span class="change-arrow">
+        {{ kpi.trend === 'up' ? '↑' : kpi.trend === 'down' ? '↓' : '→' }}
+      </span>
+      {{ kpi.change > 0 ? '+' : '' }}{{ kpi.change }}%
+    </span>
+  </div>
+  <div class="kpi-content">
+    <h3 class="kpi-title">{{ kpi.title }}</h3>
+    <p class="kpi-value" [style.color]="kpi.color">{{ kpi.value }}</p>
+  </div>
+</div>
+
+
+

@@ -1,0 +1,60 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div>
+        <h1>KPI Dashboard</h1>
+        <p>Monitor your key performance indicators</p>
+      </div>
+      <div class="period-selector">
+        <button
+          class="period-btn"
+          [class.active]="selectedPeriod === 'week'"
+          (click)="onPeriodChange('week')"
+        >
+          Week
+        </button>
+        <button
+          class="period-btn"
+          [class.active]="selectedPeriod === 'month'"
+          (click)="onPeriodChange('month')"
+        >
+          Month
+        </button>
+        <button
+          class="period-btn"
+          [class.active]="selectedPeriod === 'year'"
+          (click)="onPeriodChange('year')"
+        >
+          Year
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <!-- KPI Cards Grid -->
+    <div class="kpi-grid">
+      <app-kpi-card *ngFor="let kpi of kpiData" [kpi]="kpi"></app-kpi-card>
+    </div>
+
+    <!-- Charts Grid -->
+    <div class="charts-grid">
+      <div class="chart-container">
+        <app-revenue-chart [data]="revenueData" [period]="selectedPeriod"></app-revenue-chart>
+      </div>
+      <div class="chart-container">
+        <app-sales-chart [data]="salesData" [period]="selectedPeriod"></app-sales-chart>
+      </div>
+    </div>
+
+    <!-- Conversion Chart -->
+    <div class="chart-container-full">
+      <app-conversion-chart [data]="conversionData" [period]="selectedPeriod"></app-conversion-chart>
+    </div>
+  </main>
+</div>
+
+
+
