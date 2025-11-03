@@ -15,6 +15,11 @@ import { SalesChartComponent } from './components/sales-chart/sales-chart.compon
 import { ConversionChartComponent } from './components/conversion-chart/conversion-chart.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { LoginComponent } from './components/login/login.component';
+import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
+import { LoadingSkeletonComponent } from './components/loading-skeleton/loading-skeleton.component';
+import { PieChartComponent } from './components/pie-chart/pie-chart.component';
+import { GoalTrackerComponent } from './components/goal-tracker/goal-tracker.component';
+import { CountUpDirective } from './directives/count-up.directive';
 
 @NgModule({
   declarations: [
@@ -25,7 +30,12 @@ import { LoginComponent } from './components/login/login.component';
     SalesChartComponent,
     ConversionChartComponent,
     AdminComponent,
-    LoginComponent
+    LoginComponent,
+    ThemeToggleComponent,
+    LoadingSkeletonComponent,
+    PieChartComponent,
+    GoalTrackerComponent,
+    CountUpDirective
   ],
   imports: [
     BrowserModule,

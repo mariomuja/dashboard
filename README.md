@@ -1,16 +1,29 @@
-# KPI Dashboard
+# KPI Dashboard 📊
 
-A modern, responsive KPI dashboard built with Angular 17.
+A modern, feature-rich KPI (Key Performance Indicator) dashboard built with Angular 17.
 
-## Features
+## ✨ Key Features
 
-- 📊 **KPI Cards**: Display key performance indicators with trend indicators
-- 📈 **Interactive Charts**: Revenue, sales, and conversion rate charts
-- 📱 **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
-- 🎨 **Modern UI**: Clean and intuitive interface
-- ⏱️ **Time Period Selection**: Filter data by week, month, or year
-- 📤 **Data Upload**: Upload JSON files to update dashboard data
-- 🔐 **Secure Admin**: Password-protected admin panel with rate limiting
+- 🌙 **Dark Mode** - Toggle with localStorage persistence  
+- ✨ **Smooth Animations** - Number counters, card transitions, loading skeletons
+- 📥 **Export Data** - CSV, Excel, and PDF formats
+- 📊 **Multiple Chart Types** - Line, bar, pie charts with interactive features
+- 🎯 **Goal Tracking** - Visual progress bars for targets
+- 📱 **PWA Support** - Install as app, works offline
+- ♿ **Accessibility** - WCAG compliant, keyboard navigation, ARIA labels
+- 🔒 **Secure Admin** - Password-protected data uploads with validation
+- ⚡ **Performance** - Optimized caching, lazy loading
+- 🧪 **Well Tested** - 79 unit tests, all passing
+
+> **See [FEATURES.md](FEATURES.md) for detailed feature documentation**
+
+## Demo Features
+
+- 📊 **KPI Cards** with animated trend indicators
+- 📈 **Interactive Charts** for revenue, sales, and conversion
+- 🎨 **Modern UI** that adapts to light/dark mode
+- ⏱️ **Period Selection** to filter by week, month, or year
+- 📤 **Data Management** via secure admin panel
 
 ## Prerequisites
 

@@ -1,0 +1,188 @@
+/* Dark Theme Styles */
+:root[data-theme='dark'] {
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --bg-tertiary: #374151;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-tertiary: #9ca3af;
+  --border-color: #374151;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.7);
+}
+
+body.dark-theme {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Dashboard Header - Dark */
+.dark-theme .dashboard-header,
+.dark-theme .admin-header,
+.dark-theme .edit-header {
+  background-color: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+}
+
+.dark-theme .header-content h1 {
+  color: var(--text-primary);
+}
+
+.dark-theme .header-content p {
+  color: var(--text-secondary);
+}
+
+/* KPI Cards - Dark */
+.dark-theme .kpi-card,
+.dark-theme .upload-card-main,
+.dark-theme .chart-container,
+.dark-theme .chart-container-full {
+  background-color: var(--bg-secondary);
+  box-shadow: var(--shadow);
+}
+
+.dark-theme .kpi-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.dark-theme .kpi-title {
+  color: var(--text-secondary);
+}
+
+/* Buttons - Dark */
+.dark-theme .period-btn {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.dark-theme .period-btn:hover {
+  background-color: #4b5563;
+}
+
+.dark-theme .btn-secondary {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.dark-theme .btn-secondary:hover {
+  background-color: #4b5563;
+}
+
+/* Admin Page - Dark */
+.dark-theme .info-section,
+.dark-theme .upload-section {
+  background-color: var(--bg-secondary);
+}
+
+.dark-theme .info-section h2,
+.dark-theme .info-section h3,
+.dark-theme .card-header h2,
+.dark-theme .card-header h3 {
+  color: var(--text-primary);
+}
+
+.dark-theme .info-section p,
+.dark-theme .info-section li,
+.dark-theme .card-header p {
+  color: var(--text-secondary);
+}
+
+.dark-theme .code-block {
+  background-color: #0f172a;
+}
+
+.dark-theme .file-label {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.dark-theme .file-label:hover {
+  background-color: #4b5563;
+  border-color: #6b7280;
+}
+
+.dark-theme .status-message {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.dark-theme .btn-download {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.dark-theme .btn-download:hover:not(:disabled) {
+  background-color: #4b5563;
+}
+
+/* Tables - Dark */
+.dark-theme table {
+  color: var(--text-primary);
+}
+
+.dark-theme thead {
+  background-color: var(--bg-tertiary);
+}
+
+.dark-theme th {
+  color: var(--text-primary);
+  border-bottom-color: var(--border-color);
+}
+
+.dark-theme td {
+  border-bottom-color: var(--border-color);
+}
+
+.dark-theme tbody tr:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.dark-theme td input {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+/* Forms - Dark */
+.dark-theme .form-group label {
+  color: var(--text-secondary);
+}
+
+.dark-theme .form-group input,
+.dark-theme .form-group select {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.dark-theme .form-group input:focus,
+.dark-theme .form-group select:focus {
+  border-color: #667eea;
+}
+
+/* Note boxes - Dark */
+.dark-theme .note {
+  background-color: #7c2d12;
+  border-left-color: #f59e0b;
+  color: #fed7aa;
+}
+
+.dark-theme .note strong {
+  color: #fef3c7;
+}
+
+/* Dashboard container - Dark */
+.dark-theme .dashboard-container,
+.dark-theme .admin-container,
+.dark-theme .edit-page-container {
+  background-color: var(--bg-primary);
+}
+
+/* Transitions */
+.dark-theme * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+

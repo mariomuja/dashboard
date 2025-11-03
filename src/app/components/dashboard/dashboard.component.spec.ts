@@ -1,10 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { DashboardComponent } from './dashboard.component';
 import { DataService } from '../../services/data.service';
+import { ExportService } from '../../services/export.service';
 import { KpiCardComponent } from '../kpi-card/kpi-card.component';
 import { RevenueChartComponent } from '../revenue-chart/revenue-chart.component';
 import { SalesChartComponent } from '../sales-chart/sales-chart.component';
 import { ConversionChartComponent } from '../conversion-chart/conversion-chart.component';
+import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
+import { LoadingSkeletonComponent } from '../loading-skeleton/loading-skeleton.component';
+import { PieChartComponent } from '../pie-chart/pie-chart.component';
+import { GoalTrackerComponent } from '../goal-tracker/goal-tracker.component';
+import { CountUpDirective } from '../../directives/count-up.directive';
 import { NgChartsModule } from 'ng2-charts';
 import { of } from 'rxjs';
 
@@ -27,11 +35,17 @@ describe('DashboardComponent', () => {
         KpiCardComponent,
         RevenueChartComponent,
         SalesChartComponent,
-        ConversionChartComponent
+        ConversionChartComponent,
+        ThemeToggleComponent,
+        LoadingSkeletonComponent,
+        PieChartComponent,
+        GoalTrackerComponent,
+        CountUpDirective
       ],
-      imports: [NgChartsModule],
+      imports: [NgChartsModule, BrowserAnimationsModule, RouterTestingModule],
       providers: [
-        { provide: DataService, useValue: dataServiceSpy }
+        { provide: DataService, useValue: dataServiceSpy },
+        ExportService
       ]
     }).compileComponents();
 

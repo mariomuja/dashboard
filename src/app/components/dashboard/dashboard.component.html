@@ -7,14 +7,32 @@
         <p>Monitor your key performance indicators</p>
       </div>
       <div class="header-controls">
-        <button class="admin-btn" routerLink="/admin">
+        <app-theme-toggle></app-theme-toggle>
+        <div class="export-dropdown">
+          <button 
+            class="export-btn" 
+            (click)="toggleExportMenu()"
+            aria-label="Export dashboard data"
+            aria-haspopup="true"
+            [attr.aria-expanded]="showExportMenu">
+            📥 Export
+          </button>
+          <div class="export-menu" *ngIf="showExportMenu" role="menu">
+            <button (click)="exportToCSV()" role="menuitem">📄 Export to CSV</button>
+            <button (click)="exportToExcel()" role="menuitem">📊 Export to Excel</button>
+            <button (click)="exportToPDF()" role="menuitem">📑 Export to PDF</button>
+          </div>
+        </div>
+        <button class="admin-btn" routerLink="/admin" aria-label="Go to admin panel">
           ⚙️ Admin
         </button>
-        <div class="period-selector">
+        <div class="period-selector" role="group" aria-label="Select time period">
           <button
             class="period-btn"
             [class.active]="selectedPeriod === 'week'"
             (click)="onPeriodChange('week')"
+            [attr.aria-pressed]="selectedPeriod === 'week'"
+            aria-label="View weekly data"
           >
             Week
           </button>
@@ -22,6 +40,8 @@
             class="period-btn"
             [class.active]="selectedPeriod === 'month'"
             (click)="onPeriodChange('month')"
+            [attr.aria-pressed]="selectedPeriod === 'month'"
+            aria-label="View monthly data"
           >
             Month
           </button>
@@ -29,6 +49,8 @@
             class="period-btn"
             [class.active]="selectedPeriod === 'year'"
             (click)="onPeriodChange('year')"
+            [attr.aria-pressed]="selectedPeriod === 'year'"
+            aria-label="View yearly data"
           >
             Year
           </button>
@@ -39,24 +61,49 @@
 
   <!-- Main Content -->
   <main class="dashboard-main">
-    <!-- KPI Cards Grid -->
-    <div class="kpi-grid">
-      <app-kpi-card *ngFor="let kpi of kpiData" [kpi]="kpi"></app-kpi-card>
-    </div>
-
-    <!-- Charts Grid -->
-    <div class="charts-grid">
-      <div class="chart-container">
-        <app-revenue-chart [data]="revenueData" [period]="selectedPeriod"></app-revenue-chart>
+    <!-- Loading Skeletons -->
+    <div *ngIf="isLoading">
+      <app-loading-skeleton type="kpi" [count]="4"></app-loading-skeleton>
+      <div class="charts-grid" style="margin-top: 2rem;">
+        <app-loading-skeleton type="chart"></app-loading-skeleton>
+        <app-loading-skeleton type="chart"></app-loading-skeleton>
       </div>
-      <div class="chart-container">
-        <app-sales-chart [data]="salesData" [period]="selectedPeriod"></app-sales-chart>
+      <div style="margin-top: 2rem;">
+        <app-loading-skeleton type="chart"></app-loading-skeleton>
       </div>
     </div>
 
-    <!-- Conversion Chart -->
-    <div class="chart-container-full">
-      <app-conversion-chart [data]="conversionData" [period]="selectedPeriod"></app-conversion-chart>
+    <!-- Actual Content -->
+    <div *ngIf="!isLoading" [@fadeIn]>
+      <!-- KPI Cards Grid -->
+      <div class="kpi-grid">
+        <app-kpi-card *ngFor="let kpi of kpiData" [kpi]="kpi"></app-kpi-card>
+      </div>
+
+      <!-- Charts Grid -->
+      <div class="charts-grid">
+        <div class="chart-container">
+          <app-revenue-chart [data]="revenueData" [period]="selectedPeriod"></app-revenue-chart>
+        </div>
+        <div class="chart-container">
+          <app-sales-chart [data]="salesData" [period]="selectedPeriod"></app-sales-chart>
+        </div>
+      </div>
+
+      <!-- Conversion Chart -->
+      <div class="chart-container-full">
+        <app-conversion-chart [data]="conversionData" [period]="selectedPeriod"></app-conversion-chart>
+      </div>
+
+      <!-- New Charts Row -->
+      <div class="charts-grid">
+        <div class="chart-container">
+          <app-pie-chart title="Revenue by Category"></app-pie-chart>
+        </div>
+      </div>
+
+      <!-- Goals Tracker -->
+      <app-goal-tracker></app-goal-tracker>
     </div>
   </main>
 </div>

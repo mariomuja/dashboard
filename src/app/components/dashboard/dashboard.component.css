@@ -65,6 +65,60 @@
   color: white;
 }
 
+.export-dropdown {
+  position: relative;
+}
+
+.export-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: #8b5cf6;
+  color: white;
+}
+
+.export-btn:hover {
+  background-color: #7c3aed;
+}
+
+.export-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+  min-width: 200px;
+  z-index: 100;
+}
+
+.dark-theme .export-menu {
+  background-color: var(--bg-secondary);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+.export-menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s;
+  color: var(--text-primary);
+}
+
+.export-menu button:hover {
+  background-color: var(--hover-bg);
+}
+
 .admin-btn {
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;

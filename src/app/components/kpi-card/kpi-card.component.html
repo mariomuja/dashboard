@@ -1,12 +1,20 @@
-<div class="kpi-card">
+<div 
+  class="kpi-card" 
+  [@cardAnimation]
+  role="article"
+  [attr.aria-label]="kpi.title + ': ' + kpi.value"
+  tabindex="0">
   <div class="kpi-header">
-    <span class="kpi-icon">{{ kpi.icon }}</span>
-    <span class="kpi-change" [ngClass]="{
-      'positive': kpi.trend === 'up',
-      'negative': kpi.trend === 'down',
-      'neutral': kpi.trend === 'stable'
-    }">
-      <span class="change-arrow">
+    <span class="kpi-icon" aria-hidden="true">{{ kpi.icon }}</span>
+    <span 
+      class="kpi-change" 
+      [ngClass]="{
+        'positive': kpi.trend === 'up',
+        'negative': kpi.trend === 'down',
+        'neutral': kpi.trend === 'stable'
+      }"
+      [attr.aria-label]="'Change: ' + (kpi.change > 0 ? 'up' : kpi.change < 0 ? 'down' : 'stable') + ' by ' + Math.abs(kpi.change) + ' percent'">
+      <span class="change-arrow" aria-hidden="true">
         {{ kpi.trend === 'up' ? '↑' : kpi.trend === 'down' ? '↓' : '→' }}
       </span>
       {{ kpi.change > 0 ? '+' : '' }}{{ kpi.change }}%
@@ -14,7 +22,7 @@
   </div>
   <div class="kpi-content">
     <h3 class="kpi-title">{{ kpi.title }}</h3>
-    <p class="kpi-value" [style.color]="kpi.color">{{ kpi.value }}</p>
+    <p class="kpi-value" [style.color]="kpi.color" [appCountUp]="kpi.value"></p>
   </div>
 </div>
 
