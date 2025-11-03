@@ -80,6 +80,26 @@
       </div>
     </div>
 
+    <!-- Font Family -->
+    <div class="section-card">
+      <h2>Typography</h2>
+      <p class="section-description">Select font family for the dashboard</p>
+      
+      <select 
+        [(ngModel)]="branding.fontFamily" 
+        (ngModelChange)="onFontChange()"
+        class="font-select">
+        <option *ngFor="let font of availableFonts" [value]="font.value">
+          {{ font.name }}
+        </option>
+      </select>
+      
+      <div class="font-preview" [style.font-family]="branding.fontFamily">
+        <p>The quick brown fox jumps over the lazy dog</p>
+        <p><strong>Bold text example</strong> and <em>italic text example</em></p>
+      </div>
+    </div>
+
     <!-- Theme Preference -->
     <div class="section-card">
       <h2>Default Theme</h2>

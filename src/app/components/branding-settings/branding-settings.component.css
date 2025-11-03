@@ -65,6 +65,42 @@
   margin: 0 0 1.5rem 0;
 }
 
+.font-select {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.font-select:hover {
+  border-color: var(--primary-color);
+}
+
+.font-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.font-preview {
+  padding: 1rem;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  line-height: 1.6;
+}
+
+.font-preview p {
+  margin: 0.5rem 0;
+  color: var(--text-primary);
+}
+
 .logo-upload {
   display: flex;
   flex-direction: column;

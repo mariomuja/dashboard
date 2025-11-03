@@ -86,38 +86,55 @@
 
     <!-- Actual Content -->
     <div *ngIf="!isLoading" [@fadeIn]>
-      <!-- KPI Cards Grid -->
-      <div class="kpi-grid">
-        <app-kpi-card *ngFor="let kpi of kpiData" [kpi]="kpi"></app-kpi-card>
+      <!-- Dynamic Widget Layout -->
+      <div class="dashboard-grid">
+        <ng-container *ngFor="let widget of widgets">
+          <!-- KPI Cards -->
+          <div *ngIf="widget.type === 'kpi'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
+            <div class="kpi-grid">
+              <app-kpi-card *ngFor="let kpi of kpiData" [kpi]="kpi"></app-kpi-card>
+            </div>
+          </div>
+
+          <!-- Revenue Chart -->
+          <div *ngIf="widget.type === 'chart-revenue'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
+            <div class="chart-container">
+              <app-revenue-chart [data]="revenueData" [period]="selectedPeriod"></app-revenue-chart>
+            </div>
+          </div>
+
+          <!-- Sales Chart -->
+          <div *ngIf="widget.type === 'chart-sales'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
+            <div class="chart-container">
+              <app-sales-chart [data]="salesData" [period]="selectedPeriod"></app-sales-chart>
+            </div>
+          </div>
+
+          <!-- Conversion Chart -->
+          <div *ngIf="widget.type === 'chart-conversion'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
+            <div class="chart-container">
+              <app-conversion-chart [data]="conversionData" [period]="selectedPeriod"></app-conversion-chart>
+            </div>
+          </div>
+
+          <!-- Pie Chart -->
+          <div *ngIf="widget.type === 'pie'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
+            <div class="chart-container">
+              <app-pie-chart title="Revenue by Category"></app-pie-chart>
+            </div>
+          </div>
+
+          <!-- Goals Tracker -->
+          <div *ngIf="widget.type === 'goals'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
+            <app-goal-tracker></app-goal-tracker>
+          </div>
+
+          <!-- AI Insights Panel -->
+          <div *ngIf="widget.type === 'insights'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
+            <app-insights-panel [kpiData]="kpiData"></app-insights-panel>
+          </div>
+        </ng-container>
       </div>
-
-      <!-- Charts Grid -->
-      <div class="charts-grid">
-        <div class="chart-container">
-          <app-revenue-chart [data]="revenueData" [period]="selectedPeriod"></app-revenue-chart>
-        </div>
-        <div class="chart-container">
-          <app-sales-chart [data]="salesData" [period]="selectedPeriod"></app-sales-chart>
-        </div>
-      </div>
-
-      <!-- Conversion Chart -->
-      <div class="chart-container-full">
-        <app-conversion-chart [data]="conversionData" [period]="selectedPeriod"></app-conversion-chart>
-      </div>
-
-      <!-- New Charts Row -->
-      <div class="charts-grid">
-        <div class="chart-container">
-          <app-pie-chart title="Revenue by Category"></app-pie-chart>
-        </div>
-      </div>
-
-      <!-- Goals Tracker -->
-      <app-goal-tracker></app-goal-tracker>
-
-      <!-- AI Insights Panel -->
-      <app-insights-panel [kpiData]="kpiData"></app-insights-panel>
     </div>
   </main>
 

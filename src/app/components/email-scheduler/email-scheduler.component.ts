@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { OrganizationService } from '../../services/organization.service';
+import { DataService } from '../../services/data.service';
 
 interface EmailSchedule {
   id?: string;
@@ -36,7 +38,9 @@ export class EmailSchedulerComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private orgService: OrganizationService,
+    private dataService: DataService
   ) {}
 
   ngOnInit(): void {
@@ -76,28 +80,40 @@ export class EmailSchedulerComponent implements OnInit {
       return;
     }
 
-    // Get current dashboard data (simplified - in real app would fetch from service)
-    const dashboardData = {
-      period: 'Current',
-      kpis: [] // Would fetch from DataService
-    };
+    // Get current dashboard data and branding
+    this.dataService.getKpiData('month').subscribe(kpis => {
+      const org = this.orgService.getCurrentOrganization();
+      const branding = org ? {
+        primaryColor: org.settings.branding.primaryColor,
+        secondaryColor: org.settings.branding.secondaryColor,
+        companyName: org.settings.branding.companyName,
+        logoUrl: org.settings.branding.logo || '',
+        fontFamily: org.settings.branding.fontFamily || 'Arial, sans-serif'
+      } : null;
 
-    const payload = {
-      ...this.newSchedule,
-      dashboardData
-    };
+      const dashboardData = {
+        period: 'Current',
+        kpis: kpis
+      };
 
-    this.http.post(`${this.apiUrl}/schedule`, payload).subscribe({
-      next: (response: any) => {
-        alert('Email schedule created successfully!');
-        this.loadSchedules();
-        this.showCreateForm = false;
-        this.resetForm();
-      },
-      error: (error) => {
-        alert('Failed to create schedule: ' + (error.error?.error || 'Unknown error'));
-        console.error('Error:', error);
-      }
+      const payload = {
+        ...this.newSchedule,
+        dashboardData,
+        branding
+      };
+
+      this.http.post(`${this.apiUrl}/schedule`, payload).subscribe({
+        next: (response: any) => {
+          alert('Email schedule created successfully with your branding!');
+          this.loadSchedules();
+          this.showCreateForm = false;
+          this.resetForm();
+        },
+        error: (error) => {
+          alert('Failed to create schedule: ' + (error.error?.error || 'Unknown error'));
+          console.error('Error:', error);
+        }
+      });
     });
   }
 
@@ -123,9 +139,19 @@ export class EmailSchedulerComponent implements OnInit {
 
     this.isSending = true;
 
+    // Get branding
+    const org = this.orgService.getCurrentOrganization();
+    const branding = org ? {
+      primaryColor: org.settings.branding.primaryColor,
+      secondaryColor: org.settings.branding.secondaryColor,
+      companyName: org.settings.branding.companyName,
+      logoUrl: org.settings.branding.logo || '',
+      fontFamily: org.settings.branding.fontFamily || 'Arial, sans-serif'
+    } : null;
+
     const payload = {
       recipients: [this.testEmailRecipient],
-      subject: 'Test Email from KPI Dashboard',
+      subject: `Test Email from ${branding?.companyName || 'KPI Dashboard'}`,
       dashboardData: {
         period: 'Test',
         kpis: [
@@ -136,15 +162,16 @@ export class EmailSchedulerComponent implements OnInit {
             change: 12.5,
             trend: 'up',
             icon: '📊',
-            color: '#10b981'
+            color: branding?.primaryColor || '#10b981'
           }
         ]
-      }
+      },
+      branding
     };
 
     this.http.post(`${this.apiUrl}/send`, payload).subscribe({
       next: (response: any) => {
-        alert('Test email sent! Check your inbox.\n\nPreview: ' + (response.previewUrl || 'N/A'));
+        alert('Test email sent with your branding! Check your inbox.\n\nPreview: ' + (response.previewUrl || 'N/A'));
         this.isSending = false;
       },
       error: (error) => {

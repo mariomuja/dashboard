@@ -157,6 +157,20 @@
   padding: 0 2rem 2rem;
 }
 
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+  grid-auto-rows: minmax(80px, auto);
+  margin-bottom: 2rem;
+}
+
+.widget-item {
+  background-color: transparent;
+  border-radius: 0.75rem;
+  transition: all 0.3s ease;
+}
+
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

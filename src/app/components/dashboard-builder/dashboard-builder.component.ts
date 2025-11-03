@@ -3,6 +3,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { CdkDragDrop, CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
 import { DashboardLayoutService, WidgetConfig } from '../../services/dashboard-layout.service';
 import { DashboardTemplatesService, DashboardTemplate } from '../../services/dashboard-templates.service';
+import { DashboardVersionControlService } from '../../services/dashboard-version-control.service';
 import { Router } from '@angular/router';
 
 interface ResizeHandle {
@@ -40,12 +41,12 @@ export class DashboardBuilderComponent implements OnInit {
   
   // Grid system constants
   readonly GRID_COLUMNS = 12;
-  readonly GRID_ROWS = 20;
+  readonly GRID_ROWS = 100;
   readonly CELL_HEIGHT = 80; // pixels
   
   // Resize state
   private resizing: ResizeHandle | null = null;
-  private draggingWidget: string | null = null;
+  draggingWidget: string | null = null;
 
   availableWidgets = [
     { type: 'kpi', label: 'KPI Cards', icon: '📊' },
@@ -60,6 +61,7 @@ export class DashboardBuilderComponent implements OnInit {
   constructor(
     private layoutService: DashboardLayoutService,
     private templatesService: DashboardTemplatesService,
+    private versionControl: DashboardVersionControlService,
     private router: Router
   ) {}
 
@@ -68,7 +70,7 @@ export class DashboardBuilderComponent implements OnInit {
     this.widgets = [...layout.widgets];
     this.templates = this.templatesService.getTemplates();
     
-    // Ensure all widgets have proper grid positions
+    // Ensure all widgets have proper grid positions and are within bounds
     this.widgets.forEach((widget, index) => {
       if (!widget.position) {
         widget.position = { row: Math.floor(index / 2) * 2, col: (index % 2) * 6 };
@@ -76,7 +78,18 @@ export class DashboardBuilderComponent implements OnInit {
       if (!widget.size) {
         widget.size = { width: 6, height: 2 };
       }
+      
+      // Constrain widgets to grid bounds
+      widget.position.row = Math.max(0, Math.min(widget.position.row, this.GRID_ROWS - widget.size.height));
+      widget.position.col = Math.max(0, Math.min(widget.position.col, this.GRID_COLUMNS - widget.size.width));
+      
+      // Ensure size is reasonable
+      widget.size.width = Math.max(2, Math.min(widget.size.width, this.GRID_COLUMNS));
+      widget.size.height = Math.max(1, Math.min(widget.size.height, this.GRID_ROWS));
     });
+    
+    // Save the corrected layout
+    this.saveLayout();
   }
 
   onDragEnded(event: CdkDragEnd, widget: WidgetConfig): void {
@@ -104,7 +117,10 @@ export class DashboardBuilderComponent implements OnInit {
       this.GRID_COLUMNS - widget.size.width,
       Math.round(relativeX / cellWidth)
     ));
-    const newRow = Math.max(0, Math.round(relativeY / this.CELL_HEIGHT));
+    const newRow = Math.max(0, Math.min(
+      this.GRID_ROWS - widget.size.height,
+      Math.round(relativeY / this.CELL_HEIGHT)
+    ));
     
     // Update widget position
     widget.position = { row: newRow, col: newCol };
@@ -216,7 +232,7 @@ export class DashboardBuilderComponent implements OnInit {
     
     // Handle vertical resizing
     if (direction.includes('s')) {
-      const newHeight = Math.max(1, this.resizing.startHeight + deltaRows);
+      const newHeight = Math.max(1, Math.min(this.GRID_ROWS - widget.position.row, this.resizing.startHeight + deltaRows));
       widget.size.height = newHeight;
     } else if (direction.includes('n')) {
       const newHeight = Math.max(1, this.resizing.startHeight - deltaRows);
@@ -295,6 +311,45 @@ export class DashboardBuilderComponent implements OnInit {
       widgets: this.widgets
     };
     this.layoutService.updateLayout(layout);
+    
+    // Save version
+    this.versionControl.saveVersion(
+      'dashboard-main',
+      layout,
+      'User Changes',
+      'Manual save from dashboard builder',
+      ['manual-save']
+    );
+    
+    console.log('Layout saved with version control');
+  }
+  
+  saveVersionWithName(): void {
+    const name = prompt('Enter version name:');
+    const description = prompt('Enter version description (optional):');
+    
+    if (name) {
+      const layout = {
+        name: 'Custom',
+        widgets: this.widgets
+      };
+      
+      const version = this.versionControl.saveVersion(
+        'dashboard-main',
+        layout,
+        name,
+        description || `Version saved on ${new Date().toLocaleDateString()}`,
+        ['manual-save', 'named-version']
+      );
+      
+      alert(`Saved as version ${version.version}: ${name}`);
+    }
+  }
+  
+  viewVersionHistory(): void {
+    const history = this.versionControl.getHistory('dashboard-main');
+    console.log('Version History:', history);
+    alert(`Total versions: ${history.versions.length}\nActive: v${history.activeVersion?.version || 'None'}`);
   }
 
   getWidgetLabel(type: string): string {

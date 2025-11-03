@@ -13,6 +13,22 @@ export class BrandingSettingsComponent implements OnInit {
   isSaving = false;
   customCss = '';
   private customStyleElement: HTMLStyleElement | null = null;
+  
+  availableFonts = [
+    { name: 'Default', value: 'system-ui, -apple-system, sans-serif' },
+    { name: 'Arial', value: 'Arial, sans-serif' },
+    { name: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+    { name: 'Georgia', value: 'Georgia, serif' },
+    { name: 'Times New Roman', value: '"Times New Roman", Times, serif' },
+    { name: 'Courier New', value: '"Courier New", Courier, monospace' },
+    { name: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+    { name: 'Trebuchet MS', value: '"Trebuchet MS", sans-serif' },
+    { name: 'Roboto', value: '"Roboto", sans-serif' },
+    { name: 'Open Sans', value: '"Open Sans", sans-serif' },
+    { name: 'Lato', value: '"Lato", sans-serif' },
+    { name: 'Montserrat', value: '"Montserrat", sans-serif' },
+    { name: 'Inter', value: '"Inter", sans-serif' }
+  ];
 
   constructor(
     private orgService: OrganizationService,
@@ -95,6 +111,17 @@ export class BrandingSettingsComponent implements OnInit {
   previewBranding(): void {
     if (this.branding) {
       this.orgService.updateBranding(this.branding);
+      this.applyFontFamily();
+    }
+  }
+  
+  onFontChange(): void {
+    this.applyFontFamily();
+  }
+  
+  private applyFontFamily(): void {
+    if (this.branding?.fontFamily) {
+      document.documentElement.style.setProperty('--font-family', this.branding.fontFamily);
     }
   }
 

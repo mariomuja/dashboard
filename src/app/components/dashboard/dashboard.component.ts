@@ -3,6 +3,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { DataService, KpiData, ChartDataPoint } from '../../services/data.service';
 import { ExportService } from '../../services/export.service';
 import { OrganizationService } from '../../services/organization.service';
+import { DashboardLayoutService, WidgetConfig } from '../../services/dashboard-layout.service';
 import { DateRange } from '../date-range-picker/date-range-picker.component';
 import { Subscription } from 'rxjs';
 
@@ -28,16 +29,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
   isLoading = true;
   showExportMenu = false;
   customDateRange: DateRange | null = null;
+  widgets: WidgetConfig[] = [];
   private orgSubscription?: Subscription;
+  private layoutSubscription?: Subscription;
 
   constructor(
     private dataService: DataService,
     private exportService: ExportService,
-    private orgService: OrganizationService
+    private orgService: OrganizationService,
+    private layoutService: DashboardLayoutService
   ) { }
 
   ngOnInit(): void {
     this.loadData();
+    
+    // Subscribe to layout changes
+    this.layoutSubscription = this.layoutService.currentLayout$.subscribe(layout => {
+      this.widgets = layout.widgets.filter(w => w.visible);
+      console.log('Layout updated:', this.widgets);
+    });
     
     // Subscribe to organization changes
     this.orgSubscription = this.orgService.currentOrg$.subscribe(org => {
@@ -53,6 +63,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (this.orgSubscription) {
       this.orgSubscription.unsubscribe();
     }
+    if (this.layoutSubscription) {
+      this.layoutSubscription.unsubscribe();
+    }
+  }
+  
+  isWidgetVisible(type: string): boolean {
+    return this.widgets.some(w => w.type === type && w.visible);
+  }
+  
+  getWidgetsByType(type: string): WidgetConfig[] {
+    return this.widgets.filter(w => w.type === type);
+  }
+  
+  getWidgetStyle(widget: WidgetConfig): any {
+    return {
+      'grid-column': `${widget.position.col + 1} / span ${widget.size.width}`,
+      'grid-row': `${widget.position.row + 1} / span ${widget.size.height}`,
+      'order': widget.position.row * 100 + widget.position.col
+    };
   }
 
   loadData(): void {
