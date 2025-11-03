@@ -79,29 +79,45 @@ export class DashboardBuilderComponent implements OnInit {
     });
   }
 
-  onDragMoved(event: CdkDragMove, widget: WidgetConfig): void {
-    // Calculate grid position from pixel position
+  onDragEnded(event: CdkDragEnd, widget: WidgetConfig): void {
+    // Get the final position
     const element = event.source.element.nativeElement;
-    const rect = element.getBoundingClientRect();
-    const container = element.parentElement!;
+    const container = document.querySelector('.grid-container') as HTMLElement;
+    
+    if (!container) {
+      event.source.reset();
+      return;
+    }
+    
     const containerRect = container.getBoundingClientRect();
+    const elementRect = element.getBoundingClientRect();
     
-    const relativeX = rect.left - containerRect.left + event.distance.x;
-    const relativeY = rect.top - containerRect.top + event.distance.y;
+    // Calculate position relative to container
+    const relativeX = elementRect.left - containerRect.left;
+    const relativeY = elementRect.top - containerRect.top;
     
-    // Snap to grid
+    // Calculate cell dimensions
     const cellWidth = containerRect.width / this.GRID_COLUMNS;
-    const newCol = Math.max(0, Math.min(this.GRID_COLUMNS - widget.size.width, Math.round(relativeX / cellWidth)));
+    
+    // Snap to nearest grid cell
+    const newCol = Math.max(0, Math.min(
+      this.GRID_COLUMNS - widget.size.width,
+      Math.round(relativeX / cellWidth)
+    ));
     const newRow = Math.max(0, Math.round(relativeY / this.CELL_HEIGHT));
     
+    // Update widget position
     widget.position = { row: newRow, col: newCol };
-  }
-
-  onDragEnded(event: CdkDragEnd, widget: WidgetConfig): void {
+    
     this.draggingWidget = null;
     this.saveLayout();
-    // Reset the drag position to prevent CDK from applying transform
+    
+    // Reset transform to allow CSS Grid to position the element
     event.source.reset();
+  }
+
+  onDragStarted(widget: WidgetConfig): void {
+    this.draggingWidget = widget.id;
   }
 
   toggleWidget(widgetId: string): void {

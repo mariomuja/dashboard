@@ -69,10 +69,12 @@
       <div *ngFor="let widget of widgets"
            class="grid-widget"
            [class.hidden]="!widget.visible"
+           [class.dragging]="draggingWidget === widget.id"
            [ngStyle]="getWidgetStyle(widget)"
            cdkDrag
            cdkDragBoundary=".grid-container"
-           (cdkDragMoved)="onDragMoved($event, widget)"
+           [cdkDragFreeDragPosition]="{x: 0, y: 0}"
+           (cdkDragStarted)="onDragStarted(widget)"
            (cdkDragEnded)="onDragEnded($event, widget)">
         
         <!-- Widget Header -->

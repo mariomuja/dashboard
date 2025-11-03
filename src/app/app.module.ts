@@ -31,6 +31,7 @@ import { OrganizationSelectorComponent } from './components/organization-selecto
 import { BrandingSettingsComponent } from './components/branding-settings/branding-settings.component';
 import { CommentsPanelComponent } from './components/comments-panel/comments-panel.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
+import { EnterpriseLoginComponent } from './components/enterprise-login/enterprise-login.component';
 import { CountUpDirective } from './directives/count-up.directive';
 
 @NgModule({
@@ -58,6 +59,7 @@ import { CountUpDirective } from './directives/count-up.directive';
     BrandingSettingsComponent,
     CommentsPanelComponent,
     UserManagementComponent,
+    EnterpriseLoginComponent,
     CountUpDirective
   ],
   imports: [

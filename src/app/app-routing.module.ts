@@ -9,12 +9,14 @@ import { EmailSchedulerComponent } from './components/email-scheduler/email-sche
 import { OAuthLoginComponent } from './components/oauth-login/oauth-login.component';
 import { BrandingSettingsComponent } from './components/branding-settings/branding-settings.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
+import { EnterpriseLoginComponent } from './components/enterprise-login/enterprise-login.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
   { path: 'login', component: LoginComponent },
   { path: 'oauth-login', component: OAuthLoginComponent },
+  { path: 'enterprise-login', component: EnterpriseLoginComponent },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   { path: 'branding', component: BrandingSettingsComponent, canActivate: [AuthGuard] },
   { path: 'users', component: UserManagementComponent, canActivate: [AuthGuard] },
