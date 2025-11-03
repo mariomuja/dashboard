@@ -16,8 +16,13 @@ A modern, feature-rich KPI (Key Performance Indicator) dashboard built with Angu
 - 🔐 **OAuth Integration** - Google & GitHub login
 - 🔒 **Two-Factor Auth** - TOTP with QR codes
 - 👥 **Multi-User Roles** - Admin, Editor, Viewer permissions
-- 📧 **Email Reports** - Scheduled automated reports
-- 🎨 **Dashboard Builder** - Drag-and-drop customization
+- 📧 **Scheduled Reports** ✨ - Automated cron jobs with branded emails
+- 🎨 **White-Label Branding** ✨ - Logo, colors, fonts, custom CSS
+- 🏢 **Multi-Tenancy** ⭐ NEW - Complete tenant isolation & data segregation
+- 🔐 **Advanced User Mgmt** ⭐ NEW - LDAP/AD, SCIM, SAML SSO, temp access, audit trails
+- 🔄 **Version Control** ⭐ NEW - Save versions, rollback, change history
+- 🔌 **Multiple Data Sources** ⭐ NEW - 13 connectors: DB, API, Cloud, SaaS
+- 🎯 **Dashboard Builder** - Drag-and-drop grid customization
 - 📐 **Templates** - 4 pre-built dashboard layouts
 
 ### **Advanced:**
@@ -51,12 +56,30 @@ npm install
 
 ## Development
 
+### Start Dashboard
+
 Run the development server:
 ```bash
 npm start
 ```
 
 Navigate to `http://localhost:4200/` to view the dashboard.
+
+### Start All Services (Recommended)
+
+For full functionality including scheduled reports:
+```bash
+npm run start:all
+```
+
+This starts:
+- Dashboard (port 4200)
+- File Upload Server (port 3001)
+- Email Service (port 3002)
+- OAuth Service (port 3003)
+- LDAP Service (port 3004)
+- SCIM Service (port 3005)
+- SAML Service (port 3006)
 
 ## Build
 
@@ -110,6 +133,20 @@ src/
 - ✅ File type validation (JSON only)
 
 **Important:** Change the default password in `src/app/services/auth.service.ts` for production!
+
+### New: Enterprise Features ⭐
+
+Access from Admin Panel:
+- **📧 Email Reports**: Automated scheduled reports with cron jobs
+- **🎨 Branding**: Customize logo, colors, fonts, and CSS
+- **🏢 Multi-Tenancy**: Complete tenant isolation and data segregation
+- **🔐 Advanced Security**: LDAP/AD, SCIM, SAML SSO, temp access, audit trails
+
+**Documentation:**
+- [Scheduled Reports & Branding Guide](SCHEDULED-REPORTS-BRANDING-GUIDE.md)
+- [Multi-Tenancy & Advanced User Management Guide](MULTI-TENANCY-ADVANCED-USER-MANAGEMENT-GUIDE.md)
+- [Dashboard Version Control Guide](DASHBOARD-VERSION-CONTROL-GUIDE.md)
+- [Multiple Data Sources Guide](MULTIPLE-DATA-SOURCES-GUIDE.md)
 
 ## Customization
 

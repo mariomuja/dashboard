@@ -10,7 +10,8 @@
     "start:ldap": "node server-ldap.js",
     "start:scim": "node server-scim.js",
     "start:saml": "node server-saml.js",
-    "start:all": "concurrently \"npm start\" \"npm run start:server\" \"npm run start:email\" \"npm run start:oauth\" \"npm run start:ldap\" \"npm run start:scim\" \"npm run start:saml\"",
+    "start:datasources": "node server-datasources.js",
+    "start:all": "concurrently \"npm start\" \"npm run start:server\" \"npm run start:email\" \"npm run start:oauth\" \"npm run start:ldap\" \"npm run start:scim\" \"npm run start:saml\" \"npm run start:datasources\"",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -57,6 +58,10 @@
     "scim2-parse-filter": "^0.2.10",
     "socket.io-client": "^4.8.1",
     "speakeasy": "^2.0.0",
+    "pg": "^8.11.3",
+    "mysql2": "^3.6.5",
+    "mongodb": "^6.3.0",
+    "axios": "^1.6.2",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
   },

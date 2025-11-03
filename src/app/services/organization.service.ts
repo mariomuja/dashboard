@@ -18,6 +18,7 @@ export interface OrganizationSettings {
     secondaryColor: string;
     companyName: string;
     theme: 'light' | 'dark' | 'auto';
+    fontFamily?: string;
   };
   features: {
     dashboards: boolean;

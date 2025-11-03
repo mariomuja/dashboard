@@ -22,13 +22,13 @@ export class DashboardLayoutService {
   private readonly DEFAULT_LAYOUT: DashboardLayout = {
     name: 'Default',
     widgets: [
-      { id: 'kpi-1', type: 'kpi', position: { row: 0, col: 0 }, size: { width: 4, height: 1 }, visible: true },
-      { id: 'chart-revenue-1', type: 'chart-revenue', position: { row: 1, col: 0 }, size: { width: 2, height: 1 }, visible: true },
-      { id: 'chart-sales-1', type: 'chart-sales', position: { row: 1, col: 2 }, size: { width: 2, height: 1 }, visible: true },
-      { id: 'chart-conversion-1', type: 'chart-conversion', position: { row: 2, col: 0 }, size: { width: 4, height: 1 }, visible: true },
-      { id: 'pie-1', type: 'pie', position: { row: 3, col: 0 }, size: { width: 2, height: 1 }, visible: true },
-      { id: 'goals-1', type: 'goals', position: { row: 4, col: 0 }, size: { width: 4, height: 1 }, visible: true },
-      { id: 'insights-1', type: 'insights', position: { row: 5, col: 0 }, size: { width: 4, height: 1 }, visible: true }
+      { id: 'kpi-1', type: 'kpi', position: { row: 0, col: 0 }, size: { width: 12, height: 2 }, visible: true },
+      { id: 'chart-revenue-1', type: 'chart-revenue', position: { row: 2, col: 0 }, size: { width: 6, height: 3 }, visible: true },
+      { id: 'chart-sales-1', type: 'chart-sales', position: { row: 2, col: 6 }, size: { width: 6, height: 3 }, visible: true },
+      { id: 'chart-conversion-1', type: 'chart-conversion', position: { row: 5, col: 0 }, size: { width: 12, height: 3 }, visible: true },
+      { id: 'pie-1', type: 'pie', position: { row: 8, col: 0 }, size: { width: 6, height: 3 }, visible: true },
+      { id: 'goals-1', type: 'goals', position: { row: 8, col: 6 }, size: { width: 6, height: 3 }, visible: true },
+      { id: 'insights-1', type: 'insights', position: { row: 11, col: 0 }, size: { width: 12, height: 3 }, visible: true }
     ]
   };
 

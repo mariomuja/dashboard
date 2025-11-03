@@ -32,6 +32,7 @@ import { BrandingSettingsComponent } from './components/branding-settings/brandi
 import { CommentsPanelComponent } from './components/comments-panel/comments-panel.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { EnterpriseLoginComponent } from './components/enterprise-login/enterprise-login.component';
+import { DashboardVersionHistoryComponent } from './components/dashboard-version-history/dashboard-version-history.component';
 import { CountUpDirective } from './directives/count-up.directive';
 
 @NgModule({
@@ -53,6 +54,7 @@ import { CountUpDirective } from './directives/count-up.directive';
     TwoFactorSetupComponent,
     ChartDetailModalComponent,
     DashboardBuilderComponent,
+    DashboardVersionHistoryComponent,
     EmailSchedulerComponent,
     OAuthLoginComponent,
     OrganizationSelectorComponent,

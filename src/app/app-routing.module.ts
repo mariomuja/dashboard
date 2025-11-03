@@ -10,6 +10,7 @@ import { OAuthLoginComponent } from './components/oauth-login/oauth-login.compon
 import { BrandingSettingsComponent } from './components/branding-settings/branding-settings.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { EnterpriseLoginComponent } from './components/enterprise-login/enterprise-login.component';
+import { DashboardVersionHistoryComponent } from './components/dashboard-version-history/dashboard-version-history.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: '2fa-setup', component: TwoFactorSetupComponent, canActivate: [AuthGuard] },
   { path: 'email-scheduler', component: EmailSchedulerComponent, canActivate: [AuthGuard] },
   { path: 'builder', component: DashboardBuilderComponent },
+  { path: 'version-history', component: DashboardVersionHistoryComponent },
   { path: '**', redirectTo: '' }
 ];
 

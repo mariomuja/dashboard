@@ -78,18 +78,19 @@ app.post('/api/email/schedule', async (req, res) => {
 // Endpoint to send immediate email report
 app.post('/api/email/send', async (req, res) => {
   try {
-    const { recipients, subject, dashboardData } = req.body;
+    const { recipients, subject, dashboardData, branding } = req.body;
 
     if (!recipients || !recipients.length) {
       return res.status(400).json({ error: 'Recipients required' });
     }
 
-    const emailHtml = generateEmailHTML(dashboardData);
+    const emailHtml = generateEmailHTML(dashboardData, branding);
+    const companyName = branding?.companyName || 'KPI Dashboard';
 
     const info = await transporter.sendMail({
-      from: '"KPI Dashboard" <noreply@dashboard.com>',
+      from: `"${companyName}" <noreply@dashboard.com>`,
       to: recipients.join(', '),
-      subject: subject || 'KPI Dashboard Report',
+      subject: subject || `${companyName} Report`,
       html: emailHtml
     });
 
@@ -160,12 +161,13 @@ async function sendScheduledReport(schedule) {
   console.log(`Sending scheduled report: ${schedule.id}`);
 
   try {
-    const emailHtml = generateEmailHTML(schedule.dashboardData);
+    const emailHtml = generateEmailHTML(schedule.dashboardData, schedule.branding);
+    const companyName = schedule.branding?.companyName || 'KPI Dashboard';
 
     const info = await transporter.sendMail({
-      from: '"KPI Dashboard" <noreply@dashboard.com>',
+      from: `"${companyName}" <noreply@dashboard.com>`,
       to: schedule.recipients.join(', '),
-      subject: `KPI Dashboard ${schedule.frequency.charAt(0).toUpperCase() + schedule.frequency.slice(1)} Report`,
+      subject: `${companyName} ${schedule.frequency.charAt(0).toUpperCase() + schedule.frequency.slice(1)} Report`,
       html: emailHtml
     });
 
@@ -202,38 +204,110 @@ async function sendScheduledReport(schedule) {
   }
 }
 
-// Helper: Generate email HTML
-function generateEmailHTML(dashboardData) {
+// Helper: Generate email HTML with branding
+function generateEmailHTML(dashboardData, branding = null) {
   if (!dashboardData || !dashboardData.kpis) {
     return '<html><body><h1>KPI Dashboard Report</h1><p>No data available</p></body></html>';
   }
+
+  // Default branding
+  const brand = branding || {
+    primaryColor: '#10b981',
+    secondaryColor: '#3b82f6',
+    companyName: 'KPI Dashboard',
+    logoUrl: '',
+    fontFamily: 'Arial, sans-serif'
+  };
+
+  const logoHtml = brand.logoUrl 
+    ? `<img src="${brand.logoUrl}" alt="${brand.companyName}" style="max-height: 60px; margin-bottom: 15px;">`
+    : '';
 
   return `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
-        .container { max-width: 800px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 8px; }
-        h1 { color: #333; margin: 0 0 10px 0; }
-        .header { border-bottom: 3px solid #10b981; padding-bottom: 20px; margin-bottom: 30px; }
-        .meta { color: #666; font-size: 14px; }
-        .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 30px 0; }
-        .kpi-card { border: 1px solid #e5e7eb; padding: 20px; border-radius: 8px; background-color: #fafafa; }
-        .kpi-title { color: #666; font-size: 14px; margin-bottom: 10px; font-weight: 600; }
-        .kpi-value { font-size: 28px; font-weight: bold; margin-bottom: 10px; }
-        .kpi-change { font-size: 14px; font-weight: 600; }
+        body { 
+          font-family: ${brand.fontFamily}; 
+          margin: 0; 
+          padding: 20px; 
+          background-color: #f5f5f5; 
+        }
+        .container { 
+          max-width: 800px; 
+          margin: 0 auto; 
+          background-color: white; 
+          padding: 30px; 
+          border-radius: 8px; 
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 { 
+          color: #333; 
+          margin: 0 0 10px 0; 
+          font-family: ${brand.fontFamily};
+        }
+        .header { 
+          border-bottom: 3px solid ${brand.primaryColor}; 
+          padding-bottom: 20px; 
+          margin-bottom: 30px; 
+        }
+        .meta { 
+          color: #666; 
+          font-size: 14px; 
+        }
+        .kpi-grid { 
+          display: grid; 
+          grid-template-columns: repeat(2, 1fr); 
+          gap: 20px; 
+          margin: 30px 0; 
+        }
+        .kpi-card { 
+          border: 1px solid #e5e7eb; 
+          padding: 20px; 
+          border-radius: 8px; 
+          background-color: #fafafa; 
+        }
+        .kpi-title { 
+          color: #666; 
+          font-size: 14px; 
+          margin-bottom: 10px; 
+          font-weight: 600; 
+        }
+        .kpi-value { 
+          font-size: 28px; 
+          font-weight: bold; 
+          margin-bottom: 10px; 
+        }
+        .kpi-change { 
+          font-size: 14px; 
+          font-weight: 600; 
+        }
         .positive { color: #10b981; }
         .negative { color: #ef4444; }
         .neutral { color: #6b7280; }
-        .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #999; font-size: 12px; text-align: center; }
+        .footer { 
+          margin-top: 40px; 
+          padding-top: 20px; 
+          border-top: 1px solid #e5e7eb; 
+          color: #999; 
+          font-size: 12px; 
+          text-align: center; 
+        }
+        .brand-color { color: ${brand.primaryColor}; }
+        @media only screen and (max-width: 600px) {
+          .kpi-grid { grid-template-columns: 1fr; }
+          .container { padding: 20px; }
+        }
       </style>
     </head>
     <body>
       <div class="container">
         <div class="header">
-          <h1>📊 KPI Dashboard Report</h1>
+          ${logoHtml}
+          <h1>📊 ${brand.companyName} Report</h1>
           <p class="meta">
             <strong>Period:</strong> ${dashboardData.period || 'Current'}<br>
             <strong>Generated:</strong> ${new Date().toLocaleString()}
@@ -254,7 +328,7 @@ function generateEmailHTML(dashboardData) {
         </div>
 
         <div class="footer">
-          <p>This is an automated report from KPI Dashboard.</p>
+          <p>This is an automated report from <strong class="brand-color">${brand.companyName}</strong>.</p>
           <p>To unsubscribe or modify your email preferences, please contact your administrator.</p>
         </div>
       </div>
