@@ -15,7 +15,9 @@ import { GoalTrackerComponent } from '../goal-tracker/goal-tracker.component';
 import { DateRangePickerComponent } from '../date-range-picker/date-range-picker.component';
 import { InsightsPanelComponent } from '../insights-panel/insights-panel.component';
 import { ChartDetailModalComponent } from '../chart-detail-modal/chart-detail-modal.component';
+import { OrganizationSelectorComponent } from '../organization-selector/organization-selector.component';
 import { CountUpDirective } from '../../directives/count-up.directive';
+import { OrganizationService } from '../../services/organization.service';
 import { NgChartsModule } from 'ng2-charts';
 import { FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
@@ -30,7 +32,8 @@ describe('DashboardComponent', () => {
       'getKpiData',
       'getRevenueData',
       'getSalesData',
-      'getConversionData'
+      'getConversionData',
+      'reloadData'
     ]);
 
     await TestBed.configureTestingModule({
@@ -47,12 +50,14 @@ describe('DashboardComponent', () => {
         DateRangePickerComponent,
         InsightsPanelComponent,
         ChartDetailModalComponent,
+        OrganizationSelectorComponent,
         CountUpDirective
       ],
       imports: [NgChartsModule, BrowserAnimationsModule, RouterTestingModule, FormsModule],
       providers: [
         { provide: DataService, useValue: dataServiceSpy },
-        ExportService
+        ExportService,
+        OrganizationService
       ]
     }).compileComponents();
 
