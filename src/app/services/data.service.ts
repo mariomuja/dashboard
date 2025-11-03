@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { OrganizationService } from './organization.service';
 
 export interface KpiData {
   id: string;
@@ -37,12 +38,34 @@ interface DashboardData {
 export class DataService {
   private dataUrl = 'assets/data/dashboard-data.json';
   private cachedData$: Observable<DashboardData> | null = null;
+  private currentOrgId: string | null = null;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private orgService: OrganizationService
+  ) { }
 
   private getData(): Observable<DashboardData> {
+    const org = this.orgService.getCurrentOrganization();
+    const orgId = org?.id || 'org-1';
+    
+    // Invalidate cache if organization changed
+    if (this.currentOrgId !== orgId) {
+      this.cachedData$ = null;
+      this.currentOrgId = orgId;
+    }
+
     if (!this.cachedData$) {
-      this.cachedData$ = this.http.get<DashboardData>(this.dataUrl).pipe(
+      let dataFile = 'assets/data/dashboard-data.json';
+      
+      // Load organization-specific data if available
+      if (orgId === 'org-2') {
+        dataFile = 'assets/data/dashboard-data-org-2.json';
+      } else if (orgId === 'org-3') {
+        dataFile = 'assets/data/dashboard-data-org-3.json';
+      }
+      
+      this.cachedData$ = this.http.get<DashboardData>(dataFile).pipe(
         shareReplay(1)
       );
     }
@@ -51,6 +74,7 @@ export class DataService {
 
   reloadData(): void {
     this.cachedData$ = null;
+    this.currentOrgId = null;
   }
 
   getKpiData(period: 'week' | 'month' | 'year'): Observable<KpiData[]> {
