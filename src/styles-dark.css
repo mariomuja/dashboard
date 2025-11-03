@@ -1,5 +1,6 @@
 /* Dark Theme Styles */
-:root[data-theme='dark'] {
+:root[data-theme='dark'],
+body.dark-theme {
   --bg-primary: #111827;
   --bg-secondary: #1f2937;
   --bg-tertiary: #374151;
@@ -9,6 +10,7 @@
   --border-color: #374151;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   --shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.7);
+  --hover-bg: #4b5563;
 }
 
 body.dark-theme {

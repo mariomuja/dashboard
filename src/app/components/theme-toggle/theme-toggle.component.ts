@@ -18,7 +18,17 @@ export class ThemeToggleComponent implements OnInit {
   }
 
   toggleTheme(): void {
+    console.log('Toggle button clicked!'); // Debug
+    console.log('Current theme before toggle:', this.currentTheme);
     this.themeService.toggleTheme();
+    console.log('Current theme after toggle:', this.themeService.getCurrentTheme());
+    
+    // Force immediate visual update
+    setTimeout(() => {
+      const isDark = document.body.classList.contains('dark-theme');
+      console.log('Is dark theme applied?', isDark);
+      alert(`Theme toggled to: ${this.themeService.getCurrentTheme()}\nBody has dark-theme class: ${isDark}`);
+    }, 100);
   }
 }
 
