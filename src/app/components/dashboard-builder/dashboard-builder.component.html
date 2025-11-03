@@ -1,0 +1,107 @@
+<div class="builder-container">
+  <!-- Builder Header -->
+  <div class="builder-header">
+    <div class="header-content">
+      <h1>🎨 Dashboard Builder</h1>
+      <p>Customize your dashboard layout</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="toggleTemplateSelector()">
+        📐 Templates
+      </button>
+      <button class="btn-secondary" (click)="toggleWidgetPicker()">
+        ➕ Add Widget
+      </button>
+      <button class="btn-secondary" (click)="resetToDefault()">
+        🔄 Reset
+      </button>
+      <button class="btn-primary" routerLink="/">
+        ✓ Done
+      </button>
+    </div>
+  </div>
+
+  <!-- Template Selector -->
+  <div class="template-selector" *ngIf="showTemplateSelector" [@slideDown]>
+    <h3>Choose a Template</h3>
+    <div class="templates-grid">
+      <div *ngFor="let template of templates" 
+           class="template-card"
+           (click)="applyTemplate(template.id)">
+        <div class="template-icon">{{ template.thumbnail }}</div>
+        <h4>{{ template.name }}</h4>
+        <p>{{ template.description }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Widget Picker -->
+  <div class="widget-picker" *ngIf="showWidgetPicker" [@slideDown]>
+    <h3>Add a Widget</h3>
+    <div class="widgets-grid">
+      <div *ngFor="let widget of availableWidgets"
+           class="widget-option"
+           (click)="addWidget(widget.type)">
+        <div class="widget-icon">{{ widget.icon }}</div>
+        <div class="widget-label">{{ widget.label }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Draggable Widget List -->
+  <div class="widgets-container">
+    <div class="info-banner">
+      <span class="info-icon">ℹ️</span>
+      <span>Drag widgets to reorder them. Click the eye icon to show/hide, or the trash icon to remove.</span>
+    </div>
+
+    <div cdkDropList 
+         class="widget-list" 
+         (cdkDropListDropped)="drop($event)">
+      <div *ngFor="let widget of widgets" 
+           class="widget-item"
+           [class.hidden]="!widget.visible"
+           cdkDrag>
+        <div class="drag-handle" cdkDragHandle>
+          <span class="drag-icon">⋮⋮</span>
+        </div>
+        
+        <div class="widget-info">
+          <span class="widget-icon">{{ getWidgetIcon(widget.type) }}</span>
+          <span class="widget-name">{{ getWidgetLabel(widget.type) }}</span>
+        </div>
+
+        <div class="widget-actions">
+          <button 
+            class="action-btn" 
+            (click)="toggleWidget(widget.id)"
+            [title]="widget.visible ? 'Hide widget' : 'Show widget'">
+            {{ widget.visible ? '👁️' : '👁️‍🗨️' }}
+          </button>
+          <button 
+            class="action-btn danger" 
+            (click)="removeWidget(widget.id)"
+            title="Remove widget">
+            🗑️
+          </button>
+        </div>
+
+        <div class="drag-placeholder" *cdkDragPlaceholder></div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="widgets.length === 0">
+      <div class="empty-icon">📦</div>
+      <h3>No Widgets</h3>
+      <p>Click "Add Widget" to add your first widget</p>
+    </div>
+  </div>
+
+  <!-- Preview Toggle -->
+  <div class="preview-section">
+    <button class="btn-preview" routerLink="/">
+      👀 Preview Dashboard
+    </button>
+  </div>
+</div>
+

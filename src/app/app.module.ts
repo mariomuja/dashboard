@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgChartsModule } from 'ng2-charts';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,6 +24,7 @@ import { DateRangePickerComponent } from './components/date-range-picker/date-ra
 import { InsightsPanelComponent } from './components/insights-panel/insights-panel.component';
 import { TwoFactorSetupComponent } from './components/two-factor-setup/two-factor-setup.component';
 import { ChartDetailModalComponent } from './components/chart-detail-modal/chart-detail-modal.component';
+import { DashboardBuilderComponent } from './components/dashboard-builder/dashboard-builder.component';
 import { CountUpDirective } from './directives/count-up.directive';
 
 @NgModule({
@@ -43,6 +45,7 @@ import { CountUpDirective } from './directives/count-up.directive';
     InsightsPanelComponent,
     TwoFactorSetupComponent,
     ChartDetailModalComponent,
+    DashboardBuilderComponent,
     CountUpDirective
   ],
   imports: [
@@ -52,7 +55,8 @@ import { CountUpDirective } from './directives/count-up.directive';
     FormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    NgChartsModule
+    NgChartsModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]
