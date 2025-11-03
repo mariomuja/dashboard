@@ -91,8 +91,24 @@ body {
   color: white !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   font-weight: 700;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  text-shadow: 
+    0 0 8px rgba(0, 0, 0, 0.8),
+    0 0 12px rgba(0, 0, 0, 0.6),
+    0 1px 3px rgba(0, 0, 0, 0.9);
   letter-spacing: 0.01em;
+  position: relative;
+}
+
+.mat-btn-filled::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 .mat-btn-filled:hover {
@@ -112,6 +128,7 @@ body {
   color: var(--text-primary);
   border: 1px solid var(--border-color);
   font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .mat-btn-outlined:hover {
@@ -121,14 +138,17 @@ body {
 }
 
 .dark-theme .mat-btn-outlined {
-  color: #f3f4f6;
+  color: #ffffff;
   border-color: #4b5563;
+  text-shadow: 
+    0 0 8px rgba(0, 0, 0, 0.8),
+    0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 .dark-theme .mat-btn-outlined:hover {
   background-color: rgba(75, 85, 99, 0.3);
   border-color: var(--primary-color);
-  color: #f9fafb;
+  color: #ffffff;
 }
 
 .mat-btn-text {
@@ -136,10 +156,18 @@ body {
   color: var(--text-primary);
   border: none;
   padding: 0.5rem 0.875rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .mat-btn-text:hover {
   background-color: var(--hover-bg);
+}
+
+.dark-theme .mat-btn-text {
+  color: #f3f4f6;
+  text-shadow: 
+    0 0 8px rgba(0, 0, 0, 0.7),
+    0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 /* Icon Buttons */
@@ -250,12 +278,17 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-shadow: 
+    0 0 10px rgba(0, 0, 0, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .dark-theme .clean-header-title h1 {
-  color: #f9fafb;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  text-shadow: 
+    0 0 15px rgba(0, 0, 0, 0.9),
+    0 0 20px rgba(0, 0, 0, 0.7),
+    0 2px 8px rgba(0, 0, 0, 0.8);
   font-weight: 700;
 }
 
@@ -264,11 +297,14 @@ body {
   color: var(--text-secondary);
   margin: 0;
   font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .dark-theme .clean-header-title p {
-  color: #d1d5db;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  color: #e5e7eb;
+  text-shadow: 
+    0 0 10px rgba(0, 0, 0, 0.8),
+    0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
 .clean-header-actions {
@@ -331,8 +367,15 @@ body {
 .dark-theme .mat-btn-filled {
   color: white !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 
+    0 0 10px rgba(0, 0, 0, 0.9),
+    0 0 15px rgba(0, 0, 0, 0.8),
+    0 1px 4px rgba(0, 0, 0, 1);
   font-weight: 700;
+}
+
+.dark-theme .mat-btn-filled::before {
+  background: rgba(0, 0, 0, 0.25);
 }
 
 .dark-theme .mat-btn-filled:hover {
