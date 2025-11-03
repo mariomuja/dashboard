@@ -75,6 +75,7 @@ body {
   background-color: transparent;
   color: var(--primary-color);
   border: 1px solid transparent;
+  font-weight: 600;
 }
 
 .mat-btn-primary:hover {
@@ -88,18 +89,20 @@ body {
 .mat-btn-filled {
   background-color: var(--primary-color);
   color: white;
-  box-shadow: 0 1px 3px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .mat-btn-filled:hover {
-  background-color: #4f46e5;
-  box-shadow: 0 4px 6px rgba(99, 102, 241, 0.4);
+  filter: brightness(1.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
   transform: translateY(-1px);
 }
 
 .mat-btn-filled:active {
   transform: translateY(0);
-  box-shadow: 0 1px 2px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .mat-btn-outlined {
@@ -233,12 +236,18 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.dark-theme .clean-header-title h1 {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .clean-header-title p {
   font-size: 0.875rem;
   color: var(--text-secondary);
   margin: 0;
+  opacity: 0.9;
 }
 
 .clean-header-actions {

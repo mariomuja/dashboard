@@ -108,8 +108,8 @@ export class OrganizationService {
       type: 'team',
       settings: {
         branding: {
-          primaryColor: '#8b5cf6',
-          secondaryColor: '#ec4899',
+          primaryColor: '#7c3aed',
+          secondaryColor: '#db2777',
           companyName: 'Marketing Team',
           theme: 'dark'
         },

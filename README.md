@@ -126,5 +126,18 @@ Update `src/app/services/data.service.ts` to fetch from your backend API
 
 MIT
 
+---
 
+## 💼 Professional Services
 
+Would you like to create feature-rich services & apps in short time without expensive developers working on it for weeks and months? Let me help you. I live in Hamburg.
+
+### 📞 Contact Me
+
+**Germany:** +49 1520 464 14 73  
+**Italy:** +39 345 345 0098  
+**Email:** mario.muja@gmail.com
+
+I am looking forward to hearing from you!
+
+---
