@@ -1,0 +1,102 @@
+<div class="two-factor-container">
+  <div class="two-factor-card">
+    <div class="card-header">
+      <h1>🔐 Two-Factor Authentication</h1>
+      <p>Add an extra layer of security to your account</p>
+    </div>
+
+    <!-- 2FA Status -->
+    <div class="status-section" [class.enabled]="is2FAEnabled">
+      <div class="status-indicator">
+        <span class="status-icon">{{ is2FAEnabled ? '✓' : '○' }}</span>
+        <span class="status-text">
+          2FA is {{ is2FAEnabled ? 'enabled' : 'disabled' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Setup Section -->
+    <div class="setup-section" *ngIf="!is2FAEnabled">
+      <div *ngIf="!twoFactorSetup">
+        <p class="description">
+          Two-Factor Authentication (2FA) adds an extra layer of security by requiring a code from your authenticator app in addition to your password.
+        </p>
+        <button class="btn-primary" (click)="setupTwoFactor()">
+          Enable Two-Factor Authentication
+        </button>
+      </div>
+
+      <!-- QR Code Setup -->
+      <div *ngIf="twoFactorSetup && !showBackupCodes" class="qr-section">
+        <div class="step">
+          <h3>Step 1: Scan QR Code</h3>
+          <p>Use an authenticator app (Google Authenticator, Authy, etc.) to scan this QR code:</p>
+          <div class="qr-code">
+            <img [src]="twoFactorSetup.qrCode" alt="QR Code for 2FA setup">
+          </div>
+          <details class="manual-entry">
+            <summary>Can't scan? Enter manually</summary>
+            <p class="secret-key">
+              Secret Key: <code>{{ twoFactorSetup.secret }}</code>
+            </p>
+          </details>
+        </div>
+
+        <div class="step">
+          <h3>Step 2: Verify Code</h3>
+          <p>Enter the 6-digit code from your authenticator app:</p>
+          <input 
+            type="text" 
+            [(ngModel)]="verificationCode"
+            placeholder="000000"
+            maxlength="6"
+            class="verification-input"
+            [disabled]="isVerifying">
+          <button 
+            class="btn-primary" 
+            (click)="verifyAndEnable()"
+            [disabled]="verificationCode.length !== 6 || isVerifying">
+            {{ isVerifying ? 'Verifying...' : 'Verify and Enable' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Backup Codes -->
+      <div *ngIf="showBackupCodes" class="backup-codes-section">
+        <div class="warning-box">
+          <h3>⚠️ Save Your Backup Codes</h3>
+          <p>Store these codes in a safe place. You can use them to access your account if you lose your authenticator device.</p>
+        </div>
+        
+        <div class="backup-codes-grid">
+          <div *ngFor="let code of twoFactorSetup!.backupCodes" class="backup-code">
+            {{ code }}
+          </div>
+        </div>
+
+        <div class="backup-actions">
+          <button class="btn-secondary" (click)="downloadBackupCodes()">
+            📥 Download Codes
+          </button>
+          <button class="btn-primary" (click)="goBack()">
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Disable Section -->
+    <div class="disable-section" *ngIf="is2FAEnabled">
+      <p class="description">
+        Two-Factor Authentication is currently enabled for your account. You'll need to enter a code from your authenticator app when you log in.
+      </p>
+      <button class="btn-danger" (click)="disable2FA()">
+        Disable Two-Factor Authentication
+      </button>
+      <button class="btn-secondary" (click)="goBack()">
+        Back to Admin
+      </button>
+    </div>
+  </div>
+</div>
+

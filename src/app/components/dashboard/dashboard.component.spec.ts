@@ -12,8 +12,11 @@ import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 import { LoadingSkeletonComponent } from '../loading-skeleton/loading-skeleton.component';
 import { PieChartComponent } from '../pie-chart/pie-chart.component';
 import { GoalTrackerComponent } from '../goal-tracker/goal-tracker.component';
+import { DateRangePickerComponent } from '../date-range-picker/date-range-picker.component';
+import { InsightsPanelComponent } from '../insights-panel/insights-panel.component';
 import { CountUpDirective } from '../../directives/count-up.directive';
 import { NgChartsModule } from 'ng2-charts';
+import { FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 
 describe('DashboardComponent', () => {
@@ -40,9 +43,11 @@ describe('DashboardComponent', () => {
         LoadingSkeletonComponent,
         PieChartComponent,
         GoalTrackerComponent,
+        DateRangePickerComponent,
+        InsightsPanelComponent,
         CountUpDirective
       ],
-      imports: [NgChartsModule, BrowserAnimationsModule, RouterTestingModule],
+      imports: [NgChartsModule, BrowserAnimationsModule, RouterTestingModule, FormsModule],
       providers: [
         { provide: DataService, useValue: dataServiceSpy },
         ExportService

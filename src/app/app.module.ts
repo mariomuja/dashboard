@@ -21,6 +21,8 @@ import { PieChartComponent } from './components/pie-chart/pie-chart.component';
 import { GoalTrackerComponent } from './components/goal-tracker/goal-tracker.component';
 import { DateRangePickerComponent } from './components/date-range-picker/date-range-picker.component';
 import { InsightsPanelComponent } from './components/insights-panel/insights-panel.component';
+import { TwoFactorSetupComponent } from './components/two-factor-setup/two-factor-setup.component';
+import { ChartDetailModalComponent } from './components/chart-detail-modal/chart-detail-modal.component';
 import { CountUpDirective } from './directives/count-up.directive';
 
 @NgModule({
@@ -39,6 +41,8 @@ import { CountUpDirective } from './directives/count-up.directive';
     GoalTrackerComponent,
     DateRangePickerComponent,
     InsightsPanelComponent,
+    TwoFactorSetupComponent,
+    ChartDetailModalComponent,
     CountUpDirective
   ],
   imports: [
