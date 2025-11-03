@@ -9,6 +9,7 @@ export interface Tenant {
   plan: 'free' | 'starter' | 'professional' | 'enterprise';
   organizationIds: string[];
   settings: TenantSettings;
+  createdAt: Date; // Add for direct access in templates
   metadata: {
     createdAt: Date;
     expiresAt?: Date;
@@ -18,6 +19,13 @@ export interface Tenant {
 }
 
 export interface TenantSettings {
+  // Direct properties for template access
+  maxUsers?: number;
+  maxStorage?: number;
+  allowedFeatures?: string[];
+  customBranding?: boolean;
+  
+  // Nested settings
   isolation: {
     dataSegregation: boolean;
     networkIsolation: boolean;
@@ -65,7 +73,12 @@ export class TenantService {
       status: 'active',
       plan: 'enterprise',
       organizationIds: ['org-1', 'org-2', 'org-3'],
+      createdAt: new Date('2024-01-01'),
       settings: {
+        maxUsers: 500,
+        maxStorage: 1000,
+        allowedFeatures: ['dashboard', 'reports', 'analytics', 'admin'],
+        customBranding: true,
         isolation: {
           dataSegregation: true,
           networkIsolation: true,
@@ -96,7 +109,12 @@ export class TenantService {
       status: 'trial',
       plan: 'professional',
       organizationIds: ['org-4'],
+      createdAt: new Date('2024-06-01'),
       settings: {
+        maxUsers: 50,
+        maxStorage: 100,
+        allowedFeatures: ['dashboard', 'reports'],
+        customBranding: false,
         isolation: {
           dataSegregation: true,
           networkIsolation: false,
@@ -149,10 +167,6 @@ export class TenantService {
 
   getTenantById(tenantId: string): Tenant | undefined {
     return this.tenants.find(t => t.id === tenantId);
-  }
-
-  getAllTenants(): Tenant[] {
-    return [...this.tenants];
   }
 
   getActiveTenants(): Tenant[] {
@@ -266,6 +280,7 @@ export class TenantService {
       status: 'trial',
       plan: 'starter',
       organizationIds: [],
+      createdAt: new Date(),
       settings: tenant.settings || this.getDefaultSettings(),
       metadata: {
         createdAt: new Date(),
@@ -295,8 +310,24 @@ export class TenantService {
     this.updateTenant(tenantId, { status: 'active' });
   }
 
+  getAllTenants(): Tenant[] {
+    return this.tenants;
+  }
+
+  deleteTenant(tenantId: string): void {
+    const index = this.tenants.findIndex(t => t.id === tenantId);
+    if (index > -1) {
+      this.tenants.splice(index, 1);
+      console.log(`Deleted tenant: ${tenantId}`);
+    }
+  }
+
   private getDefaultSettings(): TenantSettings {
     return {
+      maxUsers: 10,
+      maxStorage: 10,
+      allowedFeatures: ['dashboard'],
+      customBranding: false,
       isolation: {
         dataSegregation: true,
         networkIsolation: false,

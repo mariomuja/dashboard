@@ -1,0 +1,214 @@
+<div class="access-container">
+  <!-- Header -->
+  <header class="access-header">
+    <div class="header-content">
+      <div class="header-title">
+        <h1>⏰ Temporary Access Grants</h1>
+        <p>Time-limited resource permissions</p>
+      </div>
+      <div class="header-actions">
+        <button class="mat-btn mat-btn-filled" (click)="openNewGrantModal()">
+          ➕ New Grant
+        </button>
+        <button class="mat-btn mat-btn-outlined" (click)="goBack()">
+          ← Back to Admin
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Expiring Soon Alert -->
+  <div class="expiring-alert" *ngIf="expiringGrants.length > 0">
+    <div class="alert-content">
+      <div class="alert-header">
+        <span class="alert-icon">⚠️</span>
+        <span class="alert-title">{{ expiringGrants.length }} Grant(s) Expiring Soon</span>
+      </div>
+      <div class="alert-grants">
+        <div *ngFor="let grant of expiringGrants.slice(0, 3)" class="alert-grant">
+          <span>{{ grant.grantedTo }} → {{ grant.resources.join(', ') }}</span>
+          <span class="grant-time">{{ getTimeRemaining(grant.endDate) }}</span>
+        </div>
+        <div *ngIf="expiringGrants.length > 3" class="alert-more">
+          +{{ expiringGrants.length - 3 }} more
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grants List -->
+  <div class="grants-section">
+    <h2>Active Grants ({{ grants.length }})</h2>
+
+    <div class="empty-state" *ngIf="grants.length === 0">
+      <div class="empty-icon">⏰</div>
+      <h3>No Temporary Access Grants</h3>
+      <p>Grant temporary access to users for specific resources</p>
+    </div>
+
+    <div class="grants-list">
+      <div 
+        *ngFor="let grant of grants" 
+        class="grant-card"
+        [class.expired]="isExpired(grant.endDate)"
+        [class.expiring]="isExpiringSoon(grant.endDate)">
+        
+        <!-- Grant Header -->
+        <div class="grant-header">
+          <div class="grant-info">
+            <h3>👤 {{ grant.grantedTo }}</h3>
+            <p class="grant-resource">
+              📁 {{ grant.resources.join(', ') }}
+            </p>
+          </div>
+          <div class="grant-time-badge" [class.warning]="isExpiringSoon(grant.endDate)">
+            {{ getTimeRemaining(grant.endDate) }}
+          </div>
+        </div>
+
+        <!-- Grant Details -->
+        <div class="grant-details">
+          <div class="detail-row">
+            <span class="detail-label">Permissions:</span>
+            <div class="permissions-list">
+              <span 
+                *ngFor="let perm of grant.permissions" 
+                class="permission-badge">
+                {{ perm }}
+              </span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Granted:</span>
+            <span class="detail-value">{{ formatDateTime(grant.startDate) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Expires:</span>
+            <span class="detail-value">{{ formatDateTime(grant.endDate) }}</span>
+          </div>
+          <div class="detail-row" *ngIf="grant.grantedBy">
+            <span class="detail-label">Granted By:</span>
+            <span class="detail-value">{{ grant.grantedBy }}</span>
+          </div>
+          <div class="detail-row" *ngIf="grant.reason">
+            <span class="detail-label">Reason:</span>
+            <span class="detail-value">{{ grant.reason }}</span>
+          </div>
+        </div>
+
+        <!-- Grant Actions -->
+        <div class="grant-actions">
+          <button 
+            class="mat-btn mat-btn-outlined" 
+            (click)="extendGrant(grant.id)"
+            [disabled]="isExpired(grant.endDate)">
+            ⏰ Extend
+          </button>
+          <button 
+            class="mat-btn mat-btn-danger mat-btn-outlined" 
+            (click)="revokeGrant(grant.id)">
+            ❌ Revoke
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Grant Modal -->
+  <div class="modal" *ngIf="showNewGrantModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>➕ Create Temporary Access Grant</h2>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+      <form class="modal-body">
+        <div class="form-group">
+          <label>User ID *</label>
+          <input 
+            type="text" 
+            class="input-field" 
+            [(ngModel)]="newGrant.grantedTo"
+            name="grantedTo"
+            placeholder="user@example.com">
+        </div>
+
+        <div class="form-group">
+          <label>Resources * (comma-separated)</label>
+          <input 
+            type="text" 
+            class="input-field" 
+            [(ngModel)]="resourcesInput"
+            name="resources"
+            placeholder="dashboard, report-123, data-source-456">
+        </div>
+
+        <div class="form-group">
+          <label>Permissions *</label>
+          <div class="checkbox-group">
+            <label>
+              <input 
+                type="checkbox" 
+                value="view"
+                [checked]="newGrant.permissions?.includes('view')"
+                (change)="onPermissionChange('view', $any($event.target).checked)">
+              View
+            </label>
+            <label>
+              <input 
+                type="checkbox" 
+                value="edit"
+                [checked]="newGrant.permissions?.includes('edit')"
+                (change)="onPermissionChange('edit', $any($event.target).checked)">
+              Edit
+            </label>
+            <label>
+              <input 
+                type="checkbox" 
+                value="delete"
+                [checked]="newGrant.permissions?.includes('delete')"
+                (change)="onPermissionChange('delete', $any($event.target).checked)">
+              Delete
+            </label>
+            <label>
+              <input 
+                type="checkbox" 
+                value="admin"
+                [checked]="newGrant.permissions?.includes('admin')"
+                (change)="onPermissionChange('admin', $any($event.target).checked)">
+              Admin
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Duration (hours) *</label>
+          <input 
+            type="number" 
+            class="input-field" 
+            [(ngModel)]="newGrant.durationHours"
+            name="durationHours"
+            placeholder="24"
+            min="1">
+        </div>
+
+        <div class="form-group">
+          <label>Reason</label>
+          <textarea 
+            class="input-field" 
+            [(ngModel)]="newGrant.reason"
+            name="reason"
+            rows="3"
+            placeholder="Why is this access needed?"></textarea>
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button class="mat-btn mat-btn-outlined" (click)="closeModal()">
+          Cancel
+        </button>
+        <button class="mat-btn mat-btn-filled" (click)="createGrant()">
+          Create Grant
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -34,6 +34,12 @@ import { UserManagementComponent } from './components/user-management/user-manag
 import { EnterpriseLoginComponent } from './components/enterprise-login/enterprise-login.component';
 import { DashboardVersionHistoryComponent } from './components/dashboard-version-history/dashboard-version-history.component';
 import { DataSourcesComponent } from './components/data-sources/data-sources.component';
+import { EtlJobsComponent } from './components/etl-jobs/etl-jobs.component';
+import { AdvancedAnalyticsComponent } from './components/advanced-analytics/advanced-analytics.component';
+import { AuditTrailComponent } from './components/audit-trail/audit-trail.component';
+import { TenantManagementComponent } from './components/tenant-management/tenant-management.component';
+import { TempAccessComponent } from './components/temp-access/temp-access.component';
+import { FormulaBuilderComponent } from './components/formula-builder/formula-builder.component';
 import { CountUpDirective } from './directives/count-up.directive';
 
 @NgModule({
@@ -57,6 +63,12 @@ import { CountUpDirective } from './directives/count-up.directive';
     DashboardBuilderComponent,
     DashboardVersionHistoryComponent,
     DataSourcesComponent,
+    EtlJobsComponent,
+    AdvancedAnalyticsComponent,
+    AuditTrailComponent,
+    TenantManagementComponent,
+    TempAccessComponent,
+    FormulaBuilderComponent,
     EmailSchedulerComponent,
     OAuthLoginComponent,
     OrganizationSelectorComponent,

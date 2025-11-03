@@ -8,8 +8,10 @@ export interface AuditEntry {
   userId: string;
   username: string;
   action: AuditAction;
-  resource: string;
-  resourceId: string;
+  resource: {
+    type: string;
+    id: string;
+  };
   details: any;
   ipAddress: string;
   userAgent: string;
@@ -107,7 +109,7 @@ export class AuditTrailService {
    */
   log(
     action: AuditAction,
-    resource: string,
+    resourceType: string,
     resourceId: string,
     details: any = {},
     status: 'success' | 'failure' | 'warning' = 'success',
@@ -120,8 +122,10 @@ export class AuditTrailService {
       userId: this.getCurrentUserId(),
       username: this.getCurrentUsername(),
       action,
-      resource,
-      resourceId,
+      resource: {
+        type: resourceType,
+        id: resourceId
+      },
       details,
       ipAddress: this.getClientIP(),
       userAgent: navigator.userAgent,
@@ -139,7 +143,7 @@ export class AuditTrailService {
     this.saveEntries();
     this.entriesSubject.next(this.entries);
 
-    console.log(`[AUDIT] ${action} on ${resource}/${resourceId} by ${entry.username} - ${status}`);
+    console.log(`[AUDIT] ${action} on ${resourceType}/${resourceId} by ${entry.username} - ${status}`);
   }
 
   /**
@@ -159,7 +163,7 @@ export class AuditTrailService {
         filtered = filtered.filter(e => e.action === filter.action);
       }
       if (filter.resource) {
-        filtered = filtered.filter(e => e.resource === filter.resource);
+        filtered = filtered.filter(e => e.resource.type === filter.resource || e.resource.id === filter.resource);
       }
       if (filter.status) {
         filtered = filtered.filter(e => e.status === filter.status);
@@ -293,8 +297,8 @@ export class AuditTrailService {
       e.userId,
       e.username,
       e.action,
-      e.resource,
-      e.resourceId,
+      e.resource.type,
+      e.resource.id,
       e.status,
       e.ipAddress,
       e.userAgent

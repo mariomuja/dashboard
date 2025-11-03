@@ -8,7 +8,7 @@ export interface TemporaryAccess {
   tenantId: string;
   organizationId: string;
   resources: string[];
-  permissions: Permission[];
+  permissions: string[]; // Changed from Permission[] for simplicity
   startDate: Date;
   endDate: Date;
   status: 'active' | 'expired' | 'revoked';
@@ -18,6 +18,9 @@ export interface TemporaryAccess {
   createdAt: Date;
   lastUsedAt?: Date;
 }
+
+// Alias for backward compatibility
+export type TempAccessGrant = TemporaryAccess;
 
 export interface Permission {
   resource: string;
@@ -66,7 +69,7 @@ export class TempAccessService {
     tenantId: string,
     organizationId: string,
     resources: string[],
-    permissions: Permission[],
+    permissions: string[],
     durationMinutes: number,
     reason: string,
     conditions?: AccessConditions
@@ -133,9 +136,8 @@ export class TempAccessService {
         continue;
       }
 
-      // Check permissions
-      const permission = grant.permissions.find(p => p.resource === resource);
-      if (permission && permission.actions.includes(action)) {
+      // Check permissions (simplified for string[] permissions)
+      if (grant.permissions.includes(action) || grant.permissions.includes('admin')) {
         // Log access
         this.logAccess(grant.id, action, resource, true);
         return true;
@@ -192,6 +194,13 @@ export class TempAccessService {
   }
 
   /**
+   * Get all grants
+   */
+  getAllGrants(): TemporaryAccess[] {
+    return this.grants;
+  }
+
+  /**
    * Get grant details
    */
   getGrantDetails(grantId: string): TemporaryAccess | undefined {
@@ -199,21 +208,18 @@ export class TempAccessService {
   }
 
   /**
-   * Get grants expiring soon (within next hour)
+   * Get grants expiring soon
+   * @param hoursAhead Number of hours to look ahead
    */
-  getExpiringGrants(tenantId?: string): TemporaryAccess[] {
+  getExpiringGrants(hoursAhead: number = 24): TemporaryAccess[] {
     const now = new Date();
-    const oneHourLater = new Date(now.getTime() + 60 * 60000);
+    const futureTime = new Date(now.getTime() + hoursAhead * 60 * 60000);
 
     let filtered = this.grants.filter(g =>
       g.status === 'active' &&
       g.endDate > now &&
-      g.endDate <= oneHourLater
+      g.endDate <= futureTime
     );
-
-    if (tenantId) {
-      filtered = filtered.filter(g => g.tenantId === tenantId);
-    }
 
     return filtered;
   }

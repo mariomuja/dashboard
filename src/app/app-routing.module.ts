@@ -12,6 +12,12 @@ import { UserManagementComponent } from './components/user-management/user-manag
 import { EnterpriseLoginComponent } from './components/enterprise-login/enterprise-login.component';
 import { DashboardVersionHistoryComponent } from './components/dashboard-version-history/dashboard-version-history.component';
 import { DataSourcesComponent } from './components/data-sources/data-sources.component';
+import { EtlJobsComponent } from './components/etl-jobs/etl-jobs.component';
+import { AdvancedAnalyticsComponent } from './components/advanced-analytics/advanced-analytics.component';
+import { AuditTrailComponent } from './components/audit-trail/audit-trail.component';
+import { TenantManagementComponent } from './components/tenant-management/tenant-management.component';
+import { TempAccessComponent } from './components/temp-access/temp-access.component';
+import { FormulaBuilderComponent } from './components/formula-builder/formula-builder.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
@@ -23,6 +29,12 @@ const routes: Routes = [
   { path: 'branding', component: BrandingSettingsComponent, canActivate: [AuthGuard] },
   { path: 'users', component: UserManagementComponent, canActivate: [AuthGuard] },
   { path: 'data-sources', component: DataSourcesComponent, canActivate: [AuthGuard] },
+  { path: 'etl-jobs', component: EtlJobsComponent, canActivate: [AuthGuard] },
+  { path: 'analytics', component: AdvancedAnalyticsComponent, canActivate: [AuthGuard] },
+  { path: 'audit-trail', component: AuditTrailComponent, canActivate: [AuthGuard] },
+  { path: 'tenants', component: TenantManagementComponent, canActivate: [AuthGuard] },
+  { path: 'temp-access', component: TempAccessComponent, canActivate: [AuthGuard] },
+  { path: 'formula-builder', component: FormulaBuilderComponent, canActivate: [AuthGuard] },
   { path: '2fa-setup', component: TwoFactorSetupComponent, canActivate: [AuthGuard] },
   { path: 'email-scheduler', component: EmailSchedulerComponent, canActivate: [AuthGuard] },
   { path: 'builder', component: DashboardBuilderComponent },

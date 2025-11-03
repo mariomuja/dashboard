@@ -11,18 +11,22 @@ A modern, feature-rich KPI (Key Performance Indicator) dashboard built with Angu
 - 📥 **Export Data** - CSV, Excel, and PDF formats
 - 🎯 **Goal Tracking** - Visual progress bars for targets
 - 🤖 **AI Insights** - Automated trend analysis & anomaly detection
+- 🔬 **Advanced Analytics** ⭐ - Forecasting, Cohort, Funnel, A/B Testing, Statistical Tests
+- 🧮 **Calculated Metrics** ⭐ NEW - Custom KPI formulas, aggregations, running totals (Full UI)
 
 ### **Enterprise Features:**
 - 🔐 **OAuth Integration** - Google & GitHub login
 - 🔒 **Two-Factor Auth** - TOTP with QR codes
 - 👥 **Multi-User Roles** - Admin, Editor, Viewer permissions
 - 📧 **Scheduled Reports** ✨ - Automated cron jobs with branded emails
-- 🎨 **White-Label Branding** ✨ - Logo, colors, fonts, custom CSS
-- 🏢 **Multi-Tenancy** ⭐ NEW - Complete tenant isolation & data segregation
-- 🔐 **Advanced User Mgmt** ⭐ NEW - LDAP/AD, SCIM, SAML SSO, temp access, audit trails
-- 🔄 **Version Control** ⭐ NEW - Save versions, rollback, change history
-- 🔌 **Multiple Data Sources** ⭐ NEW - 13 connectors: DB, API, Cloud, SaaS
-- ⚙️ **ETL Pipeline** ⭐ NEW - Extract, Transform, Load with validation & scheduling
+- 🎨 **White-Label Branding** ✨ - Logo, colors, fonts, custom CSS (Full UI)
+- 🏢 **Multi-Tenancy** ⭐ NEW - Complete tenant isolation & data segregation (Full UI)
+- 🔐 **Advanced User Mgmt** ⭐ NEW - LDAP/AD, SCIM, SAML SSO (Full UI)
+- ⏰ **Temporary Access** ⭐ NEW - Time-limited resource permissions (Full UI)
+- 📋 **Audit Trail** ⭐ NEW - Comprehensive activity logging (Full UI)
+- 🔄 **Version Control** ⭐ NEW - Save versions, rollback, change history (Full UI)
+- 🔌 **Multiple Data Sources** ⭐ NEW - 13 connectors: DB, API, Cloud, SaaS (Full UI)
+- ⚙️ **ETL Pipeline** ⭐ NEW - Extract, Transform, Load with validation & scheduling (Full UI)
 - 🎯 **Dashboard Builder** - Drag-and-drop grid customization
 - 📐 **Templates** - 4 pre-built dashboard layouts
 
@@ -137,11 +141,29 @@ src/
 
 ### New: Enterprise Features ⭐
 
-Access from Admin Panel:
-- **📧 Email Reports**: Automated scheduled reports with cron jobs
-- **🎨 Branding**: Customize logo, colors, fonts, and CSS
-- **🏢 Multi-Tenancy**: Complete tenant isolation and data segregation
-- **🔐 Advanced Security**: LDAP/AD, SCIM, SAML SSO, temp access, audit trails
+All features now have **comprehensive management UIs** accessible from the Admin Panel:
+
+#### **Data & Analytics:**
+- **🔌 Data Sources** (`/data-sources`) - Manage 13 data connectors (DB, API, Cloud, SaaS)
+- **⚙️ ETL Jobs** (`/etl-jobs`) - Extract, Transform, Load pipeline management
+- **🔬 Advanced Analytics** (`/analytics`) - Forecasting, Cohort, Funnel, A/B Testing
+
+#### **Security & Governance:**
+- **📋 Audit Trail** (`/audit-trail`) - Comprehensive activity logging with filters
+- **🏢 Tenants** (`/tenants`) - Multi-tenancy management with tenant isolation
+- **⏰ Temp Access** (`/temp-access`) - Time-limited resource permissions
+
+#### **Customization & Reporting:**
+- **🎨 Branding** (`/branding`) - Logo, colors, fonts, custom CSS
+- **📧 Email Scheduler** (`/email-scheduler`) - Automated scheduled reports
+- **👥 Users** (`/users`) - Advanced user management
+- **🔐 2FA Setup** (`/2fa-setup`) - Two-factor authentication
+
+#### **Dashboard Management:**
+- **🔄 Version History** (`/version-history`) - Save, rollback, compare versions
+- **🎯 Dashboard Builder** (`/builder`) - Drag-and-drop grid customization
+
+**Quick Access:** Login at `/login` (password: `admin123`), then navigate to `/admin` to access all features.
 
 **Documentation:**
 - [Scheduled Reports & Branding Guide](SCHEDULED-REPORTS-BRANDING-GUIDE.md)
@@ -149,6 +171,8 @@ Access from Admin Panel:
 - [Dashboard Version Control Guide](DASHBOARD-VERSION-CONTROL-GUIDE.md)
 - [Multiple Data Sources Guide](MULTIPLE-DATA-SOURCES-GUIDE.md)
 - [ETL Pipeline Guide](ETL-PIPELINE-GUIDE.md)
+- [Advanced Analytics Guide](ADVANCED-ANALYTICS-GUIDE.md)
+- [Calculated Metrics Guide](CALCULATED-METRICS-GUIDE.md)
 
 ## Customization
 
