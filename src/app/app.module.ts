@@ -25,6 +25,8 @@ import { InsightsPanelComponent } from './components/insights-panel/insights-pan
 import { TwoFactorSetupComponent } from './components/two-factor-setup/two-factor-setup.component';
 import { ChartDetailModalComponent } from './components/chart-detail-modal/chart-detail-modal.component';
 import { DashboardBuilderComponent } from './components/dashboard-builder/dashboard-builder.component';
+import { EmailSchedulerComponent } from './components/email-scheduler/email-scheduler.component';
+import { OAuthLoginComponent } from './components/oauth-login/oauth-login.component';
 import { CountUpDirective } from './directives/count-up.directive';
 
 @NgModule({
@@ -46,6 +48,8 @@ import { CountUpDirective } from './directives/count-up.directive';
     TwoFactorSetupComponent,
     ChartDetailModalComponent,
     DashboardBuilderComponent,
+    EmailSchedulerComponent,
+    OAuthLoginComponent,
     CountUpDirective
   ],
   imports: [
