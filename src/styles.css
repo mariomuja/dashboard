@@ -88,14 +88,15 @@ body {
 
 .mat-btn-filled {
   background-color: var(--primary-color);
-  color: white;
+  color: white !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  font-weight: 600;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.01em;
 }
 
 .mat-btn-filled:hover {
-  filter: brightness(1.1);
+  filter: brightness(0.9) saturate(1.1);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
   transform: translateY(-1px);
 }
@@ -103,18 +104,31 @@ body {
 .mat-btn-filled:active {
   transform: translateY(0);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  filter: brightness(0.85);
 }
 
 .mat-btn-outlined {
   background-color: transparent;
   color: var(--text-primary);
   border: 1px solid var(--border-color);
+  font-weight: 600;
 }
 
 .mat-btn-outlined:hover {
   background-color: var(--hover-bg);
   border-color: var(--primary-color);
   color: var(--primary-color);
+}
+
+.dark-theme .mat-btn-outlined {
+  color: #f3f4f6;
+  border-color: #4b5563;
+}
+
+.dark-theme .mat-btn-outlined:hover {
+  background-color: rgba(75, 85, 99, 0.3);
+  border-color: var(--primary-color);
+  color: #f9fafb;
 }
 
 .mat-btn-text {
@@ -230,7 +244,7 @@ body {
 
 .clean-header-title h1 {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
   margin: 0;
   display: flex;
@@ -240,14 +254,21 @@ body {
 }
 
 .dark-theme .clean-header-title h1 {
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  color: #f9fafb;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-weight: 700;
 }
 
 .clean-header-title p {
   font-size: 0.875rem;
   color: var(--text-secondary);
   margin: 0;
-  opacity: 0.9;
+  font-weight: 500;
+}
+
+.dark-theme .clean-header-title p {
+  color: #d1d5db;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .clean-header-actions {
@@ -302,21 +323,21 @@ body {
   --bg-secondary: #1f2937;
   --bg-tertiary: #374151;
   --text-primary: #f9fafb;
-  --text-secondary: #9ca3af;
-  --border-color: #374151;
+  --text-secondary: #d1d5db;
+  --border-color: #4b5563;
   --hover-bg: #374151;
 }
 
-.dark-theme .mat-btn-outlined {
-  color: var(--text-primary);
-}
-
 .dark-theme .mat-btn-filled {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  color: white !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  font-weight: 700;
 }
 
 .dark-theme .mat-btn-filled:hover {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+  filter: brightness(0.85) saturate(1.2);
 }
 
 /* Animations */

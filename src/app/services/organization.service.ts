@@ -188,6 +188,9 @@ export class OrganizationService {
     document.documentElement.style.setProperty('--primary-color', branding.primaryColor);
     document.documentElement.style.setProperty('--secondary-color', branding.secondaryColor);
     
+    // Ensure button text is always white for filled buttons
+    document.documentElement.style.setProperty('--button-text-color', '#ffffff');
+    
     // Update page title
     document.title = `${branding.companyName} - KPI Dashboard`;
     
