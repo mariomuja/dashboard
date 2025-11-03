@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { DataService, KpiData, ChartDataPoint } from '../../services/data.service';
 import { ExportService } from '../../services/export.service';
+import { OrganizationService } from '../../services/organization.service';
 import { DateRange } from '../date-range-picker/date-range-picker.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,7 +19,7 @@ import { DateRange } from '../date-range-picker/date-range-picker.component';
     ])
   ]
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   kpiData: KpiData[] = [];
   revenueData: ChartDataPoint[] = [];
   salesData: ChartDataPoint[] = [];
@@ -26,14 +28,31 @@ export class DashboardComponent implements OnInit {
   isLoading = true;
   showExportMenu = false;
   customDateRange: DateRange | null = null;
+  private orgSubscription?: Subscription;
 
   constructor(
     private dataService: DataService,
-    private exportService: ExportService
+    private exportService: ExportService,
+    private orgService: OrganizationService
   ) { }
 
   ngOnInit(): void {
     this.loadData();
+    
+    // Subscribe to organization changes
+    this.orgSubscription = this.orgService.currentOrg$.subscribe(org => {
+      if (org) {
+        console.log('Organization changed to:', org.name);
+        this.dataService.reloadData();
+        this.loadData();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.orgSubscription) {
+      this.orgSubscription.unsubscribe();
+    }
   }
 
   loadData(): void {
