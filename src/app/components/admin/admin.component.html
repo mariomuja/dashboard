@@ -1,0 +1,94 @@
+<div class="admin-container">
+  <header class="admin-header">
+    <div class="header-content">
+      <div>
+        <h1>Dashboard Admin</h1>
+        <p>Upload the complete dashboard data file</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn-secondary" routerLink="/">
+          ← Back to Dashboard
+        </button>
+        <button class="btn-danger" (click)="logout()">
+          🔒 Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-content">
+    <div class="upload-section">
+      <div class="upload-card-main">
+        <div class="card-header">
+          <h2>📊 Dashboard Data File</h2>
+          <p>Upload a single JSON file containing all dashboard data (KPIs, revenue, sales, and conversion data)</p>
+        </div>
+        
+        <div class="card-body">
+          <div class="file-upload-area">
+            <input 
+              type="file" 
+              accept=".json"
+              id="file-upload"
+              (change)="onFileSelected($event)"
+              [disabled]="isUploading"
+              class="file-input"
+            >
+            <label for="file-upload" class="file-label">
+              <span class="upload-icon">📤</span>
+              <span>Choose JSON File</span>
+            </label>
+          </div>
+
+          <div class="status-message" *ngIf="uploadStatus">
+            {{ uploadStatus }}
+          </div>
+
+          <div class="card-actions">
+            <button 
+              class="btn-download" 
+              (click)="downloadCurrentData()"
+              [disabled]="isUploading">
+              ⬇️ Download Current Data
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>How to Use</h2>
+      <ol>
+        <li><strong>Download Current Data:</strong> Click "Download Current Data" to get the complete dashboard data file</li>
+        <li><strong>Edit the JSON:</strong> Modify the downloaded file with your new data</li>
+        <li><strong>Upload:</strong> Click "Choose JSON File" and select your edited file</li>
+        <li><strong>View Changes:</strong> The page will automatically reload and display your new data</li>
+      </ol>
+
+      <h3>JSON File Structure</h3>
+      <p>The file contains all dashboard data organized by category and period:</p>
+      <div class="code-block">
+        <pre>{{ '{' }}
+  "kpi": {{ '{' }}
+    "week": [...],   // Weekly KPI data
+    "month": [...],  // Monthly KPI data
+    "year": [...]    // Yearly KPI data
+  {{ '}' }},
+  "revenue": {{ '{' }}
+    "week": [...],   // Weekly revenue
+    "month": [...],  // Monthly revenue
+    "year": [...]    // Yearly revenue
+  {{ '}' }},
+  "sales": {{ '{' }} ... {{ '}' }},
+  "conversion": {{ '{' }} ... {{ '}' }}
+{{ '}' }}</pre>
+      </div>
+
+      <div class="note">
+        <strong>Note:</strong> The file must include all four sections (kpi, revenue, sales, conversion) with data for all three periods (week, month, year).
+        The server validates the complete structure before accepting uploads.
+      </div>
+    </div>
+  </main>
+</div>
+

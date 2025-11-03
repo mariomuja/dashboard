@@ -21,6 +21,13 @@
   gap: 1rem;
 }
 
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .header-content h1 {
   font-size: 2rem;
   font-weight: 700;
@@ -56,6 +63,21 @@
 .period-btn.active {
   background-color: #2563eb;
   color: white;
+}
+
+.admin-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: #6b7280;
+  color: white;
+}
+
+.admin-btn:hover {
+  background-color: #4b5563;
 }
 
 .dashboard-main {

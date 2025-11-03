@@ -20,26 +20,26 @@ export class DashboardComponent implements OnInit {
   }
 
   loadData(): void {
-    this.dataService.getKpiData().subscribe(data => {
+    this.dataService.getKpiData(this.selectedPeriod).subscribe(data => {
       this.kpiData = data;
     });
 
-    this.dataService.getRevenueData().subscribe(data => {
+    this.dataService.getRevenueData(this.selectedPeriod).subscribe(data => {
       this.revenueData = data;
     });
 
-    this.dataService.getSalesData().subscribe(data => {
+    this.dataService.getSalesData(this.selectedPeriod).subscribe(data => {
       this.salesData = data;
     });
 
-    this.dataService.getConversionData().subscribe(data => {
+    this.dataService.getConversionData(this.selectedPeriod).subscribe(data => {
       this.conversionData = data;
     });
   }
 
   onPeriodChange(period: 'week' | 'month' | 'year'): void {
     this.selectedPeriod = period;
-    // In a real app, you would reload data based on the selected period
+    this.loadData(); // Reload data with new period
   }
 }
 

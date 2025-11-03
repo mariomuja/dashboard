@@ -6,28 +6,33 @@
         <h1>KPI Dashboard</h1>
         <p>Monitor your key performance indicators</p>
       </div>
-      <div class="period-selector">
-        <button
-          class="period-btn"
-          [class.active]="selectedPeriod === 'week'"
-          (click)="onPeriodChange('week')"
-        >
-          Week
+      <div class="header-controls">
+        <button class="admin-btn" routerLink="/admin">
+          ⚙️ Admin
         </button>
-        <button
-          class="period-btn"
-          [class.active]="selectedPeriod === 'month'"
-          (click)="onPeriodChange('month')"
-        >
-          Month
-        </button>
-        <button
-          class="period-btn"
-          [class.active]="selectedPeriod === 'year'"
-          (click)="onPeriodChange('year')"
-        >
-          Year
-        </button>
+        <div class="period-selector">
+          <button
+            class="period-btn"
+            [class.active]="selectedPeriod === 'week'"
+            (click)="onPeriodChange('week')"
+          >
+            Week
+          </button>
+          <button
+            class="period-btn"
+            [class.active]="selectedPeriod === 'month'"
+            (click)="onPeriodChange('month')"
+          >
+            Month
+          </button>
+          <button
+            class="period-btn"
+            [class.active]="selectedPeriod === 'year'"
+            (click)="onPeriodChange('year')"
+          >
+            Year
+          </button>
+        </div>
       </div>
     </div>
   </header>

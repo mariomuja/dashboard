@@ -9,6 +9,8 @@ A modern, responsive KPI dashboard built with Angular 17.
 - 📱 **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 - 🎨 **Modern UI**: Clean and intuitive interface
 - ⏱️ **Time Period Selection**: Filter data by week, month, or year
+- 📤 **Data Upload**: Upload JSON files to update dashboard data
+- 🔐 **Secure Admin**: Password-protected admin panel with rate limiting
 
 ## Prerequisites
 
@@ -66,6 +68,34 @@ src/
 - Chart.js (via ng2-charts)
 - TypeScript
 - CSS3
+
+## Admin Panel
+
+### Accessing Admin
+
+1. Click "⚙️ Admin" button in the dashboard
+2. Login with password: `admin123` (default)
+3. Upload new dashboard data via JSON file
+
+### Security Features
+
+- ✅ Password authentication
+- ✅ File size validation (max 1MB)
+- ✅ Rate limiting (5 uploads/minute)
+- ✅ File type validation (JSON only)
+
+**Important:** Change the default password in `src/app/services/auth.service.ts` for production!
+
+## Customization
+
+### Option 1: Edit JSON File
+1. Start the backend: `npm run start:server`
+2. Access admin panel: http://localhost:4200/admin
+3. Download current data
+4. Edit and upload the modified file
+
+### Option 2: Connect to Real API
+Update `src/app/services/data.service.ts` to fetch from your backend API
 
 ## License
 
