@@ -19,6 +19,8 @@ import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.com
 import { LoadingSkeletonComponent } from './components/loading-skeleton/loading-skeleton.component';
 import { PieChartComponent } from './components/pie-chart/pie-chart.component';
 import { GoalTrackerComponent } from './components/goal-tracker/goal-tracker.component';
+import { DateRangePickerComponent } from './components/date-range-picker/date-range-picker.component';
+import { InsightsPanelComponent } from './components/insights-panel/insights-panel.component';
 import { CountUpDirective } from './directives/count-up.directive';
 
 @NgModule({
@@ -35,6 +37,8 @@ import { CountUpDirective } from './directives/count-up.directive';
     LoadingSkeletonComponent,
     PieChartComponent,
     GoalTrackerComponent,
+    DateRangePickerComponent,
+    InsightsPanelComponent,
     CountUpDirective
   ],
   imports: [

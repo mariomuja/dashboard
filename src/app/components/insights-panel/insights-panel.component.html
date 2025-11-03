@@ -1,0 +1,26 @@
+<div class="insights-container" *ngIf="insights.length > 0">
+  <div class="insights-header" (click)="togglePanel()">
+    <h2>🤖 AI Insights</h2>
+    <button class="toggle-btn">{{ showPanel ? '▼' : '▶' }}</button>
+  </div>
+  
+  <div class="insights-content" *ngIf="showPanel" [@slideIn]>
+    <div *ngFor="let insight of insights" 
+         class="insight-card" 
+         [class.positive]="insight.type === 'positive'"
+         [class.negative]="insight.type === 'negative'"
+         [class.warning]="insight.type === 'warning'"
+         [class.info]="insight.type === 'info'">
+      <div class="insight-header">
+        <span class="insight-icon">{{ getInsightIcon(insight.type) }}</span>
+        <h3>{{ insight.title }}</h3>
+        <span class="confidence-badge">{{ insight.confidence }}% confident</span>
+      </div>
+      <p class="insight-description">{{ insight.description }}</p>
+      <p class="insight-recommendation" *ngIf="insight.recommendation">
+        <strong>Recommendation:</strong> {{ insight.recommendation }}
+      </p>
+    </div>
+  </div>
+</div>
+

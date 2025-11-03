@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { DataService, KpiData, ChartDataPoint } from '../../services/data.service';
 import { ExportService } from '../../services/export.service';
+import { DateRange } from '../date-range-picker/date-range-picker.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,6 +25,7 @@ export class DashboardComponent implements OnInit {
   selectedPeriod: 'week' | 'month' | 'year' = 'month';
   isLoading = true;
   showExportMenu = false;
+  customDateRange: DateRange | null = null;
 
   constructor(
     private dataService: DataService,
@@ -100,12 +102,24 @@ export class DashboardComponent implements OnInit {
   }
 
   exportToPDF(): void {
+    const periodLabel = this.customDateRange 
+      ? this.customDateRange.label 
+      : this.selectedPeriod.charAt(0).toUpperCase() + this.selectedPeriod.slice(1);
+      
     this.exportService.exportDashboardToPDF({
       kpis: this.kpiData,
-      period: this.selectedPeriod.charAt(0).toUpperCase() + this.selectedPeriod.slice(1),
+      period: periodLabel,
       date: new Date().toLocaleDateString()
     });
     this.showExportMenu = false;
+  }
+
+  onDateRangeSelected(dateRange: DateRange): void {
+    this.customDateRange = dateRange;
+    console.log('Custom date range selected:', dateRange);
+    // In a real app, you would filter data by date range here
+    // For now, we'll just reload the current period data
+    this.loadData();
   }
 }
 
