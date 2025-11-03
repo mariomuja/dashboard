@@ -11,6 +11,7 @@ import { BrandingSettingsComponent } from './components/branding-settings/brandi
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { EnterpriseLoginComponent } from './components/enterprise-login/enterprise-login.component';
 import { DashboardVersionHistoryComponent } from './components/dashboard-version-history/dashboard-version-history.component';
+import { DataSourcesComponent } from './components/data-sources/data-sources.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   { path: 'branding', component: BrandingSettingsComponent, canActivate: [AuthGuard] },
   { path: 'users', component: UserManagementComponent, canActivate: [AuthGuard] },
+  { path: 'data-sources', component: DataSourcesComponent, canActivate: [AuthGuard] },
   { path: '2fa-setup', component: TwoFactorSetupComponent, canActivate: [AuthGuard] },
   { path: 'email-scheduler', component: EmailSchedulerComponent, canActivate: [AuthGuard] },
   { path: 'builder', component: DashboardBuilderComponent },

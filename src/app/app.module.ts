@@ -33,6 +33,7 @@ import { CommentsPanelComponent } from './components/comments-panel/comments-pan
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { EnterpriseLoginComponent } from './components/enterprise-login/enterprise-login.component';
 import { DashboardVersionHistoryComponent } from './components/dashboard-version-history/dashboard-version-history.component';
+import { DataSourcesComponent } from './components/data-sources/data-sources.component';
 import { CountUpDirective } from './directives/count-up.directive';
 
 @NgModule({
@@ -55,6 +56,7 @@ import { CountUpDirective } from './directives/count-up.directive';
     ChartDetailModalComponent,
     DashboardBuilderComponent,
     DashboardVersionHistoryComponent,
+    DataSourcesComponent,
     EmailSchedulerComponent,
     OAuthLoginComponent,
     OrganizationSelectorComponent,

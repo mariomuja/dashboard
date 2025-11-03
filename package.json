@@ -11,7 +11,8 @@
     "start:scim": "node server-scim.js",
     "start:saml": "node server-saml.js",
     "start:datasources": "node server-datasources.js",
-    "start:all": "concurrently \"npm start\" \"npm run start:server\" \"npm run start:email\" \"npm run start:oauth\" \"npm run start:ldap\" \"npm run start:scim\" \"npm run start:saml\" \"npm run start:datasources\"",
+    "start:etl": "node server-etl.js",
+    "start:all": "concurrently \"npm start\" \"npm run start:server\" \"npm run start:email\" \"npm run start:oauth\" \"npm run start:ldap\" \"npm run start:scim\" \"npm run start:saml\" \"npm run start:datasources\" \"npm run start:etl\"",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

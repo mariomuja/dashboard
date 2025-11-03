@@ -22,6 +22,7 @@ A modern, feature-rich KPI (Key Performance Indicator) dashboard built with Angu
 - 🔐 **Advanced User Mgmt** ⭐ NEW - LDAP/AD, SCIM, SAML SSO, temp access, audit trails
 - 🔄 **Version Control** ⭐ NEW - Save versions, rollback, change history
 - 🔌 **Multiple Data Sources** ⭐ NEW - 13 connectors: DB, API, Cloud, SaaS
+- ⚙️ **ETL Pipeline** ⭐ NEW - Extract, Transform, Load with validation & scheduling
 - 🎯 **Dashboard Builder** - Drag-and-drop grid customization
 - 📐 **Templates** - 4 pre-built dashboard layouts
 
@@ -147,6 +148,7 @@ Access from Admin Panel:
 - [Multi-Tenancy & Advanced User Management Guide](MULTI-TENANCY-ADVANCED-USER-MANAGEMENT-GUIDE.md)
 - [Dashboard Version Control Guide](DASHBOARD-VERSION-CONTROL-GUIDE.md)
 - [Multiple Data Sources Guide](MULTIPLE-DATA-SOURCES-GUIDE.md)
+- [ETL Pipeline Guide](ETL-PIPELINE-GUIDE.md)
 
 ## Customization
 
