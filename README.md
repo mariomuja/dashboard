@@ -1,5 +1,7 @@
 # KPI Dashboard 📊
 
+![KPI Dashboard Screenshot](docs/images/dashboard-screenshot.png)
+
 A modern, feature-rich KPI (Key Performance Indicator) dashboard built with Angular 17.
 
 ## ✨ Key Features
