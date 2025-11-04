@@ -173,7 +173,7 @@
             <app-insights-panel 
               [kpiData]="kpiData"
               [insightsConfigId]="'insights-config-1'"
-              (edit)="onChartEdit($event)"></app-insights-panel>
+              (edit)="onInsightsEdit($event)"></app-insights-panel>
           </div>
         </ng-container>
       </div>
@@ -202,6 +202,12 @@
     *ngIf="showGoalEditor"
     (close)="closeGoalEditor()"
     (saved)="onGoalSaved()"></app-goal-editor>
+
+  <!-- AI Insights Editor Modal -->
+  <app-insights-editor 
+    *ngIf="showInsightsEditor"
+    (close)="closeInsightsEditor()"
+    (saved)="onInsightsSaved()"></app-insights-editor>
 </div>
 
 

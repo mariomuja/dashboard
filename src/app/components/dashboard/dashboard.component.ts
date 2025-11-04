@@ -7,6 +7,7 @@ import { DashboardLayoutService, WidgetConfig } from '../../services/dashboard-l
 import { KpiConfigService, KPIConfig } from '../../services/kpi-config.service';
 import { ChartConfigService, ChartConfig } from '../../services/chart-config.service';
 import { GoalConfigService } from '../../services/goal-config.service';
+import { InsightsConfigService } from '../../services/insights-config.service';
 import { Goal } from '../goal-tracker/goal-tracker.component';
 import { AuthService } from '../../services/auth.service';
 import { DateRange } from '../date-range-picker/date-range-picker.component';
@@ -41,6 +42,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   showKpiEditor = false;
   showChartEditor = false;
   showGoalEditor = false;
+  showInsightsEditor = false;
   editingKpiId?: string;
   editingChartId?: string;
   customDateRange: DateRange | null = null;
@@ -59,14 +61,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private kpiConfigService: KpiConfigService,
     private chartConfigService: ChartConfigService,
     private goalConfigService: GoalConfigService,
+    private insightsConfigService: InsightsConfigService,
     public authService: AuthService
   ) { }
 
   ngOnInit(): void {
-    // Initialize default KPIs, Charts, and Goals if none exist
+    // Initialize default KPIs, Charts, Goals, and Insights if none exist
     this.kpiConfigService.initializeDefaultKpis();
     this.chartConfigService.initializeDefaultCharts();
     this.goalConfigService.initializeDefaultGoals();
+    this.insightsConfigService.initializeDefault();
     
     this.loadData();
     this.loadKpiConfigs();
@@ -354,6 +358,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   onGoalSaved(): void {
     this.loadGoals();
+  }
+
+  // AI Insights Configuration Methods
+  openInsightsEditor(): void {
+    this.showInsightsEditor = true;
+  }
+
+  onInsightsEdit(configId: string): void {
+    this.openInsightsEditor();
+  }
+
+  closeInsightsEditor(): void {
+    this.showInsightsEditor = false;
+  }
+
+  onInsightsSaved(): void {
+    // Insights will regenerate automatically on next KPI data change
+    console.log('Insights configuration saved');
   }
 }
 
