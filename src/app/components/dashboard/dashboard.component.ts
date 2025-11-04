@@ -4,6 +4,7 @@ import { DataService, KpiData, ChartDataPoint } from '../../services/data.servic
 import { ExportService } from '../../services/export.service';
 import { OrganizationService } from '../../services/organization.service';
 import { DashboardLayoutService, WidgetConfig } from '../../services/dashboard-layout.service';
+import { KpiConfigService, KPIConfig } from '../../services/kpi-config.service';
 import { DateRange } from '../date-range-picker/date-range-picker.component';
 import { Subscription } from 'rxjs';
 
@@ -22,26 +23,36 @@ import { Subscription } from 'rxjs';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   kpiData: KpiData[] = [];
+  kpiConfigs: KPIConfig[] = [];
+  kpiConfigMap: Map<string, string> = new Map(); // Maps kpiData to kpiConfig IDs
   revenueData: ChartDataPoint[] = [];
   salesData: ChartDataPoint[] = [];
   conversionData: ChartDataPoint[] = [];
   selectedPeriod: 'week' | 'month' | 'year' = 'month';
   isLoading = true;
   showExportMenu = false;
+  showKpiEditor = false;
+  editingKpiId?: string;
   customDateRange: DateRange | null = null;
   widgets: WidgetConfig[] = [];
   private orgSubscription?: Subscription;
   private layoutSubscription?: Subscription;
+  private kpiConfigSubscription?: Subscription;
 
   constructor(
     private dataService: DataService,
     private exportService: ExportService,
     private orgService: OrganizationService,
-    private layoutService: DashboardLayoutService
+    private layoutService: DashboardLayoutService,
+    private kpiConfigService: KpiConfigService
   ) { }
 
   ngOnInit(): void {
+    // Initialize default KPIs if none exist
+    this.kpiConfigService.initializeDefaultKpis();
+    
     this.loadData();
+    this.loadKpiConfigs();
     
     // Subscribe to layout changes
     this.layoutSubscription = this.layoutService.currentLayout$.subscribe(layout => {
@@ -57,6 +68,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.loadData();
       }
     });
+    
+    // Subscribe to KPI config changes
+    this.kpiConfigSubscription = this.kpiConfigService.configs$.subscribe(() => {
+      this.loadKpiConfigs();
+    });
   }
 
   ngOnDestroy(): void {
@@ -65,6 +81,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
     if (this.layoutSubscription) {
       this.layoutSubscription.unsubscribe();
+    }
+    if (this.kpiConfigSubscription) {
+      this.kpiConfigSubscription.unsubscribe();
     }
   }
   
@@ -168,6 +187,69 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // In a real app, you would filter data by date range here
     // For now, we'll just reload the current period data
     this.loadData();
+  }
+
+  // KPI Configuration Methods
+  async loadKpiConfigs(): Promise<void> {
+    this.kpiConfigs = this.kpiConfigService.getVisibleConfigs();
+    this.kpiConfigMap.clear();
+    
+    // Load KPI data from configured sources
+    const kpiDataPromises = this.kpiConfigs.map(async (config) => {
+      const result = await this.kpiConfigService.fetchKpiValue(config);
+      const kpiData: KpiData = {
+        title: config.name,
+        value: this.kpiConfigService.formatValue(result.value, config.formatting),
+        change: result.change || 0,
+        trend: result.trend || 'stable',
+        icon: config.icon || '📊',
+        color: this.getTrendColor(result.trend || 'stable')
+      };
+      
+      // Store mapping
+      this.kpiConfigMap.set(kpiData.title, config.id);
+      
+      return kpiData;
+    });
+    
+    const configuredKpis = await Promise.all(kpiDataPromises);
+    
+    // Merge with existing KPIs or replace them
+    this.kpiData = configuredKpis;
+  }
+
+  getTrendColor(trend: 'up' | 'down' | 'stable'): string {
+    switch (trend) {
+      case 'up': return '#10b981';
+      case 'down': return '#ef4444';
+      default: return '#6b7280';
+    }
+  }
+
+  getKpiConfigId(kpi: KpiData): string | undefined {
+    return this.kpiConfigMap.get(kpi.title);
+  }
+
+  openKpiEditor(kpiId?: string): void {
+    this.editingKpiId = kpiId;
+    this.showKpiEditor = true;
+  }
+
+  onKpiEdit(kpiConfigId: string): void {
+    this.openKpiEditor(kpiConfigId);
+  }
+
+  createNewKpi(): void {
+    this.openKpiEditor();
+  }
+
+  closeKpiEditor(): void {
+    this.showKpiEditor = false;
+    this.editingKpiId = undefined;
+  }
+
+  onKpiSaved(): void {
+    this.loadKpiConfigs();
   }
 }
 

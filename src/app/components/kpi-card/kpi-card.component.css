@@ -23,6 +23,12 @@
   font-size: 2rem;
 }
 
+.kpi-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .kpi-change {
   display: flex;
   align-items: center;
@@ -31,6 +37,36 @@
   font-weight: 600;
   padding: 0.25rem 0.5rem;
   border-radius: 0.375rem;
+}
+
+.kpi-edit-btn {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  opacity: 0;
+  transition: all 0.2s;
+  color: #6b7280;
+}
+
+.kpi-card:hover .kpi-edit-btn {
+  opacity: 1;
+}
+
+.kpi-edit-btn:hover {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+body.dark-mode .kpi-edit-btn {
+  color: #94a3b8;
+}
+
+body.dark-mode .kpi-edit-btn:hover {
+  background-color: #334155;
+  color: #f1f5f9;
 }
 
 .kpi-change.positive {

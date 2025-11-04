@@ -1,0 +1,314 @@
+<div class="modal-overlay" (click)="cancel()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>
+        <span>{{ isEditMode ? '✏️' : '➕' }}</span>
+        {{ isEditMode ? 'Edit KPI' : 'Create New KPI' }}
+      </h2>
+      <button class="close-btn" (click)="cancel()">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Basic Information -->
+      <section class="form-section">
+        <h3>📋 Basic Information</h3>
+        
+        <div class="form-group">
+          <label>KPI Name *</label>
+          <input 
+            type="text" 
+            [(ngModel)]="kpi.name" 
+            placeholder="e.g., Total Revenue, Active Users"
+            class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea 
+            [(ngModel)]="kpi.description"
+            placeholder="Brief description of this KPI"
+            class="form-textarea"
+            rows="2"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Icon</label>
+          <div class="icon-selector">
+            <button 
+              *ngFor="let icon of iconOptions"
+              class="icon-btn"
+              [class.selected]="kpi.icon === icon"
+              (click)="kpi.icon = icon">
+              {{ icon }}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Data Source Configuration -->
+      <section class="form-section">
+        <h3>🔌 Data Source</h3>
+        
+        <div class="form-group">
+          <label>Source Type *</label>
+          <select 
+            [(ngModel)]="selectedDataSourceType"
+            (ngModelChange)="onDataSourceTypeChange()"
+            class="form-select">
+            <option value="static">Static Value</option>
+            <option value="datasource">Data Source</option>
+            <option value="calculated">Calculated</option>
+          </select>
+        </div>
+
+        <!-- Static Value -->
+        <div *ngIf="selectedDataSourceType === 'static'" class="form-group">
+          <label>Value *</label>
+          <input 
+            type="number" 
+            [(ngModel)]="kpi.dataSource!.staticValue"
+            placeholder="Enter static value"
+            class="form-input">
+          <small>Enter a fixed value for this KPI</small>
+        </div>
+
+        <!-- Data Source Selection -->
+        <div *ngIf="selectedDataSourceType === 'datasource'">
+          <div class="form-group">
+            <label>Select Data Source *</label>
+            <select 
+              [(ngModel)]="selectedDataSourceId"
+              (ngModelChange)="onDataSourceIdChange()"
+              class="form-select">
+              <option value="">-- Select Data Source --</option>
+              <option *ngFor="let ds of dataSources" [value]="ds.id">
+                {{ ds.name }} ({{ ds.type }})
+              </option>
+            </select>
+            <small *ngIf="dataSources.length === 0" class="text-warning">
+              No data sources configured. Go to <a routerLink="/data-sources">Data Sources</a> to add one.
+            </small>
+          </div>
+
+          <div *ngIf="selectedDataSourceId" class="data-source-config">
+            <div class="form-group">
+              <label>Query / Endpoint</label>
+              <input 
+                type="text" 
+                [(ngModel)]="kpi.dataSource!.query"
+                placeholder="SELECT COUNT(*) FROM users"
+                class="form-input">
+              <small>SQL query, API endpoint, or file path</small>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Table Name</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="kpi.dataSource!.tableName"
+                  placeholder="users"
+                  class="form-input">
+              </div>
+
+              <div class="form-group">
+                <label>Column Name</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="kpi.dataSource!.columnName"
+                  placeholder="total_revenue"
+                  class="form-input">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>JSON Path</label>
+              <input 
+                type="text" 
+                [(ngModel)]="kpi.dataSource!.jsonPath"
+                placeholder="data.metrics.revenue"
+                class="form-input">
+              <small>Path to extract value from JSON response (e.g., data.metrics.revenue)</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculated -->
+        <div *ngIf="selectedDataSourceType === 'calculated'" class="form-group">
+          <label>Formula</label>
+          <input 
+            type="text" 
+            [(ngModel)]="kpi.dataSource!.calculationFormula"
+            placeholder="(revenue - cost) / revenue * 100"
+            class="form-input">
+          <small>Enter calculation formula (coming soon)</small>
+        </div>
+
+        <!-- Test Connection -->
+        <div class="form-actions">
+          <button 
+            class="mat-btn mat-btn-outlined"
+            (click)="testConnection()"
+            [disabled]="isTesting">
+            {{ isTesting ? '⏳ Testing...' : '🧪 Test Connection' }}
+          </button>
+        </div>
+
+        <div *ngIf="testResult" class="test-result" [class.success]="testResult.success" [class.error]="!testResult.success">
+          <div class="result-icon">{{ testResult.success ? '✅' : '❌' }}</div>
+          <div class="result-content">
+            <div class="result-message">{{ testResult.message }}</div>
+            <div *ngIf="testResult.value !== undefined" class="result-value">
+              Test Value: <strong>{{ testResult.value }}</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Formatting -->
+      <section class="form-section">
+        <h3>🎨 Formatting</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Format Type</label>
+            <select [(ngModel)]="kpi.formatting!.format" class="form-select">
+              <option value="number">Number</option>
+              <option value="currency">Currency</option>
+              <option value="percentage">Percentage</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Decimal Places</label>
+            <input 
+              type="number" 
+              [(ngModel)]="kpi.formatting!.decimals"
+              min="0"
+              max="4"
+              class="form-input">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Prefix</label>
+            <input 
+              type="text" 
+              [(ngModel)]="kpi.formatting!.prefix"
+              placeholder="$"
+              class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label>Suffix</label>
+            <input 
+              type="text" 
+              [(ngModel)]="kpi.formatting!.suffix"
+              placeholder="%"
+              class="form-input">
+          </div>
+        </div>
+      </section>
+
+      <!-- Trend Settings -->
+      <section class="form-section">
+        <h3>📈 Trend Comparison</h3>
+        
+        <div class="form-group checkbox-group">
+          <label>
+            <input 
+              type="checkbox" 
+              [(ngModel)]="kpi.trend!.enabled">
+            Show trend comparison
+          </label>
+        </div>
+
+        <div *ngIf="kpi.trend!.enabled" class="subsection">
+          <div class="form-group">
+            <label>Comparison Period</label>
+            <select [(ngModel)]="kpi.trend!.comparisonPeriod" class="form-select">
+              <option value="previous">Previous Period</option>
+              <option value="lastYear">Last Year</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input 
+                type="checkbox" 
+                [(ngModel)]="kpi.trend!.showPercentage">
+              Show percentage change
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Target Settings -->
+      <section class="form-section">
+        <h3>🎯 Target Goal (Optional)</h3>
+        
+        <div class="form-group checkbox-group">
+          <label>
+            <input 
+              type="checkbox" 
+              [(ngModel)]="kpi.target!.enabled">
+            Set target goal
+          </label>
+        </div>
+
+        <div *ngIf="kpi.target!.enabled" class="subsection">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Target Value</label>
+              <input 
+                type="number" 
+                [(ngModel)]="kpi.target!.value"
+                placeholder="10000"
+                class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label>Goal Type</label>
+              <select [(ngModel)]="kpi.target!.comparison" class="form-select">
+                <option value="greater">Greater than target</option>
+                <option value="less">Less than target</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Visibility -->
+      <section class="form-section">
+        <h3>👁️ Visibility</h3>
+        
+        <div class="form-group checkbox-group">
+          <label>
+            <input 
+              type="checkbox" 
+              [(ngModel)]="kpi.visible">
+            Show this KPI on dashboard
+          </label>
+        </div>
+      </section>
+    </div>
+
+    <div class="modal-footer">
+      <button 
+        *ngIf="isEditMode"
+        class="mat-btn mat-btn-danger"
+        (click)="deleteKpi()">
+        🗑️ Delete KPI
+      </button>
+      <div class="spacer"></div>
+      <button class="mat-btn mat-btn-text" (click)="cancel()">
+        Cancel
+      </button>
+      <button class="mat-btn mat-btn-filled" (click)="save()">
+        💾 {{ isEditMode ? 'Save Changes' : 'Create KPI' }}
+      </button>
+    </div>
+  </div>
+</div>

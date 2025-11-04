@@ -7,6 +7,10 @@
         <p>Monitor your key performance indicators</p>
       </div>
       <div class="clean-header-actions">
+        <button class="mat-btn mat-btn-outlined" (click)="createNewKpi()" title="Create New KPI">
+          ➕ New KPI
+        </button>
+        
         <app-organization-selector></app-organization-selector>
         
         <div class="period-selector" role="group" aria-label="Select time period">
@@ -93,7 +97,11 @@
           <!-- KPI Cards -->
           <div *ngIf="widget.type === 'kpi'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
             <div class="kpi-grid">
-              <app-kpi-card *ngFor="let kpi of kpiData" [kpi]="kpi"></app-kpi-card>
+              <app-kpi-card 
+                *ngFor="let kpi of kpiData" 
+                [kpi]="kpi"
+                [kpiConfigId]="getKpiConfigId(kpi)"
+                (edit)="onKpiEdit($event)"></app-kpi-card>
             </div>
           </div>
 
@@ -141,6 +149,13 @@
 
   <!-- Comments Panel (Global) -->
   <app-comments-panel></app-comments-panel>
+
+  <!-- KPI Editor Modal -->
+  <app-kpi-editor 
+    *ngIf="showKpiEditor"
+    [kpiId]="editingKpiId"
+    (close)="closeKpiEditor()"
+    (saved)="onKpiSaved()"></app-kpi-editor>
 </div>
 
 

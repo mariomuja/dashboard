@@ -41,6 +41,7 @@ import { TenantManagementComponent } from './components/tenant-management/tenant
 import { TempAccessComponent } from './components/temp-access/temp-access.component';
 import { FormulaBuilderComponent } from './components/formula-builder/formula-builder.component';
 import { DocumentationViewerComponent } from './components/documentation-viewer/documentation-viewer.component';
+import { KpiEditorComponent } from './components/kpi-editor/kpi-editor.component';
 import { CountUpDirective } from './directives/count-up.directive';
 
 @NgModule({
@@ -78,6 +79,7 @@ import { CountUpDirective } from './directives/count-up.directive';
     UserManagementComponent,
     EnterpriseLoginComponent,
     DocumentationViewerComponent,
+    KpiEditorComponent,
     CountUpDirective
   ],
   imports: [

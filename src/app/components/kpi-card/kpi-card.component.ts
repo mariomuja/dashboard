@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { KpiData } from '../../services/data.service';
 
@@ -17,7 +17,18 @@ import { KpiData } from '../../services/data.service';
 })
 export class KpiCardComponent {
   @Input() kpi!: KpiData;
+  @Input() kpiConfigId?: string; // ID for KPI configuration
+  @Input() showEditButton = true; // Whether to show edit button
+  @Output() edit = new EventEmitter<string>(); // Emit config ID when edit is clicked
+  
   Math = Math;
+
+  onEdit(event: Event): void {
+    event.stopPropagation();
+    if (this.kpiConfigId) {
+      this.edit.emit(this.kpiConfigId);
+    }
+  }
 }
 
 
