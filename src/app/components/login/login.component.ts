@@ -26,9 +26,16 @@ export class LoginComponent {
     const success = this.authService.login(this.password);
     
     if (success) {
-      // Redirect to the attempted URL or admin page
-      const redirectUrl = sessionStorage.getItem('redirect_url') || '/admin';
+      // Get the stored redirect URL
+      let redirectUrl = sessionStorage.getItem('redirect_url') || '/admin';
       sessionStorage.removeItem('redirect_url');
+      
+      // If redirect URL is the public dashboard homepage, go to admin instead
+      // This ensures admin login always goes to admin page, not back to homepage
+      if (redirectUrl === '/' || redirectUrl === '') {
+        redirectUrl = '/admin';
+      }
+      
       this.router.navigate([redirectUrl]);
     } else {
       this.errorMessage = 'Invalid password. Please try again.';

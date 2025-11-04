@@ -17,7 +17,12 @@ export class AuthGuard implements CanActivate {
     }
 
     // Store the attempted URL for redirecting after login
-    sessionStorage.setItem('redirect_url', window.location.pathname);
+    // Don't store the homepage '/' - always redirect to admin instead
+    const attemptedUrl = window.location.pathname;
+    if (attemptedUrl !== '/' && attemptedUrl !== '') {
+      sessionStorage.setItem('redirect_url', attemptedUrl);
+    }
+    
     this.router.navigate(['/login']);
     return false;
   }
