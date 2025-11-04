@@ -125,7 +125,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   loadData(): void {
     this.isLoading = true;
     let loadedCount = 0;
-    const totalLoads = 4;
+    const totalLoads = 3; // Only load chart data, not KPIs (loaded separately from configs)
 
     const checkComplete = () => {
       loadedCount++;
@@ -135,10 +135,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }, 300); // Small delay for smooth transition
       }
     };
-    this.dataService.getKpiData(this.selectedPeriod).subscribe(data => {
-      this.kpiData = data;
-      checkComplete();
-    });
+    
+    // Don't load KPIs from old service - they come from kpiConfigService now
+    // this.dataService.getKpiData(this.selectedPeriod).subscribe(data => {
+    //   this.kpiData = data;
+    //   checkComplete();
+    // });
 
     this.dataService.getRevenueData(this.selectedPeriod).subscribe(data => {
       this.revenueData = data;
@@ -226,16 +228,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
         color: this.getTrendColor(result.trend || 'stable')
       };
       
-      // Store mapping
-      this.kpiConfigMap.set(kpiData.title, config.id);
+      // Store mapping using KPI data ID (which is the config ID)
+      this.kpiConfigMap.set(kpiData.id, config.id);
       
       return kpiData;
     });
     
     const configuredKpis = await Promise.all(kpiDataPromises);
     
-    // Merge with existing KPIs or replace them
+    // Replace KPI data with configured KPIs
     this.kpiData = configuredKpis;
+    console.log('Loaded KPI configs:', this.kpiData.length, 'Config map:', this.kpiConfigMap);
   }
 
   getTrendColor(trend: 'up' | 'down' | 'stable'): string {
@@ -247,7 +250,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   getKpiConfigId(kpi: KpiData): string | undefined {
-    return this.kpiConfigMap.get(kpi.title);
+    // The kpi.id is the config ID now
+    return kpi.id;
   }
 
   openKpiEditor(kpiId?: string): void {
