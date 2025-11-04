@@ -120,7 +120,49 @@ app.post('/api/auth/logout', (req, res) => {
     if (err) {
       return res.status(500).json({ error: 'Logout failed' });
     }
-    res.json({ success: true, message: 'Logged out' });
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ error: 'Session destroy failed' });
+      }
+      res.clearCookie('connect.sid');
+      res.json({ success: true, message: 'Logged out and session cleared' });
+    });
+  });
+});
+
+// Clear session endpoint (GET for easy access via browser)
+app.get('/api/auth/clear-session', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ error: 'Session clear failed' });
+    }
+    res.clearCookie('connect.sid');
+    res.send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Session Cleared</title>
+        <style>
+          body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f5f5f5; }
+          .container { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto; }
+          h1 { color: #10b981; }
+          .icon { font-size: 60px; margin-bottom: 20px; }
+          button { background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 6px; font-size: 16px; cursor: pointer; margin-top: 20px; }
+          button:hover { background: #2563eb; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="icon">✅</div>
+          <h1>OAuth Session Cleared!</h1>
+          <p>The "PersonalAccessToken" user and all OAuth session data have been removed.</p>
+          <p>Your OAuth cookies have been cleared.</p>
+          <button onclick="window.location.href='http://localhost:4200/oauth-login'">Go to OAuth Login</button>
+          <button onclick="window.location.href='http://localhost:4200'">Go to Dashboard</button>
+        </div>
+      </body>
+      </html>
+    `);
   });
 });
 
