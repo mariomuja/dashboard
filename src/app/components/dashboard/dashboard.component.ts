@@ -6,6 +6,8 @@ import { OrganizationService } from '../../services/organization.service';
 import { DashboardLayoutService, WidgetConfig } from '../../services/dashboard-layout.service';
 import { KpiConfigService, KPIConfig } from '../../services/kpi-config.service';
 import { ChartConfigService, ChartConfig } from '../../services/chart-config.service';
+import { GoalConfigService } from '../../services/goal-config.service';
+import { Goal } from '../goal-tracker/goal-tracker.component';
 import { AuthService } from '../../services/auth.service';
 import { DateRange } from '../date-range-picker/date-range-picker.component';
 import { Subscription } from 'rxjs';
@@ -29,6 +31,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   kpiConfigMap: Map<string, string> = new Map(); // Maps kpiData to kpiConfig IDs
   chartConfigs: ChartConfig[] = [];
   chartConfigMap: Map<string, string> = new Map(); // Maps chart names to config IDs
+  goals: Goal[] = [];
   revenueData: ChartDataPoint[] = [];
   salesData: ChartDataPoint[] = [];
   conversionData: ChartDataPoint[] = [];
@@ -37,6 +40,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   showExportMenu = false;
   showKpiEditor = false;
   showChartEditor = false;
+  showGoalEditor = false;
   editingKpiId?: string;
   editingChartId?: string;
   customDateRange: DateRange | null = null;
@@ -45,6 +49,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private layoutSubscription?: Subscription;
   private kpiConfigSubscription?: Subscription;
   private chartConfigSubscription?: Subscription;
+  private goalConfigSubscription?: Subscription;
 
   constructor(
     private dataService: DataService,
@@ -53,17 +58,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private layoutService: DashboardLayoutService,
     private kpiConfigService: KpiConfigService,
     private chartConfigService: ChartConfigService,
+    private goalConfigService: GoalConfigService,
     public authService: AuthService
   ) { }
 
   ngOnInit(): void {
-    // Initialize default KPIs and Charts if none exist
+    // Initialize default KPIs, Charts, and Goals if none exist
     this.kpiConfigService.initializeDefaultKpis();
     this.chartConfigService.initializeDefaultCharts();
+    this.goalConfigService.initializeDefaultGoals();
     
     this.loadData();
     this.loadKpiConfigs();
     this.loadChartConfigs();
+    this.loadGoals();
     
     // Subscribe to layout changes
     this.layoutSubscription = this.layoutService.currentLayout$.subscribe(layout => {
@@ -89,6 +97,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.chartConfigSubscription = this.chartConfigService.configs$.subscribe(() => {
       this.loadChartConfigs();
     });
+    
+    // Subscribe to Goal config changes
+    this.goalConfigSubscription = this.goalConfigService.config$.subscribe(() => {
+      this.loadGoals();
+    });
   }
 
   ngOnDestroy(): void {
@@ -103,6 +116,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
     if (this.chartConfigSubscription) {
       this.chartConfigSubscription.unsubscribe();
+    }
+    if (this.goalConfigSubscription) {
+      this.goalConfigSubscription.unsubscribe();
     }
   }
   
@@ -317,6 +333,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
   onChartSaved(): void {
     this.loadChartConfigs();
     this.loadData(); // Reload chart data
+  }
+
+  // Goal Configuration Methods
+  loadGoals(): void {
+    this.goals = this.goalConfigService.getGoals();
+  }
+
+  openGoalEditor(): void {
+    this.showGoalEditor = true;
+  }
+
+  onGoalEdit(configId: string): void {
+    this.openGoalEditor();
+  }
+
+  closeGoalEditor(): void {
+    this.showGoalEditor = false;
+  }
+
+  onGoalSaved(): void {
+    this.loadGoals();
   }
 }
 

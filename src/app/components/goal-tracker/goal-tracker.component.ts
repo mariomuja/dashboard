@@ -33,32 +33,7 @@ export interface Goal {
 export class GoalTrackerComponent {
   @Input() goalConfigId?: string;
   @Output() edit = new EventEmitter<string>();
-  @Input() goals: Goal[] = [
-    {
-      id: '1',
-      title: 'Monthly Revenue Target',
-      current: 124563,
-      target: 150000,
-      unit: '$',
-      color: '#10b981'
-    },
-    {
-      id: '2',
-      title: 'New Customer Goal',
-      current: 1234,
-      target: 1500,
-      unit: '',
-      color: '#3b82f6'
-    },
-    {
-      id: '3',
-      title: 'Conversion Rate Goal',
-      current: 3.24,
-      target: 4.0,
-      unit: '%',
-      color: '#8b5cf6'
-    }
-  ];
+  @Input() goals: Goal[] = [];
 
   constructor(public authService: AuthService) {}
 

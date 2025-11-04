@@ -163,13 +163,17 @@
           <!-- Goals Tracker -->
           <div *ngIf="widget.type === 'goals'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
             <app-goal-tracker
-              [goalConfigId]="getChartConfigId('Goals & Targets')"
-              (edit)="onChartEdit($event)"></app-goal-tracker>
+              [goals]="goals"
+              [goalConfigId]="'goal-config-1'"
+              (edit)="onGoalEdit($event)"></app-goal-tracker>
           </div>
 
           <!-- AI Insights Panel -->
           <div *ngIf="widget.type === 'insights'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
-            <app-insights-panel [kpiData]="kpiData"></app-insights-panel>
+            <app-insights-panel 
+              [kpiData]="kpiData"
+              [insightsConfigId]="'insights-config-1'"
+              (edit)="onChartEdit($event)"></app-insights-panel>
           </div>
         </ng-container>
       </div>
@@ -192,6 +196,12 @@
     [chartId]="editingChartId"
     (close)="closeChartEditor()"
     (saved)="onChartSaved()"></app-chart-editor>
+
+  <!-- Goal Editor Modal -->
+  <app-goal-editor 
+    *ngIf="showGoalEditor"
+    (close)="closeGoalEditor()"
+    (saved)="onGoalSaved()"></app-goal-editor>
 </div>
 
 

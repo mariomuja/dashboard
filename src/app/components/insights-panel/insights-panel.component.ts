@@ -1,7 +1,8 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { AiInsightsService, Insight } from '../../services/ai-insights.service';
 import { KpiData } from '../../services/data.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-insights-panel',
@@ -18,10 +19,19 @@ import { KpiData } from '../../services/data.service';
 })
 export class InsightsPanelComponent implements OnChanges {
   @Input() kpiData: KpiData[] = [];
+  @Input() insightsConfigId?: string;
+  @Output() edit = new EventEmitter<string>();
   insights: Insight[] = [];
   showPanel = true;
 
-  constructor(private aiInsightsService: AiInsightsService) {}
+  constructor(
+    private aiInsightsService: AiInsightsService,
+    public authService: AuthService
+  ) {}
+
+  get showEditButton(): boolean {
+    return this.authService.isAuthenticated() && !!this.insightsConfigId;
+  }
 
   ngOnChanges(): void {
     if (this.kpiData && this.kpiData.length > 0) {
@@ -41,6 +51,13 @@ export class InsightsPanelComponent implements OnChanges {
 
   togglePanel(): void {
     this.showPanel = !this.showPanel;
+  }
+
+  onEdit(event: Event): void {
+    event.stopPropagation();
+    if (this.insightsConfigId) {
+      this.edit.emit(this.insightsConfigId);
+    }
   }
 }
 

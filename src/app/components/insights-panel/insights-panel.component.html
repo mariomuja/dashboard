@@ -1,7 +1,17 @@
 <div class="insights-container" *ngIf="insights.length > 0">
-  <div class="insights-header" (click)="togglePanel()">
-    <h2>🤖 AI Insights</h2>
-    <button class="toggle-btn">{{ showPanel ? '▼' : '▶' }}</button>
+  <div class="insights-header">
+    <div class="header-left" (click)="togglePanel()">
+      <h2>🤖 AI Insights</h2>
+      <button class="toggle-btn">{{ showPanel ? '▼' : '▶' }}</button>
+    </div>
+    <button 
+      *ngIf="showEditButton"
+      class="insights-edit-btn"
+      (click)="onEdit($event)"
+      title="Edit AI Insights Configuration"
+      aria-label="Edit AI Insights Configuration">
+      ✏️
+    </button>
   </div>
   
   <div class="insights-content" *ngIf="showPanel" [@slideIn]>

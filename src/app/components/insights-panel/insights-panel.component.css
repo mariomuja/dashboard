@@ -11,12 +11,20 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
+}
+
+.header-left {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
   cursor: pointer;
   user-select: none;
   transition: background-color 0.2s;
+  margin-right: 1rem;
 }
 
-.insights-header:hover {
+.header-left:hover {
   background-color: var(--hover-bg);
 }
 
@@ -33,6 +41,36 @@
   font-size: 1.25rem;
   cursor: pointer;
   color: var(--text-secondary);
+}
+
+.insights-edit-btn {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #6b7280;
+}
+
+body.dark-mode .insights-edit-btn {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+.insights-edit-btn:hover {
+  background: #f3f4f6;
+  border-color: #3b82f6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+body.dark-mode .insights-edit-btn:hover {
+  background: #334155;
+  border-color: #60a5fa;
 }
 
 .insights-content {
