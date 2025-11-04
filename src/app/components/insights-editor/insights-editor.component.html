@@ -116,9 +116,9 @@
           <input 
             type="text" 
             [(ngModel)]="config.customMessages!.positiveGrowth"
-            placeholder="e.g., Great job! {kpi} is up {change}%"
+            placeholder="e.g., Great job! {{'{kpi}'}} is up {{'{change}'}}%"
             class="form-input">
-          <small>Use {`{kpi}`} and {`{change}`} as placeholders</small>
+          <small>Use {{'{kpi}'}} and {{'{change}'}} as placeholders</small>
         </div>
 
         <div class="form-group">
@@ -126,7 +126,7 @@
           <input 
             type="text" 
             [(ngModel)]="config.customMessages!.negativeGrowth"
-            placeholder="e.g., {kpi} has declined by {change}%"
+            placeholder="e.g., {{'{kpi}'}} has declined by {{'{change}'}}%"
             class="form-input">
         </div>
 
@@ -135,7 +135,7 @@
           <input 
             type="text" 
             [(ngModel)]="config.customMessages!.stable"
-            placeholder="e.g., {kpi} remains stable"
+            placeholder="e.g., {{'{kpi}'}} remains stable"
             class="form-input">
         </div>
 
@@ -144,7 +144,7 @@
           <input 
             type="text" 
             [(ngModel)]="config.customMessages!.anomaly"
-            placeholder="e.g., Unusual pattern detected in {kpi}"
+            placeholder="e.g., Unusual pattern detected in {{'{kpi}'}}"
             class="form-input">
         </div>
       </section>
