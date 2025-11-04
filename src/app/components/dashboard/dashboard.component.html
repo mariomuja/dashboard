@@ -7,8 +7,20 @@
         <p>Monitor your key performance indicators</p>
       </div>
       <div class="clean-header-actions">
-        <button class="mat-btn mat-btn-outlined" (click)="createNewKpi()" title="Create New KPI">
+        <button 
+          *ngIf="authService.isAuthenticated()"
+          class="mat-btn mat-btn-outlined" 
+          (click)="createNewKpi()" 
+          title="Create New KPI">
           ➕ New KPI
+        </button>
+        
+        <button 
+          *ngIf="authService.isAuthenticated()"
+          class="mat-btn mat-btn-outlined" 
+          (click)="createNewChart()" 
+          title="Create New Chart">
+          📊 New Chart
         </button>
         
         <app-organization-selector></app-organization-selector>
@@ -108,28 +120,43 @@
           <!-- Revenue Chart -->
           <div *ngIf="widget.type === 'chart-revenue'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
             <div class="chart-container">
-              <app-revenue-chart [data]="revenueData" [period]="selectedPeriod"></app-revenue-chart>
+              <app-revenue-chart 
+                [data]="revenueData" 
+                [period]="selectedPeriod"
+                [chartConfigId]="getChartConfigId('Revenue Trend')"
+                (edit)="onChartEdit($event)"></app-revenue-chart>
             </div>
           </div>
 
           <!-- Sales Chart -->
           <div *ngIf="widget.type === 'chart-sales'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
             <div class="chart-container">
-              <app-sales-chart [data]="salesData" [period]="selectedPeriod"></app-sales-chart>
+              <app-sales-chart 
+                [data]="salesData" 
+                [period]="selectedPeriod"
+                [chartConfigId]="getChartConfigId('Sales Volume')"
+                (edit)="onChartEdit($event)"></app-sales-chart>
             </div>
           </div>
 
           <!-- Conversion Chart -->
           <div *ngIf="widget.type === 'chart-conversion'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
             <div class="chart-container">
-              <app-conversion-chart [data]="conversionData" [period]="selectedPeriod"></app-conversion-chart>
+              <app-conversion-chart 
+                [data]="conversionData" 
+                [period]="selectedPeriod"
+                [chartConfigId]="getChartConfigId('Conversion Funnel')"
+                (edit)="onChartEdit($event)"></app-conversion-chart>
             </div>
           </div>
 
           <!-- Pie Chart -->
           <div *ngIf="widget.type === 'pie'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
             <div class="chart-container">
-              <app-pie-chart title="Revenue by Category"></app-pie-chart>
+              <app-pie-chart 
+                title="Revenue by Category"
+                [chartConfigId]="getChartConfigId('Revenue by Category')"
+                (edit)="onChartEdit($event)"></app-pie-chart>
             </div>
           </div>
 
@@ -156,6 +183,13 @@
     [kpiId]="editingKpiId"
     (close)="closeKpiEditor()"
     (saved)="onKpiSaved()"></app-kpi-editor>
+
+  <!-- Chart Editor Modal -->
+  <app-chart-editor 
+    *ngIf="showChartEditor"
+    [chartId]="editingChartId"
+    (close)="closeChartEditor()"
+    (saved)="onChartSaved()"></app-chart-editor>
 </div>
 
 

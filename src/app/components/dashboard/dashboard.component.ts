@@ -5,6 +5,8 @@ import { ExportService } from '../../services/export.service';
 import { OrganizationService } from '../../services/organization.service';
 import { DashboardLayoutService, WidgetConfig } from '../../services/dashboard-layout.service';
 import { KpiConfigService, KPIConfig } from '../../services/kpi-config.service';
+import { ChartConfigService, ChartConfig } from '../../services/chart-config.service';
+import { AuthService } from '../../services/auth.service';
 import { DateRange } from '../date-range-picker/date-range-picker.component';
 import { Subscription } from 'rxjs';
 
@@ -25,6 +27,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   kpiData: KpiData[] = [];
   kpiConfigs: KPIConfig[] = [];
   kpiConfigMap: Map<string, string> = new Map(); // Maps kpiData to kpiConfig IDs
+  chartConfigs: ChartConfig[] = [];
+  chartConfigMap: Map<string, string> = new Map(); // Maps chart names to config IDs
   revenueData: ChartDataPoint[] = [];
   salesData: ChartDataPoint[] = [];
   conversionData: ChartDataPoint[] = [];
@@ -32,27 +36,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
   isLoading = true;
   showExportMenu = false;
   showKpiEditor = false;
+  showChartEditor = false;
   editingKpiId?: string;
+  editingChartId?: string;
   customDateRange: DateRange | null = null;
   widgets: WidgetConfig[] = [];
   private orgSubscription?: Subscription;
   private layoutSubscription?: Subscription;
   private kpiConfigSubscription?: Subscription;
+  private chartConfigSubscription?: Subscription;
 
   constructor(
     private dataService: DataService,
     private exportService: ExportService,
     private orgService: OrganizationService,
     private layoutService: DashboardLayoutService,
-    private kpiConfigService: KpiConfigService
+    private kpiConfigService: KpiConfigService,
+    private chartConfigService: ChartConfigService,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {
-    // Initialize default KPIs if none exist
+    // Initialize default KPIs and Charts if none exist
     this.kpiConfigService.initializeDefaultKpis();
+    this.chartConfigService.initializeDefaultCharts();
     
     this.loadData();
     this.loadKpiConfigs();
+    this.loadChartConfigs();
     
     // Subscribe to layout changes
     this.layoutSubscription = this.layoutService.currentLayout$.subscribe(layout => {
@@ -73,6 +84,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.kpiConfigSubscription = this.kpiConfigService.configs$.subscribe(() => {
       this.loadKpiConfigs();
     });
+    
+    // Subscribe to Chart config changes
+    this.chartConfigSubscription = this.chartConfigService.configs$.subscribe(() => {
+      this.loadChartConfigs();
+    });
   }
 
   ngOnDestroy(): void {
@@ -84,6 +100,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
     if (this.kpiConfigSubscription) {
       this.kpiConfigSubscription.unsubscribe();
+    }
+    if (this.chartConfigSubscription) {
+      this.chartConfigSubscription.unsubscribe();
     }
   }
   
@@ -251,6 +270,44 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   onKpiSaved(): void {
     this.loadKpiConfigs();
+  }
+
+  // Chart Configuration Methods
+  async loadChartConfigs(): Promise<void> {
+    this.chartConfigs = this.chartConfigService.getVisibleConfigs();
+    this.chartConfigMap.clear();
+    
+    // Map chart configs to IDs
+    this.chartConfigs.forEach(config => {
+      this.chartConfigMap.set(config.name, config.id);
+    });
+  }
+
+  getChartConfigId(chartName: string): string | undefined {
+    return this.chartConfigMap.get(chartName);
+  }
+
+  openChartEditor(chartId?: string): void {
+    this.editingChartId = chartId;
+    this.showChartEditor = true;
+  }
+
+  onChartEdit(chartConfigId: string): void {
+    this.openChartEditor(chartConfigId);
+  }
+
+  createNewChart(): void {
+    this.openChartEditor();
+  }
+
+  closeChartEditor(): void {
+    this.showChartEditor = false;
+    this.editingChartId = undefined;
+  }
+
+  onChartSaved(): void {
+    this.loadChartConfigs();
+    this.loadData(); // Reload chart data
   }
 }
 

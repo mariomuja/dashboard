@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { KpiData } from '../../services/data.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-kpi-card',
@@ -18,10 +19,15 @@ import { KpiData } from '../../services/data.service';
 export class KpiCardComponent {
   @Input() kpi!: KpiData;
   @Input() kpiConfigId?: string; // ID for KPI configuration
-  @Input() showEditButton = true; // Whether to show edit button
   @Output() edit = new EventEmitter<string>(); // Emit config ID when edit is clicked
   
   Math = Math;
+
+  constructor(public authService: AuthService) {}
+
+  get showEditButton(): boolean {
+    return this.authService.isAuthenticated() && !!this.kpiConfigId;
+  }
 
   onEdit(event: Event): void {
     event.stopPropagation();

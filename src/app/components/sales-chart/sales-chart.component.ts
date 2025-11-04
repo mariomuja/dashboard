@@ -1,6 +1,7 @@
-import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { ChartDataPoint } from '../../services/data.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sales-chart',
@@ -10,6 +11,8 @@ import { ChartDataPoint } from '../../services/data.service';
 export class SalesChartComponent implements OnInit, OnChanges {
   @Input() data: ChartDataPoint[] = [];
   @Input() period: 'week' | 'month' | 'year' = 'month';
+  @Input() chartConfigId?: string;
+  @Output() edit = new EventEmitter<string>();
 
   public barChartData: ChartConfiguration<'bar'>['data'] = {
     labels: [],
@@ -42,8 +45,21 @@ export class SalesChartComponent implements OnInit, OnChanges {
 
   public barChartLegend = true;
 
+  constructor(public authService: AuthService) {}
+
+  get showEditButton(): boolean {
+    return this.authService.isAuthenticated() && !!this.chartConfigId;
+  }
+
   ngOnInit(): void {
     this.updateChart();
+  }
+
+  onEdit(event: Event): void {
+    event.stopPropagation();
+    if (this.chartConfigId) {
+      this.edit.emit(this.chartConfigId);
+    }
   }
 
   ngOnChanges(): void {

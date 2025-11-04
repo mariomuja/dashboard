@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-pie-chart',
@@ -8,6 +9,8 @@ import { ChartConfiguration } from 'chart.js';
 })
 export class PieChartComponent implements OnInit {
   @Input() title: string = 'Revenue by Category';
+  @Input() chartConfigId?: string;
+  @Output() edit = new EventEmitter<string>();
   
   public pieChartData: ChartConfiguration<'pie'>['data'] = {
     labels: [],
@@ -33,6 +36,12 @@ export class PieChartComponent implements OnInit {
     }
   };
 
+  constructor(public authService: AuthService) {}
+
+  get showEditButton(): boolean {
+    return this.authService.isAuthenticated() && !!this.chartConfigId;
+  }
+
   ngOnInit(): void {
     // Sample data - in real app, this would come from service
     this.pieChartData = {
@@ -48,6 +57,13 @@ export class PieChartComponent implements OnInit {
         hoverOffset: 10
       }]
     };
+  }
+
+  onEdit(event: Event): void {
+    event.stopPropagation();
+    if (this.chartConfigId) {
+      this.edit.emit(this.chartConfigId);
+    }
   }
 }
 
