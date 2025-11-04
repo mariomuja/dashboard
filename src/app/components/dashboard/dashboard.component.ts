@@ -284,11 +284,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // Map chart configs to IDs
     this.chartConfigs.forEach(config => {
       this.chartConfigMap.set(config.name, config.id);
+      console.log('Mapped chart:', config.name, '→', config.id);
     });
+    
+    console.log('Chart config map:', this.chartConfigMap);
   }
 
   getChartConfigId(chartName: string): string | undefined {
-    return this.chartConfigMap.get(chartName);
+    const id = this.chartConfigMap.get(chartName);
+    console.log('Getting chart ID for:', chartName, '→', id);
+    return id;
   }
 
   openChartEditor(chartId?: string): void {

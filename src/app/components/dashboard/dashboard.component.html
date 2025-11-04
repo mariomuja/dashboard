@@ -162,7 +162,9 @@
 
           <!-- Goals Tracker -->
           <div *ngIf="widget.type === 'goals'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
-            <app-goal-tracker></app-goal-tracker>
+            <app-goal-tracker
+              [goalConfigId]="getChartConfigId('Goals & Targets')"
+              (edit)="onChartEdit($event)"></app-goal-tracker>
           </div>
 
           <!-- AI Insights Panel -->

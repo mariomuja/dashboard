@@ -1,5 +1,15 @@
 <div class="goal-tracker-container">
-  <h2 class="section-title">🎯 Goals & Targets</h2>
+  <div class="goal-tracker-header">
+    <h2 class="section-title">🎯 Goals & Targets</h2>
+    <button 
+      *ngIf="showEditButton"
+      class="goal-edit-btn"
+      (click)="onEdit($event)"
+      title="Edit Goals Configuration"
+      aria-label="Edit Goals Configuration">
+      ✏️
+    </button>
+  </div>
   <div class="goals-grid">
     <div class="goal-card" *ngFor="let goal of goals" [@cardAnimation]>
       <div class="goal-header">

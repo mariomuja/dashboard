@@ -165,7 +165,23 @@ export class ChartConfigService {
 
   // Initialize default charts if none exist
   initializeDefaultCharts(): void {
-    if (this.getConfigs().length === 0) {
+    const existingConfigs = this.getConfigs();
+    const existingNames = existingConfigs.map(c => c.name);
+    
+    // Define all default charts
+    const allDefaults = this.getDefaultChartDefinitions();
+    
+    // Only add charts that don't already exist
+    const chartsToAdd = allDefaults.filter(chart => !existingNames.includes(chart.name));
+    
+    if (chartsToAdd.length > 0) {
+      chartsToAdd.forEach(chart => this.createConfig(chart));
+      console.log(`Added ${chartsToAdd.length} missing default charts`);
+    }
+  }
+
+  private getDefaultChartDefinitions(): Omit<ChartConfig, 'id' | 'createdAt' | 'updatedAt'>[] {
+    return [
       const defaultCharts: Omit<ChartConfig, 'id' | 'createdAt' | 'updatedAt'>[] = [
         {
           name: 'Revenue Trend',
@@ -247,11 +263,49 @@ export class ChartConfigService {
           },
           order: 2,
           visible: true
+        },
+        {
+          name: 'Revenue by Category',
+          description: 'Revenue distribution by product category',
+          chartType: 'pie',
+          dataSource: {
+            type: 'static',
+            staticData: [
+              { label: 'Products', value: 45 },
+              { label: 'Services', value: 30 },
+              { label: 'Subscriptions', value: 20 },
+              { label: 'Other', value: 5 }
+            ]
+          },
+          styling: {
+            colors: ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b'],
+            showLegend: true,
+            showGrid: false
+          },
+          order: 3,
+          visible: true
+        },
+        {
+          name: 'Goals & Targets',
+          description: 'Progress towards goals',
+          chartType: 'bar',
+          dataSource: {
+            type: 'static',
+            staticData: [
+              { label: 'Revenue Target', value: 83 },
+              { label: 'Customer Goal', value: 82 },
+              { label: 'Conversion Goal', value: 81 }
+            ]
+          },
+          styling: {
+            colors: ['#10b981', '#3b82f6', '#8b5cf6'],
+            showLegend: false,
+            showGrid: false
+          },
+          order: 4,
+          visible: true
         }
       ];
-
-      defaultCharts.forEach(chart => this.createConfig(chart));
-    }
   }
 
   // Storage

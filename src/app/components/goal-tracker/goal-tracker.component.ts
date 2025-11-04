@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { AuthService } from '../../services/auth.service';
 
 export interface Goal {
   id: string;
@@ -30,6 +31,8 @@ export interface Goal {
   ]
 })
 export class GoalTrackerComponent {
+  @Input() goalConfigId?: string;
+  @Output() edit = new EventEmitter<string>();
   @Input() goals: Goal[] = [
     {
       id: '1',
@@ -57,6 +60,12 @@ export class GoalTrackerComponent {
     }
   ];
 
+  constructor(public authService: AuthService) {}
+
+  get showEditButton(): boolean {
+    return this.authService.isAuthenticated() && !!this.goalConfigId;
+  }
+
   getProgress(goal: Goal): number {
     return Math.min((goal.current / goal.target) * 100, 100);
   }
@@ -68,6 +77,13 @@ export class GoalTrackerComponent {
       return `${value}%`;
     }
     return value.toLocaleString('en-US');
+  }
+
+  onEdit(event: Event): void {
+    event.stopPropagation();
+    if (this.goalConfigId) {
+      this.edit.emit(this.goalConfigId);
+    }
   }
 }
 
