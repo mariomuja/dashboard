@@ -1,0 +1,73 @@
+<div class="help-dropdown">
+  <button 
+    class="mat-icon-btn help-btn" 
+    (click)="toggleDropdown()"
+    [class.active]="showDropdown"
+    aria-label="Help & Documentation" 
+    title="Help & Documentation">
+    ❓
+  </button>
+
+  <!-- Dropdown Menu -->
+  <div class="dropdown-menu" *ngIf="showDropdown" @slideIn>
+    <div class="dropdown-header">
+      <h3>📚 Documentation</h3>
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="Search documentation..."
+        [(ngModel)]="searchTerm"
+        (click)="$event.stopPropagation()">
+    </div>
+    
+    <div class="dropdown-list">
+      <button 
+        *ngFor="let doc of filteredDocs"
+        class="dropdown-item"
+        (click)="selectDocument(doc)"
+        [title]="doc.displayName">
+        <span class="doc-icon">📄</span>
+        <span class="doc-name">{{ doc.displayName }}</span>
+      </button>
+
+      <div *ngIf="filteredDocs.length === 0" class="no-results">
+        <span>🔍</span>
+        <p>No documentation found</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="showModal" @fadeIn (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()" @slideIn>
+    <div class="modal-header">
+      <h2>
+        <span class="doc-icon">📄</span>
+        {{ selectedDoc?.displayName }}
+      </h2>
+      <button class="close-btn" (click)="closeModal()" aria-label="Close documentation">
+        ✕
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <div *ngIf="isLoading" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading documentation...</p>
+      </div>
+      
+      <div 
+        *ngIf="!isLoading" 
+        class="markdown-content" 
+        [innerHTML]="documentContent">
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="mat-btn mat-btn-outlined" (click)="closeModal()">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
