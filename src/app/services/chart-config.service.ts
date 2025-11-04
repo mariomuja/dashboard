@@ -182,7 +182,6 @@ export class ChartConfigService {
 
   private getDefaultChartDefinitions(): Omit<ChartConfig, 'id' | 'createdAt' | 'updatedAt'>[] {
     return [
-      const defaultCharts: Omit<ChartConfig, 'id' | 'createdAt' | 'updatedAt'>[] = [
         {
           name: 'Revenue Trend',
           description: 'Revenue over time',
