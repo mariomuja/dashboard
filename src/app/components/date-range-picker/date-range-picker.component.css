@@ -6,15 +6,28 @@
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   font-weight: 500;
-  border: none;
+  border: 1px solid #d1d5db;
   cursor: pointer;
   transition: all 0.2s;
-  background-color: #6366f1;
-  color: white;
+  background-color: white;
+  color: #374151;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode .date-range-btn {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
 }
 
 .date-range-btn:hover {
-  background-color: #4f46e5;
+  background-color: #f9fafb;
+  border-color: #3b82f6;
+}
+
+body.dark-mode .date-range-btn:hover {
+  background-color: #334155;
+  border-color: #60a5fa;
 }
 
 .picker-dropdown {
