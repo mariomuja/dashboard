@@ -198,6 +198,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const kpiDataPromises = this.kpiConfigs.map(async (config) => {
       const result = await this.kpiConfigService.fetchKpiValue(config);
       const kpiData: KpiData = {
+        id: config.id,
         title: config.name,
         value: this.kpiConfigService.formatValue(result.value, config.formatting),
         change: result.change || 0,

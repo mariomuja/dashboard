@@ -55,7 +55,7 @@ export class KpiEditorComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.dataSources = this.dataSourceService.getDataSources();
+    this.dataSources = this.dataSourceService.getAllDataSources();
     
     if (this.kpiId) {
       this.isEditMode = true;

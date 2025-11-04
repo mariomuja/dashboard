@@ -161,7 +161,7 @@ export class KpiConfigService {
       return { value: 0 };
     }
 
-    const dataSource = this.dataSourceService.getDataSourceById(sourceId);
+    const dataSource = this.dataSourceService.getDataSource(sourceId);
     if (!dataSource) {
       return { value: 0 };
     }
