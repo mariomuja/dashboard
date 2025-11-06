@@ -5,6 +5,11 @@
   "outputDirectory": "dist/kpi-dashboard/browser",
   "installCommand": "npm install",
   "devCommand": "npm start",
+  "build": {
+    "env": {
+      "NODE_VERSION": "22"
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",
