@@ -76,7 +76,7 @@ if (!fs.existsSync('uploads')) {
 
 // Root endpoint
 app.get('/', (req, res) => {
-  res.send('KPI Dashboard Backend - v2.0 - Session-based isolation enabled');
+  res.send('KPI Dashboard Backend - v2.1 - Session-based isolation enabled - ' + new Date().toISOString());
 });
 
 // ============================================================================
