@@ -1,7 +1,7 @@
 {
   "version": 2,
   "buildCommand": "npm run build -- --configuration=production",
-  "outputDirectory": "dist/kpi-dashboard/browser",
+  "outputDirectory": "dist/kpi-dashboard",
   "installCommand": "npm install",
   "framework": "angular",
   "build": {
