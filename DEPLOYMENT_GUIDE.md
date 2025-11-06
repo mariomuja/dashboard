@@ -1,327 +1,407 @@
-# 🚀 Complete Deployment Guide - Session-Based Isolation
+# 🚀 Deployment Guide - KPI Dashboard & Bookkeeping Integration
 
-## ✅ **What We've Implemented**
-
-### **Session-Based Demo Isolation** (Option D - Hybrid Approach)
-
-Each demo user now gets their **own isolated data sandbox** that:
-- ✅ Persists for **24 hours**
-- ✅ **Never interferes** with other users' data
-- ✅ **Auto-cleans up** expired sessions
-- ✅ Scales to **unlimited concurrent users**
+## Prerequisites
+- Render account (for backends and PostgreSQL)
+- Vercel account (for frontends)
+- Git repositories pushed to GitHub
 
 ---
 
-## 📊 **Architecture Overview**
+## Step 1: PostgreSQL Setup on Render
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     User 1 (Demo Login)                      │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-                           ▼
-                    ┌──────────────┐
-                    │   Frontend   │
-                    │   (Vercel)   │
-                    └──────┬───────┘
-                           │ JWT with sessionId
-                           ▼
-                    ┌──────────────┐
-                    │   Backend    │
-                    │   (Render)   │
-                    └──────┬───────┘
-                           │
-                           ▼
-            ┌──────────────────────────────┐
-            │     PostgreSQL (Render)      │
-            ├──────────────────────────────┤
-            │ session_abc123:              │
-            │   ├─ 10 accounts             │
-            │   ├─ 4 journal entries       │
-            │   └─ Expires: 24h later      │
-            └──────────────────────────────┘
+### 1.1 Create PostgreSQL Database for Dashboard
 
-┌─────────────────────────────────────────────────────────────┐
-│                     User 2 (Demo Login)                      │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-                           ▼
-                    [Same Frontend/Backend]
-                           │
-                           ▼
-            ┌──────────────────────────────┐
-            │     PostgreSQL (Render)      │
-            ├──────────────────────────────┤
-            │ session_def456:              │
-            │   ├─ 10 accounts (isolated)  │
-            │   ├─ 4 journal entries       │
-            │   └─ INDEPENDENT from User 1 │
-            └──────────────────────────────┘
-```
-
----
-
-## 🛠️ **Manual Setup Required**
-
-### **Step 1: Create GitHub Repositories**
-
-You need to create ONE new GitHub repository:
-
-```bash
-# On GitHub.com, create:
-Repository: mariomuja/dashboard-backend
-Description: Backend API for KPI Dashboard
-```
-
-**Note:** `mariomuja/bookkeeping` already exists ✅
-
----
-
-### **Step 2: Push Dashboard Backend**
-
-```bash
-cd C:\Users\mario\dashboard-backend
-git push --set-upstream origin master
-```
-
----
-
-### **Step 3: Set Up Render PostgreSQL Databases**
-
-#### **For Bookkeeping App:**
-
-1. Go to https://dashboard.render.com
+1. Go to https://dashboard.render.com/
 2. Click **"New +"** → **"PostgreSQL"**
-3. Settings:
-   - **Name:** `bookkeeping-db`
-   - **Database:** `international_bookkeeping`
-   - **User:** `bookkeeping_user`
-   - **Region:** Choose closest to you
-   - **Plan:** **Free** (256 MB, 90 days, then $7/month)
+3. Configure:
+   - **Name**: `kpi-dashboard-db`
+   - **Database**: `kpi_dashboard`
+   - **User**: (auto-generated)
+   - **Region**: Choose closest to you
+   - **Plan**: `Free` (for testing)
 4. Click **"Create Database"**
-5. Copy the **Internal Database URL**
-6. Run the schema:
-   ```bash
-   # In Render's PostgreSQL dashboard, go to "Connect" tab
-   # Copy the PSQL Command and run:
-   psql [your-connection-string] < C:\Users\mario\bookkeeping\database\session-isolation-schema.sql
-   ```
+5. Wait for provisioning (~2 minutes)
+6. Copy the **Internal Database URL** (starts with `postgresql://`)
 
-#### **For KPI Dashboard:**
+### 1.2 Run Dashboard Database Schema
 
-1. Repeat above steps but with:
-   - **Name:** `kpi-dashboard-db`
-   - **Database:** `kpi_dashboard`
-   - **User:** `kpi_dashboard_user`
-2. Run the schema:
-   ```bash
-   psql [connection-string] < C:\Users\mario\dashboard-backend\database-schema.sql
-   ```
-
----
-
-### **Step 4: Update Render Backend Services**
-
-#### **Bookkeeping Backend (Already Deployed):**
-
-1. Go to your existing Render service: `international-bookkeeping-api`
-2. Go to **"Environment"** tab
-3. Add new environment variable:
-   - **Key:** `DATABASE_URL`
-   - **Value:** (Use "Add from database" → select `bookkeeping-db`)
-4. Click **"Save Changes"**
-5. Service will auto-redeploy
-
-#### **Dashboard Backend (New Deployment):**
-
-1. Go to https://dashboard.render.com
-2. Click **"New +"** → **"Web Service"**
-3. Connect to `mariomuja/dashboard-backend` repository
-4. Settings:
-   - **Name:** `kpi-dashboard-api`
-   - **Environment:** `Node`
-   - **Build Command:** `npm install`
-   - **Start Command:** `npm start`
-   - **Plan:** **Free**
-5. **Environment Variables** (will auto-populate from `render.yaml`):
-   - `DATABASE_URL` → Select `kpi-dashboard-db`
-   - `JWT_SECRET` → Auto-generated
-   - `CORS_ORIGIN` → `https://kpi-dashboard.vercel.app`
-   - `SESSION_EXPIRY_HOURS` → `24`
-6. Click **"Create Web Service"**
-
----
-
-### **Step 5: Update Frontend Environment Variables**
-
-#### **Bookkeeping Frontend:**
-
-File: `bookkeeping-frontend/src/environments/environment.prod.ts`
-
-```typescript
-export const environment = {
-  production: true,
-  apiUrl: 'https://international-bookkeeping-api.onrender.com/api'
-};
-```
-
-#### **Dashboard Frontend:**
-
-Create: `C:\Users\mario\dashboard\src\environments\environment.prod.ts`
-
-```typescript
-export const environment = {
-  production: true,
-  apiUrl: 'https://kpi-dashboard-api.onrender.com/api'
-};
-```
-
----
-
-### **Step 6: Deploy Dashboard to Vercel**
-
-1. Go to https://vercel.com/new
-2. Import `mariomuja/dashboard` repository
-3. Settings (auto-detected from `vercel.json`):
-   - **Framework Preset:** Angular
-   - **Build Command:** `npm run vercel-build`
-   - **Output Directory:** `dist/kpi-dashboard/browser`
-4. Click **"Deploy"**
-5. Once deployed, add custom domain (optional):
-   - `kpi-dashboard.vercel.app` or custom domain
-
----
-
-## 🧪 **Testing Session Isolation**
-
-### **Test Scenario:**
-
-1. **User 1 Actions:**
-   - Open https://international-bookkeeping.vercel.app
-   - Login with `demo` / `DemoUser2025!Secure`
-   - Create a new account: "Test Account 1"
-   - Create a journal entry: "User 1 Entry"
-
-2. **User 2 Actions (Different Browser/Incognito):**
-   - Open https://international-bookkeeping.vercel.app
-   - Login with `demo` / `DemoUser2025!Secure`
-   - Should see **only default demo data**
-   - Should **NOT** see "Test Account 1" or "User 1 Entry"
-   - Create account: "Test Account 2"
-
-3. **Verify:**
-   - User 1 refreshes → Still sees "Test Account 1" ✅
-   - User 1 doesn't see "Test Account 2" ✅
-   - User 2 doesn't see "Test Account 1" ✅
-   - User 2 sees "Test Account 2" ✅
-
----
-
-## 📋 **What Happens Now**
-
-| User Action | Data Behavior |
-|-------------|---------------|
-| **Demo user logs in** | Creates new session with fresh demo data |
-| **User creates accounts** | Saved to their session in PostgreSQL |
-| **User creates journal entries** | Saved to their session in PostgreSQL |
-| **User logs out** | Session remains active for 24h |
-| **User logs back in (same browser)** | New session created (fresh start) |
-| **Different user logs in** | Gets completely separate session |
-| **24 hours pass** | Session auto-deleted by cleanup job |
-
----
-
-## 🔧 **Manual Cleanup (if needed)**
+**Option A: Using Render's psql Console**
+1. In your database dashboard, click **"Connect"** → **"External Connection"**
+2. Copy the `psql` command
+3. Open your local terminal and run the copied command
+4. Once connected, paste this SQL:
 
 ```sql
--- See all active sessions
-SELECT * FROM demo_sessions WHERE is_active = TRUE;
+-- Session-Based Demo Isolation Schema for KPI Dashboard
+-- Enhanced with External Application KPI Integration
 
--- See session statistics
-SELECT * FROM demo_session_stats;
+-- Demo Sessions Table
+CREATE TABLE IF NOT EXISTS demo_sessions (
+    session_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL,
+    last_accessed TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT TRUE
+);
 
--- Manual cleanup
-SELECT * FROM cleanup_expired_sessions();
+-- Dashboard Data (KPIs)
+CREATE TABLE IF NOT EXISTS demo_dashboard_data (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id UUID REFERENCES demo_sessions(session_id) ON DELETE CASCADE,
+    data_key VARCHAR(100) NOT NULL,
+    period_type VARCHAR(20) NOT NULL,
+    data JSONB NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
--- Delete specific session
-DELETE FROM demo_sessions WHERE session_id = 'abc-123-def';
+-- External Application KPIs (NEW - receives KPIs from other apps)
+CREATE TABLE IF NOT EXISTS external_kpis (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id UUID REFERENCES demo_sessions(session_id) ON DELETE CASCADE,
+    source_app VARCHAR(100) NOT NULL,
+    source_app_display VARCHAR(255) NOT NULL,
+    kpi_name VARCHAR(255) NOT NULL,
+    kpi_value DECIMAL(15,2),
+    kpi_unit VARCHAR(50),
+    kpi_change DECIMAL(5,2),
+    kpi_icon VARCHAR(50),
+    kpi_color VARCHAR(20),
+    chart_type VARCHAR(50),
+    chart_data JSONB,
+    description TEXT,
+    category VARCHAR(100),
+    display_order INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_demo_sessions_expires ON demo_sessions(expires_at);
+CREATE INDEX IF NOT EXISTS idx_demo_dashboard_session ON demo_dashboard_data(session_id);
+CREATE INDEX IF NOT EXISTS idx_external_kpis_session ON external_kpis(session_id);
+CREATE INDEX IF NOT EXISTS idx_external_kpis_source ON external_kpis(source_app);
+CREATE INDEX IF NOT EXISTS idx_external_kpis_active ON external_kpis(is_active);
+
+-- Function to cleanup expired sessions
+CREATE OR REPLACE FUNCTION cleanup_expired_sessions()
+RETURNS INTEGER AS $$
+DECLARE
+    deleted_count INTEGER;
+BEGIN
+    DELETE FROM demo_sessions WHERE expires_at < CURRENT_TIMESTAMP;
+    GET DIAGNOSTICS deleted_count = ROW_COUNT;
+    RETURN deleted_count;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Enhanced session initialization with sample external KPIs
+CREATE OR REPLACE FUNCTION initialize_demo_session(p_session_id UUID)
+RETURNS VOID AS $$
+BEGIN
+    -- Insert default KPI data
+    INSERT INTO demo_dashboard_data (session_id, data_key, period_type, data) VALUES
+    (p_session_id, 'kpi', 'week', '{"currentWeek": [12500, 13200, 14100, 13800, 15200, 16100, 14500], "lastWeek": [11800, 12400, 13100, 12900, 14300, 15200, 13700]}'::jsonb),
+    (p_session_id, 'kpi', 'month', '{"currentMonth": [45000, 48000, 52000, 54000, 58000, 62000], "lastMonth": [42000, 45000, 49000, 51000, 55000, 59000]}'::jsonb),
+    (p_session_id, 'revenue', 'week', '{"currentWeek": [45000, 48000, 52000, 54000, 58000, 62000, 56000], "lastWeek": [42000, 45000, 49000, 51000, 55000, 59000, 53000]}'::jsonb),
+    (p_session_id, 'sales', 'week', '{"currentWeek": [850, 920, 1050, 980, 1120, 1200, 1080], "lastWeek": [780, 850, 980, 910, 1050, 1130, 1010]}'::jsonb);
+
+    -- Insert sample external KPIs from Bookkeeping App
+    INSERT INTO external_kpis (
+        session_id, source_app, source_app_display, kpi_name, kpi_value, 
+        kpi_unit, kpi_change, kpi_icon, kpi_color, category, display_order, description
+    ) VALUES
+    (p_session_id, 'bookkeeping', 'International Bookkeeping', 'Total Assets', 32000.00, '$', 12.5, '💰', 'blue', 'financial', 1, 'Total assets from bookkeeping system'),
+    (p_session_id, 'bookkeeping', 'International Bookkeeping', 'Net Income', 32000.00, '$', 15.3, '📈', 'green', 'financial', 2, 'Net income (Revenue - Expenses)'),
+    (p_session_id, 'bookkeeping', 'International Bookkeeping', 'Total Revenue', 55000.00, '$', 18.2, '💵', 'green', 'financial', 3, 'Year-to-date revenue'),
+    (p_session_id, 'bookkeeping', 'International Bookkeeping', 'Total Expenses', 23000.00, '$', -5.1, '💸', 'red', 'financial', 4, 'Year-to-date expenses'),
+    (p_session_id, 'bookkeeping', 'International Bookkeeping', 'Cash Balance', 32000.00, '$', 8.7, '💵', 'blue', 'financial', 5, 'Current cash account balance'),
+    (p_session_id, 'bookkeeping', 'International Bookkeeping', 'Accounts Receivable', 0.00, '$', 0.0, '📥', 'gray', 'financial', 6, 'Outstanding receivables'),
+    (p_session_id, 'bookkeeping', 'International Bookkeeping', 'Accounts Payable', 0.00, '$', 0.0, '📤', 'gray', 'financial', 7, 'Outstanding payables'),
+    (p_session_id, 'bookkeeping', 'International Bookkeeping', 'Journal Entries', 4.00, 'count', 0.0, '📝', 'blue', 'operational', 8, 'Total journal entries recorded'),
+    (p_session_id, 'bookkeeping', 'International Bookkeeping', 'Active Accounts', 10.00, 'count', 0.0, '📊', 'blue', 'operational', 9, 'Number of active accounts');
+
+    -- Insert sample chart for Revenue Trend from Bookkeeping
+    INSERT INTO external_kpis (
+        session_id, source_app, source_app_display, kpi_name, 
+        chart_type, chart_data, category, display_order, description
+    ) VALUES
+    (p_session_id, 'bookkeeping', 'International Bookkeeping', 'Revenue Trend',
+     'line', 
+     '{"labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"], "datasets": [{"label": "Revenue", "data": [45000, 48000, 52000, 54000, 58000, 62000], "borderColor": "#10b981", "backgroundColor": "rgba(16, 185, 129, 0.1)"}]}'::jsonb,
+     'financial', 10, 'Monthly revenue trend from bookkeeping system');
+END;
+$$ LANGUAGE plpgsql;
+```
+
+5. Type `\q` to exit psql
+
+**Option B: Using SQL File Upload**
+1. In database dashboard, find **"Execute SQL"** or similar
+2. Upload `dashboard-backend/database-schema.sql`
+3. Click "Execute"
+
+### 1.3 Create PostgreSQL Database for Bookkeeping
+
+Repeat the process for bookkeeping:
+1. Create new PostgreSQL database: `bookkeeping-db`
+2. Database name: `bookkeeping`
+3. Copy the **Internal Database URL**
+4. Connect via psql (use the schema from the bookkeeping repository)
+
+---
+
+## Step 2: Deploy Dashboard Backend on Render
+
+### 2.1 Create Web Service
+
+1. Go to https://dashboard.render.com/
+2. Click **"New +"** → **"Web Service"**
+3. Connect your GitHub repository: `mariomuja/dashboard`
+4. Configure:
+   - **Name**: `kpi-dashboard-backend`
+   - **Region**: Same as your database
+   - **Branch**: `main`
+   - **Root Directory**: `dashboard-backend`
+   - **Runtime**: `Node`
+   - **Build Command**: `npm install`
+   - **Start Command**: `node server.js`
+   - **Plan**: `Free`
+
+### 2.2 Environment Variables
+
+Add these environment variables:
+- `NODE_ENV` = `production`
+- `PORT` = `10000`
+- `DATABASE_URL` = **(Paste Internal Database URL from Step 1.1)**
+- `CORS_ORIGIN` = `https://kpi-dashboard.vercel.app` *(update after Vercel deploy)*
+
+### 2.3 Deploy
+
+1. Click **"Create Web Service"**
+2. Wait for deployment (~3-5 minutes)
+3. Copy the **service URL** (e.g., `https://kpi-dashboard-backend.onrender.com`)
+
+---
+
+## Step 3: Deploy Dashboard Frontend on Vercel
+
+### 3.1 Import Project
+
+1. Go to https://vercel.com/dashboard
+2. Click **"Add New..."** → **"Project"**
+3. Import `mariomuja/dashboard` repository
+4. Configure:
+   - **Project Name**: `kpi-dashboard`
+   - **Framework Preset**: `Angular`
+   - **Root Directory**: `dashboard-frontend`
+   - **Build Command**: `npm install && npm run vercel-build`
+   - **Output Directory**: `dist/kpi-dashboard/browser`
+
+### 3.2 Environment Variables
+
+Add these:
+- `NG_APP_API_URL` = `https://kpi-dashboard-backend.onrender.com/api` *(from Step 2.3)*
+
+### 3.3 Deploy
+
+1. Click **"Deploy"**
+2. Wait for deployment (~2-3 minutes)
+3. Copy the **deployment URL** (e.g., `https://kpi-dashboard.vercel.app`)
+
+### 3.4 Update Backend CORS
+
+Go back to Render dashboard backend:
+1. Update `CORS_ORIGIN` environment variable with your Vercel URL
+2. Click **"Save Changes"** (will auto-redeploy)
+
+---
+
+## Step 4: Deploy Bookkeeping Backend on Render
+
+### 4.1 Create Web Service
+
+1. **New Web Service** on Render
+2. Connect repository: `mariomuja/bookkeeping`
+3. Configure:
+   - **Name**: `international-bookkeeping-backend`
+   - **Root Directory**: `bookkeeping-backend`
+   - **Build Command**: `npm install`
+   - **Start Command**: `node server.js`
+   - **Plan**: `Free`
+
+### 4.2 Environment Variables
+
+- `NODE_ENV` = `production`
+- `PORT` = `10000`
+- `DATABASE_URL` = **(Bookkeeping database URL from Step 1.3)**
+- `CORS_ORIGIN` = `https://international-bookkeeping.vercel.app`
+- `DASHBOARD_API_URL` = `https://kpi-dashboard-backend.onrender.com/api` **(from Step 2.3)**
+- `ENABLE_KPI_INTEGRATION` = `true`
+
+### 4.3 Deploy
+
+1. Click **"Create Web Service"**
+2. Wait for deployment
+3. Copy the service URL
+
+---
+
+## Step 5: Deploy Bookkeeping Frontend on Vercel
+
+### 5.1 Import Project
+
+1. **New Project** on Vercel
+2. Import `mariomuja/bookkeeping` repository
+3. Configure:
+   - **Project Name**: `international-bookkeeping`
+   - **Framework**: `Angular`
+   - **Root Directory**: `bookkeeping-frontend`
+   - **Build Command**: `npm install && npm run vercel-build`
+   - **Output Directory**: `dist/bookkeeping-frontend/browser`
+
+### 5.2 Environment Variables
+
+- `NG_APP_API_URL` = `https://international-bookkeeping-backend.onrender.com/api`
+
+### 5.3 Deploy
+
+1. Click **"Deploy"**
+2. Wait for deployment
+3. Copy deployment URL
+
+### 5.4 Update Backend CORS
+
+Update bookkeeping backend CORS with Vercel URL
+
+---
+
+## Step 6: Test Session Isolation & KPI Integration
+
+### 6.1 Test Bookkeeping App
+
+1. Open: `https://international-bookkeeping.vercel.app`
+2. Login with demo credentials:
+   - Username: `demo`
+   - Password: `DemoUser2025!Secure`
+3. Navigate to **Dashboard** page
+4. Verify metrics are loading
+5. **Check browser console** - should see: `[KPI Sender] Sent 9 KPIs to dashboard`
+
+### 6.2 Test Dashboard App
+
+1. Open: `https://kpi-dashboard.vercel.app`
+2. Login with demo credentials
+3. Scroll down to **"📡 KPIs from Connected Applications"** section
+4. **You should see**:
+   - Section header: "Real-time metrics from International Bookkeeping..."
+   - 9 KPI cards labeled "from International Bookkeeping"
+   - Values like Total Assets ($32,000), Net Income, Revenue, etc.
+   - Color-coded percentage changes
+
+### 6.3 Test Session Isolation
+
+**Test A: Separate Sessions**
+1. Open bookkeeping in **Browser 1** (normal window)
+2. Open bookkeeping in **Browser 2** (incognito)
+3. Make different changes in each:
+   - Browser 1: Create a journal entry
+   - Browser 2: Create a different journal entry
+4. Verify changes are **independent** (don't affect each other)
+
+**Test B: Session Persistence**
+1. Make changes in bookkeeping
+2. Refresh the page
+3. Verify changes **persist** (stored in PostgreSQL)
+
+**Test C: Session Expiration**
+1. Wait 24 hours OR manually delete session from database
+2. Refresh bookkeeping app
+3. Should create **new session** with fresh demo data
+
+### 6.4 Test Cross-App KPI Flow
+
+1. **Start fresh**: Clear browser storage, open bookkeeping
+2. Login to bookkeeping app
+3. Go to Dashboard page (triggers KPI sending)
+4. **Copy the session ID** from localStorage (open DevTools → Application → Local Storage)
+5. Open dashboard app in **same browser**
+6. Login to dashboard
+7. **Verify same session ID** in localStorage
+8. Dashboard should show KPIs from bookkeeping
+
+---
+
+## 📊 Verification Checklist
+
+- [ ] PostgreSQL databases created and schemas applied
+- [ ] Dashboard backend deployed and healthy
+- [ ] Dashboard frontend deployed and loads
+- [ ] Bookkeeping backend deployed and healthy
+- [ ] Bookkeeping frontend deployed and loads
+- [ ] Can login to bookkeeping with demo credentials
+- [ ] Can login to dashboard with demo credentials
+- [ ] Dashboard shows "KPIs from Connected Applications" section
+- [ ] Section displays 9 bookkeeping KPIs
+- [ ] Each KPI shows source label "from International Bookkeeping"
+- [ ] KPIs have correct values and color-coded changes
+- [ ] Session isolation works (separate browser windows have separate data)
+- [ ] Changes persist after page refresh
+- [ ] Both apps auto-deploy on git push
+
+---
+
+## 🎯 Expected Results
+
+### Dashboard App
+```
+📊 KPI Dashboard
+├── Standard KPI cards (your dashboard KPIs)
+├── Charts (revenue, sales, conversion)
+└── 📡 KPIs from Connected Applications
+    └── International Bookkeeping
+        ├── 💰 Total Assets: $32,000.00 (+12.5%)
+        ├── 📈 Net Income: $32,000.00 (+15.3%)
+        ├── 💵 Total Revenue: $55,000.00 (+18.2%)
+        ├── 💸 Total Expenses: $23,000.00 (-5.1%)
+        ├── 💵 Cash Balance: $32,000.00 (+8.7%)
+        ├── 📥 Accounts Receivable: $0.00 (0.0%)
+        ├── 📤 Accounts Payable: $0.00 (0.0%)
+        ├── 📝 Journal Entries: 4 (0.0%)
+        └── 📊 Active Accounts: 10 (0.0%)
 ```
 
 ---
 
-## 📊 **Database Limits (Render Free Tier)**
+## 🐛 Troubleshooting
 
-- **Storage:** 256 MB
-- **Connections:** 97 hours/month active time
-- **Estimated Capacity:** ~100-200 concurrent sessions
-- **Auto-cleanup:** Keeps database size manageable
+### KPIs Not Showing
+- Check browser console for errors
+- Verify `DASHBOARD_API_URL` in bookkeeping backend
+- Verify `ENABLE_KPI_INTEGRATION=true`
+- Check Render logs: `render logs <service-name>`
 
----
+### CORS Errors
+- Verify `CORS_ORIGIN` matches frontend URLs exactly
+- No trailing slashes in URLs
+- Redeploy backend after changing CORS
 
-## 🎯 **Benefits of This Implementation**
+### Database Connection Errors
+- Use **Internal Database URL** for Render services
+- External URL only for local development
+- Check database is in same region as backend
 
-1. ✅ **True Isolation** - No data conflicts between demo users
-2. ✅ **Persistent Play** - Changes last 24 hours
-3. ✅ **Automatic Cleanup** - No manual maintenance
-4. ✅ **Production Ready** - Scales to many users
-5. ✅ **Free Tier Compatible** - Works on Render's free plan
-6. ✅ **Future Proof** - Easy to add real user accounts later
-
----
-
-## 🚨 **Important Notes**
-
-1. **GitHub Repository Required:**
-   - You must create `mariomuja/dashboard-backend` on GitHub before pushing
-
-2. **Render PostgreSQL:**
-   - Free tier sleeps after inactivity
-   - First request might be slow (cold start)
-   - Consider upgrading to paid tier ($7/month) for production
-
-3. **Session Tokens:**
-   - Stored in JWT (no cookies needed)
-   - Frontend stores in localStorage
-   - Auto-expires after 24 hours
+### Session Not Persisting
+- Clear browser cache/storage
+- Check PostgreSQL connection
+- Verify `DATABASE_URL` is set correctly
 
 ---
 
-## 📞 **Next Steps After GitHub Repo Creation**
+## 📞 Support
 
-```bash
-# 1. Create mariomuja/dashboard-backend on GitHub
+- Email: mario.muja@gmail.com
+- Phone: +49 1520 464 1473
 
-# 2. Push backend code
-cd C:\Users\mario\dashboard-backend
-git push --set-upstream origin master
-
-# 3. Follow Step 4 (Render setup)
-
-# 4. Follow Step 5 (Frontend env vars)
-
-# 5. Follow Step 6 (Vercel deployment)
-
-# 6. Test! 🎉
-```
-
----
-
-## 📚 **Files Created**
-
-### **Bookkeeping:**
-- ✅ `database/session-isolation-schema.sql` - PostgreSQL schema
-- ✅ `bookkeeping-backend/session-manager.js` - Session management
-- ✅ `bookkeeping-backend/db-queries.js` - Database queries
-- ✅ `render.yaml` - Render configuration
-
-### **Dashboard:**
-- ✅ `dashboard-backend/` - Complete backend separation
-- ✅ `dashboard-backend/database-schema.sql` - PostgreSQL schema
-- ✅ `dashboard-backend/session-manager.js` - Session management  
-- ✅ `dashboard-backend/render.yaml` - Render configuration
-- ✅ `dashboard-backend/mock-data.js` - Default demo data
-
----
-
-**All code is ready to deploy!** Just need to create the GitHub repo and follow the deployment steps above.
-
+**Happy Deploying! 🚀**
