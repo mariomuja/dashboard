@@ -4,7 +4,7 @@ services:
     env: node
     plan: free
     buildCommand: cd dashboard-backend && npm install
-    startCommand: cd dashboard-backend && npm start
+    startCommand: cd dashboard-backend && node server-simple.js
     envVars:
       - key: NODE_ENV
         value: production
