@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const sessionManager = require('./session-manager');
 const kpiIntegration = require('./kpi-integration');
+const mockData = require('./mock-data');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -160,16 +161,114 @@ function validateDashboardData(data) {
 }
 
 // Get current dashboard data endpoint
-app.get('/api/data/dashboard-data', (req, res) => {
+app.get('/api/data/dashboard-data', async (req, res) => {
   try {
-    const filePath = path.join(__dirname, 'src', 'assets', 'data', 'dashboard-data.json');
+    const sessionId = req.headers['x-session-id'];
     
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ error: 'Dashboard data file not found' });
-    }
-
-    const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    res.json(data);
+    // For now, return mock data
+    // TODO: Load session-specific data from database
+    const dashboardData = {
+      kpi: {
+        week: mockData.dashboardData.kpis,
+        month: mockData.dashboardData.kpis,
+        year: mockData.dashboardData.kpis
+      },
+      revenue: {
+        week: [
+          { label: 'Mon', value: 8500 },
+          { label: 'Tue', value: 9200 },
+          { label: 'Wed', value: 8800 },
+          { label: 'Thu', value: 9500 },
+          { label: 'Fri', value: 10200 },
+          { label: 'Sat', value: 7800 },
+          { label: 'Sun', value: 6900 }
+        ],
+        month: [
+          { label: 'Week 1', value: 45000 },
+          { label: 'Week 2', value: 48000 },
+          { label: 'Week 3', value: 52000 },
+          { label: 'Week 4', value: 62000 }
+        ],
+        year: [
+          { label: 'Jan', value: 45000 },
+          { label: 'Feb', value: 48000 },
+          { label: 'Mar', value: 52000 },
+          { label: 'Apr', value: 54000 },
+          { label: 'May', value: 58000 },
+          { label: 'Jun', value: 62000 },
+          { label: 'Jul', value: 65000 },
+          { label: 'Aug', value: 68000 },
+          { label: 'Sep', value: 70000 },
+          { label: 'Oct', value: 72000 },
+          { label: 'Nov', value: 75000 },
+          { label: 'Dec', value: 78000 }
+        ]
+      },
+      sales: {
+        week: [
+          { label: 'Mon', value: 120 },
+          { label: 'Tue', value: 150 },
+          { label: 'Wed', value: 135 },
+          { label: 'Thu', value: 160 },
+          { label: 'Fri', value: 180 },
+          { label: 'Sat', value: 95 },
+          { label: 'Sun', value: 85 }
+        ],
+        month: [
+          { label: 'Week 1', value: 320 },
+          { label: 'Week 2', value: 450 },
+          { label: 'Week 3', value: 380 },
+          { label: 'Week 4', value: 610 }
+        ],
+        year: [
+          { label: 'Jan', value: 320 },
+          { label: 'Feb', value: 450 },
+          { label: 'Mar', value: 380 },
+          { label: 'Apr', value: 520 },
+          { label: 'May', value: 490 },
+          { label: 'Jun', value: 610 },
+          { label: 'Jul', value: 680 },
+          { label: 'Aug', value: 720 },
+          { label: 'Sep', value: 650 },
+          { label: 'Oct', value: 780 },
+          { label: 'Nov', value: 820 },
+          { label: 'Dec', value: 950 }
+        ]
+      },
+      conversion: {
+        week: [
+          { label: 'Mon', value: 3.2 },
+          { label: 'Tue', value: 3.5 },
+          { label: 'Wed', value: 3.1 },
+          { label: 'Thu', value: 3.8 },
+          { label: 'Fri', value: 4.1 },
+          { label: 'Sat', value: 2.9 },
+          { label: 'Sun', value: 2.7 }
+        ],
+        month: [
+          { label: 'Week 1', value: 2.8 },
+          { label: 'Week 2', value: 3.2 },
+          { label: 'Week 3', value: 3.5 },
+          { label: 'Week 4', value: 3.9 }
+        ],
+        year: [
+          { label: 'Jan', value: 2.5 },
+          { label: 'Feb', value: 2.8 },
+          { label: 'Mar', value: 3.1 },
+          { label: 'Apr', value: 3.0 },
+          { label: 'May', value: 3.3 },
+          { label: 'Jun', value: 3.5 },
+          { label: 'Jul', value: 3.7 },
+          { label: 'Aug', value: 3.8 },
+          { label: 'Sep', value: 3.6 },
+          { label: 'Oct', value: 3.9 },
+          { label: 'Nov', value: 4.1 },
+          { label: 'Dec', value: 4.3 }
+        ]
+      }
+    };
+    
+    res.json(dashboardData);
   } catch (error) {
     console.error('Error reading data:', error);
     res.status(500).json({ error: 'Failed to read dashboard data' });
