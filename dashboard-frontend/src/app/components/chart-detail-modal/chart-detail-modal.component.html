@@ -1,0 +1,62 @@
+<div class="modal-overlay" [@modalAnimation] (click)="onClose()">
+  <div class="modal-content" [@slideIn] (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ title }} - Detailed View</h2>
+      <button class="close-btn" (click)="onClose()" aria-label="Close">×</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Summary Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total</div>
+          <div class="stat-value">{{ getTotalValue() | number:'1.0-2' }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Average</div>
+          <div class="stat-value">{{ getAverageValue() | number:'1.0-2' }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Maximum</div>
+          <div class="stat-value">{{ getMaxValue()?.value | number:'1.0-2' }}</div>
+          <div class="stat-sublabel">{{ getMaxValue()?.label }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Minimum</div>
+          <div class="stat-value">{{ getMinValue()?.value | number:'1.0-2' }}</div>
+          <div class="stat-sublabel">{{ getMinValue()?.label }}</div>
+        </div>
+      </div>
+
+      <!-- Detailed Data Table -->
+      <div class="data-table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Period</th>
+              <th>Value</th>
+              <th>% of Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of data">
+              <td>{{ item.label }}</td>
+              <td>{{ item.value | number:'1.0-2' }}</td>
+              <td>{{ (item.value / getTotalValue() * 100) | number:'1.1-1' }}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="exportDetailedData()">
+        📥 Export to CSV
+      </button>
+      <button class="btn-primary" (click)="onClose()">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+

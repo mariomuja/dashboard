@@ -1,0 +1,197 @@
+<div class="audit-container">
+  <!-- Header -->
+  <header class="audit-header">
+    <div class="header-content">
+      <div class="header-title">
+        <h1>📋 Audit Trail</h1>
+        <p>Comprehensive activity logging and monitoring</p>
+      </div>
+      <div class="header-actions">
+        <button class="mat-btn mat-btn-outlined" (click)="exportToCSV()">
+          📤 Export CSV
+        </button>
+        <button class="mat-btn mat-btn-outlined" (click)="goBack()">
+          ← Back to Admin
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Statistics -->
+  <div class="stats-panel" *ngIf="statistics">
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ statistics.totalEntries }}</div>
+        <div class="stat-label">Total Events</div>
+      </div>
+    </div>
+    <div class="stat-card success">
+      <div class="stat-icon">✅</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ statistics.successRate.toFixed(1) }}%</div>
+        <div class="stat-label">Success Rate</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">👥</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ statistics.uniqueUsers }}</div>
+        <div class="stat-label">Unique Users</div>
+      </div>
+    </div>
+    <div class="stat-card warning">
+      <div class="stat-icon">🔒</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ securityEvents.length }}</div>
+        <div class="stat-label">Security Events</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <h2>Filters</h2>
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label>Action:</label>
+        <input 
+          type="text" 
+          [(ngModel)]="filterAction" 
+          (input)="applyFilters()"
+          placeholder="e.g., login, create"
+          class="filter-input">
+      </div>
+      <div class="filter-group">
+        <label>User:</label>
+        <input 
+          type="text" 
+          [(ngModel)]="filterUser" 
+          (input)="applyFilters()"
+          placeholder="User ID"
+          class="filter-input">
+      </div>
+      <div class="filter-group">
+        <label>Status:</label>
+        <select [(ngModel)]="filterStatus" (change)="applyFilters()" class="filter-input">
+          <option value="all">All</option>
+          <option value="success">Success</option>
+          <option value="failure">Failure</option>
+          <option value="pending">Pending</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Start Date:</label>
+        <input 
+          type="date" 
+          [(ngModel)]="filterStartDate" 
+          (change)="applyFilters()"
+          class="filter-input">
+      </div>
+      <div class="filter-group">
+        <label>End Date:</label>
+        <input 
+          type="date" 
+          [(ngModel)]="filterEndDate" 
+          (change)="applyFilters()"
+          class="filter-input">
+      </div>
+      <div class="filter-group">
+        <button class="mat-btn mat-btn-outlined" (click)="clearFilters()">
+          Clear Filters
+        </button>
+      </div>
+    </div>
+    <div class="results-count">
+      Showing {{ filteredEntries.length }} of {{ entries.length }} events
+    </div>
+  </div>
+
+  <!-- Security Events Alert -->
+  <div class="security-alert" *ngIf="securityEvents.length > 0">
+    <div class="alert-header">
+      <span class="alert-icon">⚠️</span>
+      <span class="alert-title">{{ securityEvents.length }} Security Event(s) Detected</span>
+    </div>
+    <div class="alert-events">
+      <div *ngFor="let event of securityEvents.slice(0, 3)" class="alert-event">
+        <span>{{ event.action }}</span>
+        <span class="event-time">{{ formatDate(event.timestamp) }}</span>
+      </div>
+      <div *ngIf="securityEvents.length > 3" class="alert-more">
+        +{{ securityEvents.length - 3 }} more
+      </div>
+    </div>
+  </div>
+
+  <!-- Audit Entries -->
+  <div class="entries-section">
+    <h2>Audit Entries</h2>
+
+    <div class="empty-state" *ngIf="filteredEntries.length === 0">
+      <div class="empty-icon">📋</div>
+      <h3>No Entries Found</h3>
+      <p>{{ entries.length === 0 ? 'No audit entries yet' : 'Try adjusting your filters' }}</p>
+    </div>
+
+    <div class="entries-list">
+      <div *ngFor="let entry of paginatedEntries" class="entry-card">
+        <div class="entry-header">
+          <div class="entry-info">
+            <span class="entry-icon">{{ getActionIcon(entry.action) }}</span>
+            <div class="entry-details">
+              <h3>{{ entry.action }}</h3>
+              <p class="entry-user">👤 {{ entry.userId }} • {{ entry.tenantId }}</p>
+            </div>
+          </div>
+          <div class="entry-status" [style.color]="getStatusColor(entry.status)">
+            <span class="status-icon">{{ getStatusIcon(entry.status) }}</span>
+            <span>{{ entry.status }}</span>
+          </div>
+        </div>
+
+        <div class="entry-body">
+          <div class="entry-row">
+            <span class="entry-label">Resource:</span>
+            <span class="entry-value">{{ entry.resource.type }} / {{ entry.resource.id }}</span>
+          </div>
+          <div class="entry-row">
+            <span class="entry-label">Timestamp:</span>
+            <span class="entry-value">{{ formatDate(entry.timestamp) }}</span>
+          </div>
+          <div class="entry-row" *ngIf="entry.ipAddress">
+            <span class="entry-label">IP Address:</span>
+            <span class="entry-value">{{ entry.ipAddress }}</span>
+          </div>
+          <div class="entry-row" *ngIf="entry.userAgent">
+            <span class="entry-label">User Agent:</span>
+            <span class="entry-value entry-agent">{{ entry.userAgent }}</span>
+          </div>
+          <div class="entry-row" *ngIf="entry.changes">
+            <span class="entry-label">Changes:</span>
+            <pre class="entry-json">{{ entry.changes | json }}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="filteredEntries.length > pageSize">
+      <button 
+        class="mat-btn mat-btn-outlined"
+        (click)="prevPage()"
+        [disabled]="currentPage === 1">
+        ← Previous
+      </button>
+      <span class="page-info">
+        Page {{ currentPage }} of {{ totalPages }}
+      </span>
+      <button 
+        class="mat-btn mat-btn-outlined"
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages">
+        Next →
+      </button>
+    </div>
+  </div>
+</div>

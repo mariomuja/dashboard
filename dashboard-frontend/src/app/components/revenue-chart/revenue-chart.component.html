@@ -1,0 +1,19 @@
+<div class="chart-wrapper">
+  <button 
+    *ngIf="showEditButton && chartConfigId"
+    class="chart-edit-btn"
+    (click)="onEdit($event)"
+    title="Edit Chart Configuration"
+    aria-label="Edit Chart Configuration">
+    ✏️
+  </button>
+  <canvas baseChart
+    [data]="lineChartData"
+    [options]="lineChartOptions"
+    [legend]="lineChartLegend"
+    type="line">
+  </canvas>
+</div>
+
+
+

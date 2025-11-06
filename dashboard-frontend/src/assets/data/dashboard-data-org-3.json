@@ -1,0 +1,220 @@
+{
+  "organizationId": "org-3",
+  "organizationName": "Marketing Team",
+  "kpi": {
+    "week": [
+      {
+        "id": "1",
+        "title": "Total Revenue",
+        "value": "$18,340",
+        "change": 5.8,
+        "trend": "up",
+        "icon": "💰",
+        "color": "#10b981"
+      },
+      {
+        "id": "2",
+        "title": "New Customers",
+        "value": "156",
+        "change": -2.1,
+        "trend": "down",
+        "icon": "👥",
+        "color": "#3b82f6"
+      },
+      {
+        "id": "3",
+        "title": "Conversion Rate",
+        "value": "2.45%",
+        "change": 3.7,
+        "trend": "up",
+        "icon": "📈",
+        "color": "#8b5cf6"
+      },
+      {
+        "id": "4",
+        "title": "Avg. Order Value",
+        "value": "$67.30",
+        "change": 1.2,
+        "trend": "up",
+        "icon": "🛒",
+        "color": "#f59e0b"
+      }
+    ],
+    "month": [
+      {
+        "id": "1",
+        "title": "Total Revenue",
+        "value": "$82,145",
+        "change": 9.3,
+        "trend": "up",
+        "icon": "💰",
+        "color": "#10b981"
+      },
+      {
+        "id": "2",
+        "title": "New Customers",
+        "value": "724",
+        "change": -1.8,
+        "trend": "down",
+        "icon": "👥",
+        "color": "#3b82f6"
+      },
+      {
+        "id": "3",
+        "title": "Conversion Rate",
+        "value": "2.58%",
+        "change": 6.4,
+        "trend": "up",
+        "icon": "📈",
+        "color": "#8b5cf6"
+      },
+      {
+        "id": "4",
+        "title": "Avg. Order Value",
+        "value": "$71.85",
+        "change": 2.1,
+        "trend": "up",
+        "icon": "🛒",
+        "color": "#f59e0b"
+      }
+    ],
+    "year": [
+      {
+        "id": "1",
+        "title": "Total Revenue",
+        "value": "$956,420",
+        "change": 14.2,
+        "trend": "up",
+        "icon": "💰",
+        "color": "#10b981"
+      },
+      {
+        "id": "2",
+        "title": "New Customers",
+        "value": "8,642",
+        "change": 11.5,
+        "trend": "up",
+        "icon": "👥",
+        "color": "#3b82f6"
+      },
+      {
+        "id": "3",
+        "title": "Conversion Rate",
+        "value": "2.74%",
+        "change": 9.8,
+        "trend": "up",
+        "icon": "📈",
+        "color": "#8b5cf6"
+      },
+      {
+        "id": "4",
+        "title": "Avg. Order Value",
+        "value": "$78.40",
+        "change": 5.6,
+        "trend": "up",
+        "icon": "🛒",
+        "color": "#f59e0b"
+      }
+    ]
+  },
+  "revenue": {
+    "week": [
+      { "label": "Mon", "value": 2450 },
+      { "label": "Tue", "value": 2800 },
+      { "label": "Wed", "value": 2650 },
+      { "label": "Thu", "value": 3100 },
+      { "label": "Fri", "value": 3450 },
+      { "label": "Sat", "value": 2140 },
+      { "label": "Sun", "value": 1750 }
+    ],
+    "month": [
+      { "label": "Jan", "value": 30000 },
+      { "label": "Feb", "value": 35000 },
+      { "label": "Mar", "value": 32000 },
+      { "label": "Apr", "value": 41000 },
+      { "label": "May", "value": 37000 },
+      { "label": "Jun", "value": 45000 },
+      { "label": "Jul", "value": 48000 },
+      { "label": "Aug", "value": 45500 },
+      { "label": "Sep", "value": 50000 },
+      { "label": "Oct", "value": 53000 },
+      { "label": "Nov", "value": 52000 },
+      { "label": "Dec", "value": 56000 }
+    ],
+    "year": [
+      { "label": "2019", "value": 390000 },
+      { "label": "2020", "value": 485000 },
+      { "label": "2021", "value": 598000 },
+      { "label": "2022", "value": 705000 },
+      { "label": "2023", "value": 827000 },
+      { "label": "2024", "value": 956420 }
+    ]
+  },
+  "sales": {
+    "week": [
+      { "label": "Mon", "value": 28 },
+      { "label": "Tue", "value": 32 },
+      { "label": "Wed", "value": 30 },
+      { "label": "Thu", "value": 35 },
+      { "label": "Fri", "value": 39 },
+      { "label": "Sat", "value": 24 },
+      { "label": "Sun", "value": 18 }
+    ],
+    "month": [
+      { "label": "Jan", "value": 80 },
+      { "label": "Feb", "value": 97 },
+      { "label": "Mar", "value": 88 },
+      { "label": "Apr", "value": 112 },
+      { "label": "May", "value": 103 },
+      { "label": "Jun", "value": 126 },
+      { "label": "Jul", "value": 137 },
+      { "label": "Aug", "value": 128 },
+      { "label": "Sep", "value": 145 },
+      { "label": "Oct", "value": 157 },
+      { "label": "Nov", "value": 152 },
+      { "label": "Dec", "value": 163 }
+    ],
+    "year": [
+      { "label": "2019", "value": 1050 },
+      { "label": "2020", "value": 1280 },
+      { "label": "2021", "value": 1435 },
+      { "label": "2022", "value": 1650 },
+      { "label": "2023", "value": 1890 },
+      { "label": "2024", "value": 2084 }
+    ]
+  },
+  "conversion": {
+    "week": [
+      { "label": "Mon", "value": 2.1 },
+      { "label": "Tue", "value": 2.4 },
+      { "label": "Wed", "value": 2.2 },
+      { "label": "Thu", "value": 2.7 },
+      { "label": "Fri", "value": 2.9 },
+      { "label": "Sat", "value": 1.9 },
+      { "label": "Sun", "value": 1.7 }
+    ],
+    "month": [
+      { "label": "Jan", "value": 1.9 },
+      { "label": "Feb", "value": 2.2 },
+      { "label": "Mar", "value": 2.0 },
+      { "label": "Apr", "value": 2.5 },
+      { "label": "May", "value": 2.3 },
+      { "label": "Jun", "value": 2.7 },
+      { "label": "Jul", "value": 2.9 },
+      { "label": "Aug", "value": 2.6 },
+      { "label": "Sep", "value": 3.0 },
+      { "label": "Oct", "value": 3.2 },
+      { "label": "Nov", "value": 2.8 },
+      { "label": "Dec", "value": 3.3 }
+    ],
+    "year": [
+      { "label": "2019", "value": 1.7 },
+      { "label": "2020", "value": 2.0 },
+      { "label": "2021", "value": 2.2 },
+      { "label": "2022", "value": 2.5 },
+      { "label": "2023", "value": 2.7 },
+      { "label": "2024", "value": 3.0 }
+    ]
+  }
+}
+

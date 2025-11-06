@@ -1,0 +1,4 @@
+<button class="theme-toggle" (click)="toggleTheme()" [title]="'Switch to ' + (currentTheme === 'light' ? 'dark' : 'light') + ' mode'">
+  <span class="theme-icon">{{ currentTheme === 'light' ? '🌙' : '☀️' }}</span>
+</button>
+

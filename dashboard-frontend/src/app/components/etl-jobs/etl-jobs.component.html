@@ -1,0 +1,167 @@
+<div class="etl-container">
+  <!-- Header -->
+  <header class="etl-header">
+    <div class="header-content">
+      <div class="header-title">
+        <h1>⚙️ ETL Pipeline Jobs</h1>
+        <p>Extract, Transform, Load automation</p>
+      </div>
+      <div class="header-actions">
+        <button class="mat-btn mat-btn-outlined" (click)="goBack()">
+          ← Back to Admin
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Statistics -->
+  <div class="stats-panel">
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ jobs.length }}</div>
+        <div class="stat-label">Total Jobs</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⏰</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ scheduledJobs.length }}</div>
+        <div class="stat-label">Scheduled</div>
+      </div>
+    </div>
+    <div class="stat-card running">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ runningJobs.length }}</div>
+        <div class="stat-label">Running</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Jobs List -->
+  <div class="jobs-section">
+    <h2>ETL Jobs</h2>
+    
+    <div class="empty-state" *ngIf="jobs.length === 0">
+      <div class="empty-icon">⚙️</div>
+      <h3>No ETL Jobs Yet</h3>
+      <p>ETL jobs can be created programmatically via the EtlPipelineService</p>
+      <p class="code-hint">See ADVANCED-ANALYTICS-GUIDE.md for examples</p>
+    </div>
+
+    <div class="jobs-grid">
+      <div 
+        *ngFor="let job of jobs" 
+        class="job-card"
+        [class.selected]="selectedJob?.id === job.id"
+        (click)="selectJob(job)">
+        
+        <!-- Job Header -->
+        <div class="job-header">
+          <div class="job-title">
+            <h3>{{ job.name }}</h3>
+            <p class="job-description">{{ job.description }}</p>
+          </div>
+          <div class="job-status" [style.color]="getStatusColor(job.status)">
+            <span class="status-icon">{{ getStatusIcon(job.status) }}</span>
+            <span>{{ job.status }}</span>
+          </div>
+        </div>
+
+        <!-- Job Details -->
+        <div class="job-details">
+          <div class="detail-row">
+            <span class="detail-label">Source:</span>
+            <span class="detail-value">{{ job.source.type }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Transformations:</span>
+            <span class="detail-value">{{ job.transformations.length }} rules</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Validations:</span>
+            <span class="detail-value">{{ job.validations.length }} checks</span>
+          </div>
+          <div class="detail-row" *ngIf="job.schedule?.enabled">
+            <span class="detail-label">Schedule:</span>
+            <span class="detail-value">{{ job.schedule?.frequency }} at {{ job.schedule?.time }}</span>
+          </div>
+          <div class="detail-row" *ngIf="job.metadata.lastRun">
+            <span class="detail-label">Last Run:</span>
+            <span class="detail-value">{{ formatDate(job.metadata.lastRun) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Success Rate:</span>
+            <span class="detail-value">
+              {{ job.metadata.totalRuns > 0 ? ((job.metadata.successfulRuns / job.metadata.totalRuns) * 100).toFixed(1) : 0 }}%
+            </span>
+          </div>
+        </div>
+
+        <!-- Job Actions -->
+        <div class="job-actions">
+          <button 
+            class="action-btn run-btn"
+            (click)="runJob(job); $event.stopPropagation()"
+            [disabled]="job.status === 'running'">
+            ▶️ Run
+          </button>
+          <button 
+            class="action-btn stats-btn"
+            (click)="viewStatistics(job); $event.stopPropagation()">
+            📊 Stats
+          </button>
+          <button 
+            *ngIf="job.status === 'running'"
+            class="action-btn pause-btn"
+            (click)="pauseJob(job); $event.stopPropagation()">
+            ⏸️ Pause
+          </button>
+          <button 
+            *ngIf="job.status === 'paused'"
+            class="action-btn resume-btn"
+            (click)="resumeJob(job); $event.stopPropagation()">
+            ▶️ Resume
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Job Logs -->
+  <div class="logs-panel" *ngIf="showLogs && selectedJob">
+    <div class="logs-header">
+      <h3>📝 Job Logs: {{ selectedJob.name }}</h3>
+      <button class="mat-btn mat-btn-text" (click)="showLogs = false">✕ Close</button>
+    </div>
+
+    <div class="logs-content">
+      <div class="empty-state" *ngIf="logs.length === 0">
+        <p>No logs yet. Run the job to see logs.</p>
+      </div>
+
+      <div class="log-list">
+        <div 
+          *ngFor="let log of logs" 
+          class="log-entry"
+          [style.border-left-color]="getLogColor(log.level)">
+          <div class="log-header">
+            <span class="log-icon">{{ getLogIcon(log.level) }}</span>
+            <span class="log-level" [style.color]="getLogColor(log.level)">{{ log.level }}</span>
+            <span class="log-phase">{{ log.phase }}</span>
+            <span class="log-time">{{ formatDate(log.timestamp) }}</span>
+          </div>
+          <div class="log-message">{{ log.message }}</div>
+          <div class="log-details" *ngIf="log.details">
+            <pre>{{ log.details | json }}</pre>
+          </div>
+          <div class="log-metrics" *ngIf="log.recordsProcessed">
+            <span>Processed: {{ log.recordsProcessed }}</span>
+            <span *ngIf="log.recordsFailed">Failed: {{ log.recordsFailed }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

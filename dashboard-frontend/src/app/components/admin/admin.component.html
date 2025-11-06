@@ -1,0 +1,127 @@
+<div class="admin-container">
+  <header class="clean-header">
+    <div class="clean-header-content">
+      <div class="clean-header-title">
+        <h1><span style="opacity: 0.8;">⚙️</span> Dashboard Admin</h1>
+        <p>Manage dashboard settings and data</p>
+      </div>
+      <div class="clean-header-actions">
+        <button class="mat-btn mat-btn-text" routerLink="/">
+          <span>←</span> Dashboard
+        </button>
+        <button class="mat-btn mat-btn-outlined" routerLink="/users">
+          <span>👥</span> Users
+        </button>
+        <button class="mat-btn mat-btn-outlined" routerLink="/branding">
+          <span>🎨</span> Branding
+        </button>
+        <button class="mat-btn mat-btn-outlined" routerLink="/data-sources">
+          <span>🔌</span> Data
+        </button>
+        <button class="mat-btn mat-btn-outlined" routerLink="/etl-jobs">
+          <span>⚙️</span> ETL
+        </button>
+        <button class="mat-btn mat-btn-outlined" routerLink="/analytics">
+          <span>🔬</span> Analytics
+        </button>
+        <button class="mat-btn mat-btn-outlined" routerLink="/audit-trail">
+          <span>📋</span> Audit
+        </button>
+        <button class="mat-btn mat-btn-outlined" routerLink="/tenants">
+          <span>🏢</span> Tenants
+        </button>
+        <button class="mat-btn mat-btn-outlined" routerLink="/temp-access">
+          <span>⏰</span> Access
+        </button>
+        <button class="mat-btn mat-btn-outlined" routerLink="/formula-builder">
+          <span>🧮</span> Formulas
+        </button>
+        <button class="mat-btn mat-btn-outlined" routerLink="/email-scheduler">
+          <span>📧</span> Email
+        </button>
+        <button class="mat-btn mat-btn-outlined" routerLink="/2fa-setup">
+          <span>🔐</span> 2FA
+        </button>
+        <button class="mat-btn mat-btn-danger mat-btn-outlined" (click)="logout()">
+          <span>🚪</span> Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-content">
+    <div class="upload-section">
+      <div class="upload-card-main">
+        <div class="card-header">
+          <h2>📊 Dashboard Data File</h2>
+          <p>Upload a single JSON file containing all dashboard data (KPIs, revenue, sales, and conversion data)</p>
+        </div>
+        
+        <div class="card-body">
+          <div class="file-upload-area">
+            <input 
+              type="file" 
+              accept=".json"
+              id="file-upload"
+              (change)="onFileSelected($event)"
+              [disabled]="isUploading"
+              class="file-input"
+            >
+            <label for="file-upload" class="file-label">
+              <span class="upload-icon">📤</span>
+              <span>Choose JSON File</span>
+            </label>
+          </div>
+
+          <div class="status-message" *ngIf="uploadStatus">
+            {{ uploadStatus }}
+          </div>
+
+          <div class="card-actions">
+            <button 
+              class="btn-download" 
+              (click)="downloadCurrentData()"
+              [disabled]="isUploading">
+              ⬇️ Download Current Data
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>How to Use</h2>
+      <ol>
+        <li><strong>Download Current Data:</strong> Click "Download Current Data" to get the complete dashboard data file</li>
+        <li><strong>Edit the JSON:</strong> Modify the downloaded file with your new data</li>
+        <li><strong>Upload:</strong> Click "Choose JSON File" and select your edited file</li>
+        <li><strong>View Changes:</strong> The page will automatically reload and display your new data</li>
+      </ol>
+
+      <h3>JSON File Structure</h3>
+      <p>The file contains all dashboard data organized by category and period:</p>
+      <div class="code-block">
+        <pre>{{ '{' }}
+  "kpi": {{ '{' }}
+    "week": [...],   // Weekly KPI data
+    "month": [...],  // Monthly KPI data
+    "year": [...]    // Yearly KPI data
+  {{ '}' }},
+  "revenue": {{ '{' }}
+    "week": [...],   // Weekly revenue
+    "month": [...],  // Monthly revenue
+    "year": [...]    // Yearly revenue
+  {{ '}' }},
+  "sales": {{ '{' }} ... {{ '}' }},
+  "conversion": {{ '{' }} ... {{ '}' }}
+{{ '}' }}</pre>
+      </div>
+
+      <div class="note">
+        <strong>Note:</strong> The file must include all four sections (kpi, revenue, sales, conversion) with data for all three periods (week, month, year).
+        The server validates the complete structure before accepting uploads.
+      </div>
+    </div>
+  </main>
+</div>
+

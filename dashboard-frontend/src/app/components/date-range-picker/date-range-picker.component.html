@@ -1,0 +1,55 @@
+<div class="date-range-picker">
+  <button class="date-range-btn" (click)="togglePicker()" aria-label="Select date range">
+    📅 Date Range
+  </button>
+  
+  <div class="picker-dropdown" *ngIf="showPicker" [@slideDown]>
+    <div class="picker-header">
+      <h3>Select Date Range</h3>
+      <button class="close-btn" (click)="togglePicker()" aria-label="Close picker">×</button>
+    </div>
+    
+    <div class="picker-content">
+      <!-- Quick Presets -->
+      <div class="presets-section">
+        <h4>Quick Select</h4>
+        <div class="presets-grid">
+          <button 
+            *ngFor="let preset of presets" 
+            class="preset-btn"
+            (click)="selectPreset(preset)">
+            {{ preset.label }}
+          </button>
+        </div>
+      </div>
+      
+      <!-- Custom Date Selection -->
+      <div class="custom-section">
+        <h4>Custom Range</h4>
+        <div class="date-inputs">
+          <div class="input-group">
+            <label for="start-date">Start Date</label>
+            <input 
+              type="date" 
+              id="start-date"
+              [(ngModel)]="startDate"
+              class="date-input">
+          </div>
+          <div class="input-group">
+            <label for="end-date">End Date</label>
+            <input 
+              type="date" 
+              id="end-date"
+              [(ngModel)]="endDate"
+              class="date-input">
+          </div>
+        </div>
+        <div class="action-buttons">
+          <button class="btn-secondary" (click)="clearSelection()">Clear</button>
+          <button class="btn-primary" (click)="applyDateRange()">Apply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

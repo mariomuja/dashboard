@@ -1,0 +1,529 @@
+<div class="formula-container">
+  <!-- Header -->
+  <header class="formula-header">
+    <div class="header-content">
+      <div class="header-title">
+        <h1>🧮 Calculated Metrics & Formula Builder</h1>
+        <p>Create custom KPIs with formulas, aggregations, and running totals</p>
+      </div>
+      <div class="header-actions">
+        <button class="mat-btn mat-btn-filled" (click)="openNewMetricModal()">
+          ➕ New Metric
+        </button>
+        <button class="mat-btn mat-btn-outlined" (click)="exportMetrics()">
+          📤 Export
+        </button>
+        <input 
+          type="file" 
+          #fileInput 
+          accept=".json" 
+          style="display: none" 
+          (change)="importMetrics($event)">
+        <button class="mat-btn mat-btn-outlined" (click)="fileInput.click()">
+          📥 Import
+        </button>
+        <button class="mat-btn mat-btn-outlined" (click)="clearCache()">
+          🗑️ Clear Cache
+        </button>
+        <button class="mat-btn mat-btn-outlined" (click)="goBack()">
+          ← Back
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Statistics -->
+  <div class="stats-panel" *ngIf="statistics">
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ statistics.totalMetrics }}</div>
+        <div class="stat-label">Total Metrics</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">✅</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ statistics.enabledMetrics }}</div>
+        <div class="stat-label">Enabled</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">💰</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ statistics.byCategory.financial }}</div>
+        <div class="stat-label">Financial</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⚙️</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ statistics.byCategory.operational }}</div>
+        <div class="stat-label">Operational</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🔧</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ statistics.totalFunctions }}</div>
+        <div class="stat-label">Functions</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="filter-group">
+      <label>Search</label>
+      <input 
+        type="text" 
+        class="filter-input" 
+        [(ngModel)]="searchTerm"
+        placeholder="Search metrics...">
+    </div>
+    <div class="filter-group">
+      <label>Category</label>
+      <select class="filter-select" [(ngModel)]="filterCategory">
+        <option value="all">All Categories</option>
+        <option value="kpi">KPI</option>
+        <option value="financial">Financial</option>
+        <option value="operational">Operational</option>
+        <option value="custom">Custom</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Status</label>
+      <select class="filter-select" [(ngModel)]="filterEnabled">
+        <option value="all">All</option>
+        <option value="enabled">Enabled Only</option>
+        <option value="disabled">Disabled Only</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Metrics List -->
+  <div class="metrics-section">
+    <h2>Metrics ({{ filteredMetrics.length }})</h2>
+
+    <div class="empty-state" *ngIf="filteredMetrics.length === 0">
+      <div class="empty-icon">🧮</div>
+      <h3>No Metrics Found</h3>
+      <p>Create your first calculated metric to get started</p>
+    </div>
+
+    <div class="metrics-grid">
+      <div 
+        *ngFor="let metric of filteredMetrics"
+        class="metric-card"
+        [class.selected]="selectedMetric?.id === metric.id"
+        [class.disabled]="!metric.enabled"
+        (click)="selectMetric(metric)">
+        
+        <!-- Metric Header -->
+        <div class="metric-header">
+          <div class="metric-badge">
+            <span class="category-icon">{{ getCategoryIcon(metric.category) }}</span>
+            <span class="format-icon">{{ getFormatIcon(metric.format) }}</span>
+          </div>
+          <div class="metric-status">
+            <span 
+              class="status-indicator" 
+              [class.active]="metric.enabled"
+              [class.inactive]="!metric.enabled">
+            </span>
+          </div>
+        </div>
+
+        <!-- Metric Info -->
+        <div class="metric-info">
+          <h3>{{ metric.name }}</h3>
+          <p class="metric-description">{{ metric.description }}</p>
+          <div class="metric-formula">
+            <code>{{ metric.formula }}</code>
+          </div>
+        </div>
+
+        <!-- Metric Meta -->
+        <div class="metric-meta">
+          <span class="meta-item">
+            📊 {{ metric.variables.length }} variables
+          </span>
+          <span class="meta-item" *ngIf="metric.runningTotal">
+            📈 Running Total
+          </span>
+          <span class="meta-item" *ngIf="metric.aggregation">
+            Σ {{ metric.aggregation }}
+          </span>
+        </div>
+
+        <!-- Metric Actions -->
+        <div class="metric-actions">
+          <button 
+            class="action-btn test-btn" 
+            (click)="openTestModal(metric); $event.stopPropagation()"
+            title="Test Calculation">
+            🧪
+          </button>
+          <button 
+            class="action-btn edit-btn" 
+            (click)="openEditModal(metric); $event.stopPropagation()"
+            title="Edit">
+            ✏️
+          </button>
+          <button 
+            class="action-btn toggle-btn" 
+            (click)="toggleMetricEnabled(metric); $event.stopPropagation()"
+            [title]="metric.enabled ? 'Disable' : 'Enable'">
+            {{ metric.enabled ? '👁️' : '🚫' }}
+          </button>
+          <button 
+            class="action-btn delete-btn" 
+            (click)="deleteMetric(metric); $event.stopPropagation()"
+            title="Delete">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal" *ngIf="showEditModal" (click)="closeEditModal()">
+    <div class="modal-content modal-large" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ isNewMetric ? '➕ Create New Metric' : '✏️ Edit Metric' }}</h2>
+        <button class="close-btn" (click)="closeEditModal()">✕</button>
+      </div>
+
+      <div class="modal-body modal-split">
+        <!-- Left Panel: Formula Editor -->
+        <div class="editor-panel">
+          <h3>Formula Editor</h3>
+
+          <!-- Basic Info -->
+          <div class="form-section">
+            <div class="form-group">
+              <label>Name *</label>
+              <input 
+                type="text" 
+                class="input-field" 
+                [(ngModel)]="editingMetric.name"
+                placeholder="E.g. Revenue Growth %">
+            </div>
+
+            <div class="form-group">
+              <label>Description</label>
+              <textarea 
+                class="input-field" 
+                [(ngModel)]="editingMetric.description"
+                rows="2"
+                placeholder="What does this metric calculate?"></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Category</label>
+                <select class="input-field" [(ngModel)]="editingMetric.category">
+                  <option value="kpi">KPI</option>
+                  <option value="financial">Financial</option>
+                  <option value="operational">Operational</option>
+                  <option value="custom">Custom</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Format</label>
+                <select class="input-field" [(ngModel)]="editingMetric.format">
+                  <option value="number">Number</option>
+                  <option value="currency">Currency ($)</option>
+                  <option value="percentage">Percentage (%)</option>
+                  <option value="text">Text</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Decimals</label>
+                <input 
+                  type="number" 
+                  class="input-field" 
+                  [(ngModel)]="editingMetric.decimals"
+                  min="0"
+                  max="10">
+              </div>
+            </div>
+          </div>
+
+          <!-- Variables -->
+          <div class="form-section">
+            <div class="section-header">
+              <h4>Variables</h4>
+              <button class="mat-btn mat-btn-text" (click)="addVariable()">
+                ➕ Add Variable
+              </button>
+            </div>
+
+            <div class="variables-list" *ngIf="editingMetric.variables && editingMetric.variables.length > 0">
+              <div 
+                *ngFor="let variable of editingMetric.variables; let i = index" 
+                class="variable-item">
+                <div class="variable-row">
+                  <input 
+                    type="text" 
+                    class="input-field small" 
+                    [(ngModel)]="variable.name"
+                    placeholder="varName">
+                  <select class="input-field small" [(ngModel)]="variable.source">
+                    <option value="kpi">KPI</option>
+                    <option value="chart">Chart</option>
+                    <option value="datasource">Data Source</option>
+                    <option value="constant">Constant</option>
+                  </select>
+                  <input 
+                    type="text" 
+                    class="input-field small" 
+                    [(ngModel)]="variable.sourceId"
+                    placeholder="Source ID">
+                  <input 
+                    type="text" 
+                    class="input-field small" 
+                    [(ngModel)]="variable.field"
+                    placeholder="Field">
+                  <input 
+                    type="number" 
+                    class="input-field small" 
+                    [(ngModel)]="variable.defaultValue"
+                    placeholder="Default">
+                  <button 
+                    class="btn-icon insert-btn" 
+                    (click)="insertVariableToFormula(variable.name)"
+                    title="Insert to formula">
+                    ↓
+                  </button>
+                  <button 
+                    class="btn-icon delete-btn" 
+                    (click)="removeVariable(i)"
+                    title="Remove">
+                    ✕
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="empty-notice" *ngIf="!editingMetric.variables || editingMetric.variables.length === 0">
+              No variables defined. Click "Add Variable" to create one.
+            </div>
+          </div>
+
+          <!-- Formula -->
+          <div class="form-section">
+            <div class="section-header">
+              <h4>Formula *</h4>
+              <button 
+                class="mat-btn mat-btn-text" 
+                (click)="validateCurrentFormula()">
+                ✓ Validate
+              </button>
+            </div>
+
+            <textarea 
+              class="formula-input" 
+              [(ngModel)]="editingMetric.formula"
+              rows="4"
+              placeholder="E.g. (revenue - cost) / revenue * 100"></textarea>
+
+            <!-- Validation Result -->
+            <div class="validation-result" *ngIf="validation">
+              <div class="validation-header" [class.valid]="validation.valid" [class.invalid]="!validation.valid">
+                <span *ngIf="validation.valid">✅ Formula is valid</span>
+                <span *ngIf="!validation.valid">❌ Formula has errors</span>
+              </div>
+              
+              <div class="validation-errors" *ngIf="validation.errors.length > 0">
+                <h5>Errors:</h5>
+                <ul>
+                  <li *ngFor="let error of validation.errors">{{ error }}</li>
+                </ul>
+              </div>
+
+              <div class="validation-warnings" *ngIf="validation.warnings.length > 0">
+                <h5>Warnings:</h5>
+                <ul>
+                  <li *ngFor="let warning of validation.warnings">{{ warning }}</li>
+                </ul>
+              </div>
+
+              <div class="validation-variables" *ngIf="validation.usedVariables.length > 0">
+                <h5>Used Variables:</h5>
+                <div class="variable-chips">
+                  <span *ngFor="let varName of validation.usedVariables" class="variable-chip">
+                    {{ varName }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Advanced Options -->
+          <div class="form-section">
+            <h4>Advanced Options</h4>
+
+            <div class="form-group">
+              <label>Aggregation</label>
+              <select class="input-field" [(ngModel)]="editingMetric.aggregation">
+                <option [ngValue]="undefined">None</option>
+                <option value="sum">Sum</option>
+                <option value="avg">Average</option>
+                <option value="min">Minimum</option>
+                <option value="max">Maximum</option>
+                <option value="count">Count</option>
+                <option value="median">Median</option>
+                <option value="stddev">Std Deviation</option>
+              </select>
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label>
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="editingMetric.runningTotal">
+                Enable Running Total
+              </label>
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label>
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="editingMetric.enabled">
+                Enable Metric
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Panel: Functions Reference -->
+        <div class="reference-panel">
+          <h3>Available Functions</h3>
+
+          <div class="functions-list">
+            <div 
+              *ngFor="let func of availableFunctions" 
+              class="function-item"
+              (click)="insertFunctionToFormula(func.name, func.args)">
+              <div class="function-header">
+                <span class="function-name">{{ func.name }}</span>
+                <button class="btn-icon insert-btn" title="Insert">↓</button>
+              </div>
+              <div class="function-description">{{ func.description }}</div>
+            </div>
+          </div>
+
+          <div class="operators-section">
+            <h4>Operators</h4>
+            <div class="operator-buttons">
+              <button 
+                *ngFor="let op of ['+', '-', '*', '/', '(', ')', '<', '>', '=', '!']"
+                class="operator-btn"
+                (click)="editingMetric.formula = (editingMetric.formula || '') + op">
+                {{ op }}
+              </button>
+            </div>
+          </div>
+
+          <div class="examples-section">
+            <h4>Example Formulas</h4>
+            <div class="example-item">
+              <code>revenue / customers</code>
+              <span>Revenue per customer</span>
+            </div>
+            <div class="example-item">
+              <code>GROWTH(current, previous)</code>
+              <span>Growth rate</span>
+            </div>
+            <div class="example-item">
+              <code>IF(revenue > 1000, 1, 0)</code>
+              <span>Conditional logic</span>
+            </div>
+            <div class="example-item">
+              <code>AVG(a, b, c)</code>
+              <span>Average of values</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="mat-btn mat-btn-outlined" (click)="closeEditModal()">
+          Cancel
+        </button>
+        <button class="mat-btn mat-btn-filled" (click)="saveMetric()">
+          {{ isNewMetric ? 'Create' : 'Save Changes' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Test Modal -->
+  <div class="modal" *ngIf="showTestModal" (click)="closeTestModal()">
+    <div class="modal-content modal-medium" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>🧪 Test Calculation: {{ selectedMetric?.name }}</h2>
+        <button class="close-btn" (click)="closeTestModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="test-section">
+          <h4>Input Values</h4>
+          <div class="test-inputs">
+            <div 
+              *ngFor="let variable of selectedMetric?.variables" 
+              class="test-input-row">
+              <label>{{ variable.name }}</label>
+              <input 
+                type="number" 
+                class="input-field" 
+                [(ngModel)]="testValues[variable.name]"
+                [placeholder]="variable.defaultValue?.toString()">
+              <span class="input-hint">{{ variable.source }} / {{ variable.sourceId }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="test-section">
+          <h4>Formula</h4>
+          <div class="formula-display">
+            <code>{{ selectedMetric?.formula }}</code>
+          </div>
+        </div>
+
+        <div class="test-section" *ngIf="testResult">
+          <h4>Result</h4>
+          <div class="test-result" *ngIf="!testResult.error">
+            <div class="result-value">{{ testResult.formattedValue }}</div>
+            <div class="result-meta">
+              <div class="meta-row">
+                <span class="meta-label">Raw Value:</span>
+                <span class="meta-value">{{ testResult.value }}</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Calculation Time:</span>
+                <span class="meta-value">{{ testResult.metadata.calculationTime.toFixed(2) }}ms</span>
+              </div>
+            </div>
+          </div>
+          <div class="test-error" *ngIf="testResult.error">
+            ❌ Error: {{ testResult.error }}
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="mat-btn mat-btn-outlined" (click)="closeTestModal()">
+          Close
+        </button>
+        <button class="mat-btn mat-btn-filled" (click)="runTestCalculation()">
+          🧪 Calculate
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

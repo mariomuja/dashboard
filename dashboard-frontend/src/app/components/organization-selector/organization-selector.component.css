@@ -1,0 +1,127 @@
+.org-selector {
+  position: relative;
+}
+
+.org-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.org-btn:hover {
+  background-color: var(--hover-bg);
+  border-color: #6366f1;
+}
+
+.dropdown-arrow {
+  font-size: 0.75rem;
+  margin-left: 0.25rem;
+}
+
+.org-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  min-width: 300px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.org-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.org-header h3 {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.org-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.org-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.org-item:last-child {
+  border-bottom: none;
+}
+
+.org-item:hover {
+  background-color: var(--hover-bg);
+}
+
+.org-item.active {
+  background-color: #eff6ff;
+}
+
+.dark-theme .org-item.active {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.org-item.child {
+  padding-left: 2.5rem;
+  background-color: var(--bg-tertiary);
+}
+
+.org-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.org-info {
+  flex: 1;
+}
+
+.org-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+}
+
+.org-type {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+  margin-top: 0.125rem;
+}
+
+.check-icon {
+  color: #10b981;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .org-dropdown {
+    left: auto;
+    right: 0;
+    min-width: 250px;
+  }
+}
+

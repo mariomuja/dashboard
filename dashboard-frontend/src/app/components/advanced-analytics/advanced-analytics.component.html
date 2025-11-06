@@ -1,0 +1,310 @@
+<div class="analytics-container">
+  <!-- Header -->
+  <header class="analytics-header">
+    <div class="header-content">
+      <div class="header-title">
+        <h1>🔬 Advanced Analytics</h1>
+        <p>Forecasting, Cohort, Funnel & A/B Testing</p>
+      </div>
+      <div class="header-actions">
+        <button class="mat-btn mat-btn-outlined" (click)="goBack()">
+          ← Back to Admin
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Tabs -->
+  <div class="tabs-container">
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'forecast'"
+      (click)="setActiveTab('forecast')">
+      📈 Forecasting
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'cohort'"
+      (click)="setActiveTab('cohort')">
+      👥 Cohort Analysis
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'funnel'"
+      (click)="setActiveTab('funnel')">
+      🔽 Funnel Analysis
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'abtest'"
+      (click)="setActiveTab('abtest')">
+      🧪 A/B Testing
+    </button>
+  </div>
+
+  <!-- Forecasting Tab -->
+  <div class="tab-content" *ngIf="activeTab === 'forecast'">
+    <div class="analysis-card">
+      <h2>📈 Time Series Forecasting</h2>
+      <p>Predict future values using statistical models</p>
+
+      <div class="form-group">
+        <label>Forecast Method:</label>
+        <select [(ngModel)]="selectedForecastMethod" class="input-field">
+          <option value="arima">ARIMA (Auto-Regressive Integrated Moving Average)</option>
+          <option value="prophet">Prophet (Facebook's Time Series)</option>
+          <option value="exponential">Exponential Smoothing</option>
+          <option value="linear">Linear Regression</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Forecast Steps:</label>
+        <input 
+          type="number" 
+          [(ngModel)]="forecastSteps" 
+          min="1" 
+          max="365"
+          class="input-field">
+      </div>
+
+      <button 
+        class="mat-btn mat-btn-filled"
+        (click)="runForecast()"
+        [disabled]="loading">
+        {{ loading ? '⏳ Running...' : '▶️ Run Forecast' }}
+      </button>
+
+      <div class="results-section" *ngIf="forecastResult">
+        <h3>Results - {{ forecastResult.method }}</h3>
+        
+        <div class="metrics-grid">
+          <div class="metric-card" *ngIf="forecastResult.mse">
+            <div class="metric-label">MSE</div>
+            <div class="metric-value">{{ forecastResult.mse.toFixed(2) }}</div>
+          </div>
+          <div class="metric-card" *ngIf="forecastResult.rmse">
+            <div class="metric-label">RMSE</div>
+            <div class="metric-value">{{ forecastResult.rmse.toFixed(2) }}</div>
+          </div>
+          <div class="metric-card" *ngIf="forecastResult.mae">
+            <div class="metric-label">MAE</div>
+            <div class="metric-value">{{ forecastResult.mae.toFixed(2) }}</div>
+          </div>
+          <div class="metric-card" *ngIf="forecastResult.r2">
+            <div class="metric-label">R²</div>
+            <div class="metric-value">{{ forecastResult.r2.toFixed(4) }}</div>
+          </div>
+        </div>
+
+        <div class="predictions-section">
+          <h4>Predictions (showing first 10):</h4>
+          <div class="predictions-list">
+            <div *ngFor="let pred of forecastResult.predictions.slice(0, 10); let i = index" class="prediction-item">
+              <span class="pred-index">Step {{ i + 1 }}:</span>
+              <span class="pred-value">{{ pred.toFixed(2) }}</span>
+              <span class="pred-confidence" *ngIf="forecastResult.confidence">
+                ({{ forecastResult.confidence.lower[i]?.toFixed(2) }} - {{ forecastResult.confidence.upper[i]?.toFixed(2) }})
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cohort Analysis Tab -->
+  <div class="tab-content" *ngIf="activeTab === 'cohort'">
+    <div class="analysis-card">
+      <h2>👥 Cohort Analysis</h2>
+      <p>Analyze user retention and behavior over time</p>
+
+      <button 
+        class="mat-btn mat-btn-filled"
+        (click)="runCohortAnalysis()"
+        [disabled]="loading">
+        {{ loading ? '⏳ Running...' : '▶️ Run Cohort Analysis' }}
+      </button>
+
+      <div class="results-section" *ngIf="cohortResult">
+        <h3>Cohort Retention Results</h3>
+
+        <div class="cohort-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Cohort Date</th>
+                <th>Size</th>
+                <th *ngFor="let _ of cohortResult.avgRetention; let i = index">Month {{ i }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let cohort of cohortResult.cohorts">
+                <td><strong>{{ cohort.cohortDate }}</strong></td>
+                <td>{{ cohort.cohortSize }}</td>
+                <td *ngFor="let retention of cohort.retention" 
+                    [style.background-color]="'rgba(16, 185, 129, ' + (retention / 100) + ')'">
+                  {{ (retention * 100).toFixed(1) }}%
+                </td>
+              </tr>
+              <tr class="avg-row">
+                <td colspan="2"><strong>Average</strong></td>
+                <td *ngFor="let avg of cohortResult.avgRetention"
+                    [style.background-color]="'rgba(59, 130, 246, ' + (avg / 100) + ')'">
+                  <strong>{{ (avg * 100).toFixed(1) }}%</strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Funnel Analysis Tab -->
+  <div class="tab-content" *ngIf="activeTab === 'funnel'">
+    <div class="analysis-card">
+      <h2>🔽 Funnel Analysis</h2>
+      <p>Analyze conversion rates and drop-offs across stages</p>
+
+      <button 
+        class="mat-btn mat-btn-filled"
+        (click)="runFunnelAnalysis()"
+        [disabled]="loading">
+        {{ loading ? '⏳ Running...' : '▶️ Run Funnel Analysis' }}
+      </button>
+
+      <div class="results-section" *ngIf="funnelResult">
+        <h3>Funnel Results</h3>
+        
+        <div class="overall-metric">
+          <span>Overall Conversion:</span>
+          <strong>{{ (funnelResult.overallConversion * 100).toFixed(2) }}%</strong>
+        </div>
+
+        <div class="funnel-steps">
+          <div *ngFor="let step of funnelResult.steps" class="funnel-step">
+            <div class="step-header">
+              <h4>{{ step.name }}</h4>
+              <span class="step-count">{{ step.count.toLocaleString() }} users</span>
+            </div>
+            <div class="step-metrics">
+              <div class="step-metric">
+                <span>Conversion Rate:</span>
+                <strong class="positive">{{ (step.conversionRate * 100).toFixed(2) }}%</strong>
+              </div>
+              <div class="step-metric">
+                <span>Drop-off Rate:</span>
+                <strong class="negative">{{ (step.dropoffRate * 100).toFixed(2) }}%</strong>
+              </div>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="step.conversionRate * 100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- A/B Testing Tab -->
+  <div class="tab-content" *ngIf="activeTab === 'abtest'">
+    <div class="analysis-card">
+      <h2>🧪 A/B Testing</h2>
+      <p>Statistical significance testing for variant comparison</p>
+
+      <div class="ab-test-inputs">
+        <div class="form-group">
+          <label>Variant A Data (comma-separated):</label>
+          <textarea 
+            class="input-field" 
+            rows="3"
+            placeholder="e.g., 10.5, 12.3, 9.8, 11.2, 10.9"
+            (input)="variantAData = parseNumberArray($any($event.target).value)"></textarea>
+          <small>{{ variantAData.length }} values</small>
+        </div>
+
+        <div class="form-group">
+          <label>Variant B Data (comma-separated):</label>
+          <textarea 
+            class="input-field" 
+            rows="3"
+            placeholder="e.g., 15.2, 14.8, 16.1, 15.5, 14.9"
+            (input)="variantBData = parseNumberArray($any($event.target).value)"></textarea>
+          <small>{{ variantBData.length }} values</small>
+        </div>
+      </div>
+
+      <button 
+        class="mat-btn mat-btn-filled"
+        (click)="runABTest()"
+        [disabled]="loading">
+        {{ loading ? '⏳ Running...' : '▶️ Run A/B Test' }}
+      </button>
+
+      <div class="results-section" *ngIf="abTestResult">
+        <h3>A/B Test Results</h3>
+
+        <div class="significance-banner" [class.significant]="abTestResult.isSignificant">
+          <span class="banner-icon">{{ abTestResult.isSignificant ? '✅' : '❌' }}</span>
+          <span class="banner-text">
+            {{ abTestResult.isSignificant ? 'Statistically Significant' : 'Not Statistically Significant' }}
+          </span>
+          <span class="p-value">p-value: {{ abTestResult.pValue.toFixed(4) }}</span>
+        </div>
+
+        <div class="ab-comparison">
+          <div class="variant-card">
+            <h4>Variant A (Control)</h4>
+            <div class="variant-stats">
+              <div class="stat">
+                <span>Mean:</span>
+                <strong>{{ abTestResult.variantA.mean.toFixed(2) }}</strong>
+              </div>
+              <div class="stat">
+                <span>Std Dev:</span>
+                <strong>{{ abTestResult.variantA.stdDev.toFixed(2) }}</strong>
+              </div>
+              <div class="stat">
+                <span>Sample Size:</span>
+                <strong>{{ abTestResult.variantA.sampleSize }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="vs-divider">VS</div>
+
+          <div class="variant-card">
+            <h4>Variant B (Test)</h4>
+            <div class="variant-stats">
+              <div class="stat">
+                <span>Mean:</span>
+                <strong>{{ abTestResult.variantB.mean.toFixed(2) }}</strong>
+              </div>
+              <div class="stat">
+                <span>Std Dev:</span>
+                <strong>{{ abTestResult.variantB.stdDev.toFixed(2) }}</strong>
+              </div>
+              <div class="stat">
+                <span>Sample Size:</span>
+                <strong>{{ abTestResult.variantB.sampleSize }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="uplift-section">
+          <h4>Uplift Analysis</h4>
+          <div class="uplift-value" [class.positive]="abTestResult.uplift > 0" [class.negative]="abTestResult.uplift < 0">
+            {{ abTestResult.uplift > 0 ? '+' : '' }}{{ (abTestResult.uplift * 100).toFixed(2) }}%
+          </div>
+        </div>
+
+        <div class="recommendation-section">
+          <h4>Recommendation</h4>
+          <p class="recommendation">{{ abTestResult.recommendation }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

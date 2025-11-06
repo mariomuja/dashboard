@@ -1,0 +1,236 @@
+<div class="user-mgmt-container">
+  <header class="clean-header">
+    <div class="clean-header-content">
+      <div class="clean-header-title">
+        <h1><span style="opacity: 0.8;">👥</span> User Management</h1>
+        <p>Manage users, roles, and permissions</p>
+      </div>
+      <div class="clean-header-actions">
+        <button class="mat-btn mat-btn-text" (click)="goBack()">
+          <span>←</span> Back
+        </button>
+        <button class="mat-btn mat-btn-filled" (click)="toggleInviteForm()">
+          <span>📧</span> {{ showInviteForm ? 'Cancel' : 'Invite User' }}
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="user-mgmt-content">
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-value">{{ userStats.total }}</div>
+        <div class="stat-label">Total Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value">{{ userStats.active }}</div>
+        <div class="stat-label">Active</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📧</div>
+        <div class="stat-value">{{ invitations.length }}</div>
+        <div class="stat-label">Pending Invites</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🛡️</div>
+        <div class="stat-value">{{ userStats.byRole?.admin || 0 }}</div>
+        <div class="stat-label">Admins</div>
+      </div>
+    </div>
+
+    <!-- Invite Form -->
+    <div class="invite-form clean-card" *ngIf="showInviteForm">
+      <h3>📧 Invite New User</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input 
+            type="email" 
+            [(ngModel)]="inviteEmail"
+            placeholder="user@example.com"
+            class="form-input">
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <select [(ngModel)]="inviteRole" class="form-select">
+            <option value="viewer">Viewer</option>
+            <option value="editor">Editor</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="mat-btn mat-btn-outlined" (click)="toggleInviteForm()">Cancel</button>
+        <button class="mat-btn mat-btn-filled" (click)="sendInvitation()">
+          <span>📨</span> Send Invitation
+        </button>
+      </div>
+    </div>
+
+    <!-- Pending Invitations -->
+    <div class="section" *ngIf="invitations.length > 0">
+      <h2>📧 Pending Invitations</h2>
+      <div class="invitations-list">
+        <div *ngFor="let inv of invitations" class="invitation-item">
+          <div class="inv-info">
+            <span class="inv-email">{{ inv.email }}</span>
+            <span class="mat-chip mat-chip-primary">{{ inv.role }}</span>
+          </div>
+          <div class="inv-meta">
+            <span class="inv-date">Expires: {{ inv.expiresAt | date:'short' }}</span>
+          </div>
+          <div class="inv-actions">
+            <button class="mat-btn mat-btn-text" (click)="resendInvitation(inv.id)">
+              <span>🔄</span> Resend
+            </button>
+            <button class="mat-btn mat-btn-text mat-btn-danger" (click)="cancelInvitation(inv.id)">
+              <span>✕</span> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="section">
+      <h2>👥 Users ({{ users.length }})</h2>
+      <div class="users-table">
+        <div class="table-header">
+          <div class="th">User</div>
+          <div class="th">Role</div>
+          <div class="th">Status</div>
+          <div class="th">Last Login</div>
+          <div class="th">Actions</div>
+        </div>
+        
+        <div *ngFor="let user of users" class="table-row">
+          <div class="td user-cell">
+            <div class="user-avatar">{{ user.name.charAt(0) }}</div>
+            <div class="user-info">
+              <div class="user-name">{{ user.name }}</div>
+              <div class="user-email">{{ user.email }}</div>
+            </div>
+          </div>
+          
+          <div class="td">
+            <select 
+              [value]="user.role"
+              (change)="changeUserRole(user.id, $any($event.target).value)"
+              class="role-select">
+              <option value="admin">Admin</option>
+              <option value="editor">Editor</option>
+              <option value="viewer">Viewer</option>
+            </select>
+          </div>
+          
+          <div class="td">
+            <span [class]="getStatusBadgeClass(user.status)">
+              {{ user.status }}
+            </span>
+          </div>
+          
+          <div class="td">
+            <span class="last-login">
+              {{ user.lastLogin ? (user.lastLogin | date:'short') : 'Never' }}
+            </span>
+          </div>
+          
+          <div class="td actions-cell">
+            <button class="mat-icon-btn" (click)="editUser(user)" title="Edit user">
+              ✏️
+            </button>
+            <button 
+              class="mat-icon-btn"
+              (click)="toggleUserStatus(user)"
+              [title]="user.status === 'active' ? 'Deactivate' : 'Activate'">
+              {{ user.status === 'active' ? '🔒' : '🔓' }}
+            </button>
+            <button class="mat-icon-btn" (click)="deleteUser(user.id)" title="Delete user">
+              🗑️
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal-overlay" *ngIf="showUserForm" (click)="showUserForm = false">
+      <div class="modal-content" (click)="$event.stopPropagation()" *ngIf="selectedUser">
+        <div class="modal-header">
+          <h3>✏️ Edit User</h3>
+          <button class="close-btn" (click)="showUserForm = false">✕</button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" [(ngModel)]="selectedUser.name" class="form-input">
+          </div>
+          
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" [(ngModel)]="selectedUser.email" class="form-input">
+          </div>
+          
+          <div class="form-group">
+            <label>Role</label>
+            <select [(ngModel)]="selectedUser.role" class="form-select">
+              <option value="admin">Admin</option>
+              <option value="editor">Editor</option>
+              <option value="viewer">Viewer</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>Status</label>
+            <select [(ngModel)]="selectedUser.status" class="form-select">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+
+          <div class="permissions-section">
+            <h4>Permissions</h4>
+            <div class="permissions-grid">
+              <label class="permission-item">
+                <input type="checkbox" [(ngModel)]="selectedUser.permissions.canViewDashboards">
+                <span>View Dashboards</span>
+              </label>
+              <label class="permission-item">
+                <input type="checkbox" [(ngModel)]="selectedUser.permissions.canEditDashboards">
+                <span>Edit Dashboards</span>
+              </label>
+              <label class="permission-item">
+                <input type="checkbox" [(ngModel)]="selectedUser.permissions.canExportData">
+                <span>Export Data</span>
+              </label>
+              <label class="permission-item">
+                <input type="checkbox" [(ngModel)]="selectedUser.permissions.canManageUsers">
+                <span>Manage Users</span>
+              </label>
+              <label class="permission-item">
+                <input type="checkbox" [(ngModel)]="selectedUser.permissions.canManageSettings">
+                <span>Manage Settings</span>
+              </label>
+              <label class="permission-item">
+                <input type="checkbox" [(ngModel)]="selectedUser.permissions.canAccessAdmin">
+                <span>Access Admin</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button class="mat-btn mat-btn-outlined" (click)="showUserForm = false">Cancel</button>
+          <button class="mat-btn mat-btn-filled" (click)="saveUser()">
+            <span>💾</span> Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

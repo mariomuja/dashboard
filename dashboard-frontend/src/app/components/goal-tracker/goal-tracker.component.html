@@ -1,0 +1,34 @@
+<div class="goal-tracker-container">
+  <div class="goal-tracker-header">
+    <h2 class="section-title">🎯 Goals & Targets</h2>
+    <button 
+      *ngIf="showEditButton"
+      class="goal-edit-btn"
+      (click)="onEdit($event)"
+      title="Edit Goals Configuration"
+      aria-label="Edit Goals Configuration">
+      ✏️
+    </button>
+  </div>
+  <div class="goals-grid">
+    <div class="goal-card" *ngFor="let goal of goals" [@cardAnimation]>
+      <div class="goal-header">
+        <h3>{{ goal.title }}</h3>
+        <span class="goal-percentage">{{ getProgress(goal) | number:'1.0-0' }}%</span>
+      </div>
+      <div class="progress-info">
+        <span class="current-value">{{ formatValue(goal.current, goal.unit) }}</span>
+        <span class="target-value">of {{ formatValue(goal.target, goal.unit) }}</span>
+      </div>
+      <div class="progress-bar-container">
+        <div 
+          class="progress-bar" 
+          [style.width.%]="getProgress(goal)"
+          [style.background-color]="goal.color"
+          [@progressAnimation]>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

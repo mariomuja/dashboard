@@ -1,0 +1,422 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+  /* Colors */
+  --primary-color: #6366f1;
+  --secondary-color: #10b981;
+  --accent-color: #8b5cf6;
+  --danger-color: #ef4444;
+  --warning-color: #f59e0b;
+  
+  /* Light theme */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #ffffff;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+  --hover-bg: #f3f4f6;
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+/* Material Design Buttons */
+.mat-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  line-height: 1.5;
+}
+
+.mat-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.mat-btn:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Button Variants */
+.mat-btn-primary {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid transparent;
+  font-weight: 600;
+}
+
+.mat-btn-primary:hover {
+  background-color: rgba(99, 102, 241, 0.08);
+}
+
+.mat-btn-primary:active {
+  background-color: rgba(99, 102, 241, 0.16);
+}
+
+.mat-btn-filled {
+  background-color: var(--primary-color);
+  color: #000000 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
+  text-shadow: 
+    0 0 4px rgba(255, 255, 255, 0.8),
+    0 0 8px rgba(255, 255, 255, 0.6),
+    0 1px 2px rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.01em;
+  position: relative;
+}
+
+.mat-btn-filled::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.mat-btn-filled:hover {
+  filter: brightness(0.9) saturate(1.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+.mat-btn-filled:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  filter: brightness(0.85);
+}
+
+.mat-btn-outlined {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.mat-btn-outlined:hover {
+  background-color: var(--hover-bg);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.dark-theme .mat-btn-outlined {
+  color: #ffffff;
+  border-color: #4b5563;
+  text-shadow: 
+    0 0 8px rgba(0, 0, 0, 0.8),
+    0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.dark-theme .mat-btn-outlined:hover {
+  background-color: rgba(75, 85, 99, 0.3);
+  border-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.mat-btn-text {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: none;
+  padding: 0.5rem 0.875rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.mat-btn-text:hover {
+  background-color: var(--hover-bg);
+}
+
+.dark-theme .mat-btn-text {
+  color: #f3f4f6;
+  text-shadow: 
+    0 0 8px rgba(0, 0, 0, 0.7),
+    0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Icon Buttons */
+.mat-icon-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  color: var(--text-secondary);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1.25rem;
+}
+
+.mat-icon-btn:hover {
+  background-color: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.mat-icon-btn:active {
+  background-color: var(--border-color);
+}
+
+/* Color Variants */
+.mat-btn-success {
+  color: #10b981;
+}
+
+.mat-btn-success.mat-btn-filled {
+  background-color: #10b981;
+  color: white;
+}
+
+.mat-btn-success.mat-btn-filled:hover {
+  background-color: #059669;
+}
+
+.mat-btn-danger {
+  color: #ef4444;
+}
+
+.mat-btn-danger.mat-btn-filled {
+  background-color: #ef4444;
+  color: white;
+}
+
+.mat-btn-danger.mat-btn-filled:hover {
+  background-color: #dc2626;
+}
+
+.mat-btn-warning {
+  color: #f59e0b;
+}
+
+/* Disabled State */
+.mat-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Toolbar Styling */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background-color: transparent;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.toolbar-spacer {
+  flex: 1;
+}
+
+/* Clean Header Styling */
+.clean-header {
+  background-color: transparent;
+  border-bottom: 1px solid var(--border-color);
+  padding: 1.5rem 2rem;
+}
+
+.clean-header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.clean-header-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.clean-header-title h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-shadow: 
+    0 0 10px rgba(0, 0, 0, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.dark-theme .clean-header-title h1 {
+  color: #ffffff;
+  text-shadow: 
+    0 0 15px rgba(0, 0, 0, 0.9),
+    0 0 20px rgba(0, 0, 0, 0.7),
+    0 2px 8px rgba(0, 0, 0, 0.8);
+  font-weight: 700;
+}
+
+.clean-header-title p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.dark-theme .clean-header-title p {
+  color: #e5e7eb;
+  text-shadow: 
+    0 0 10px rgba(0, 0, 0, 0.8),
+    0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.clean-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Card Styling */
+.clean-card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  transition: all 0.2s;
+}
+
+.clean-card:hover {
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Chip/Badge Styling */
+.mat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.mat-chip-primary {
+  background-color: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.3);
+  color: #4f46e5;
+}
+
+.mat-chip-success {
+  background-color: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #059669;
+}
+
+/* Dark Theme */
+.dark-theme {
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --bg-tertiary: #374151;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --border-color: #4b5563;
+  --hover-bg: #374151;
+}
+
+.dark-theme .mat-btn-filled {
+  color: #000000 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  text-shadow: 
+    0 0 6px rgba(255, 255, 255, 0.9),
+    0 0 10px rgba(255, 255, 255, 0.7),
+    0 1px 3px rgba(255, 255, 255, 0.8);
+  font-weight: 700;
+}
+
+.dark-theme .mat-btn-filled::before {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.dark-theme .mat-btn-filled:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+  filter: brightness(0.85) saturate(1.2);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .clean-header {
+    padding: 1rem;
+  }
+
+  .clean-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .clean-header-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .mat-btn {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+  }
+}

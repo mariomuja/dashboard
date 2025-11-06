@@ -1,0 +1,16 @@
+<div class="chart-wrapper">
+  <button 
+    *ngIf="showEditButton"
+    class="chart-edit-btn"
+    (click)="onEdit($event)"
+    title="Edit Chart Configuration"
+    aria-label="Edit Chart Configuration">
+    ✏️
+  </button>
+  <canvas baseChart
+    [data]="pieChartData"
+    [options]="pieChartOptions"
+    type="pie">
+  </canvas>
+</div>
+

@@ -1,0 +1,16 @@
+<div *ngIf="type === 'kpi'" class="skeleton-kpi-grid">
+  <div *ngFor="let item of items" class="skeleton-kpi-card">
+    <div class="skeleton-header">
+      <div class="skeleton-icon"></div>
+      <div class="skeleton-badge"></div>
+    </div>
+    <div class="skeleton-title"></div>
+    <div class="skeleton-value"></div>
+  </div>
+</div>
+
+<div *ngIf="type === 'chart'" class="skeleton-chart">
+  <div class="skeleton-chart-title"></div>
+  <div class="skeleton-chart-body"></div>
+</div>
+
