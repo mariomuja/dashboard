@@ -73,6 +73,11 @@ if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
 }
 
+// Root endpoint
+app.get('/', (req, res) => {
+  res.send('KPI Dashboard Backend - v2.0 - Session-based isolation enabled');
+});
+
 // File upload endpoint with rate limiting
 app.post('/api/upload/dashboard-data', rateLimiter, upload.single('file'), async (req, res) => {
   try {
