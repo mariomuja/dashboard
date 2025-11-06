@@ -3,9 +3,11 @@ const cors = require('cors');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const sessionManager = require('./session-manager');
+const kpiIntegration = require('./kpi-integration');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Rate limiting storage
 const uploadAttempts = new Map();
@@ -181,10 +183,86 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// ============================================================================
+// EXTERNAL KPI INTEGRATION (NEW - Cross-app KPI sharing)
+// ============================================================================
+
+// Receive KPI from external application (e.g., bookkeeping app)
+app.post('/api/kpis/external', async (req, res) => {
+  try {
+    const sessionId = req.headers['x-session-id'];
+    if (!sessionId) {
+      return res.status(401).json({ error: 'Session ID required' });
+    }
+
+    const isValid = await sessionManager.validateSession(sessionId);
+    if (!isValid) {
+      return res.status(401).json({ error: 'Invalid or expired session' });
+    }
+
+    const result = await kpiIntegration.receiveExternalKPI(sessionId, req.body);
+    res.status(201).json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Receive batch of KPIs from external application
+app.post('/api/kpis/external/batch', async (req, res) => {
+  try {
+    const sessionId = req.headers['x-session-id'];
+    if (!sessionId) {
+      return res.status(401).json({ error: 'Session ID required' });
+    }
+
+    const isValid = await sessionManager.validateSession(sessionId);
+    if (!isValid) {
+      return res.status(401).json({ error: 'Invalid or expired session' });
+    }
+
+    const { sourceApp, sourceAppDisplay, kpis } = req.body;
+    const results = await kpiIntegration.receiveKPIBatch(sessionId, sourceApp, sourceAppDisplay, kpis);
+    res.status(201).json({ success: true, count: results.length, results });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get all external KPIs for current session
+app.get('/api/kpis/external', async (req, res) => {
+  try {
+    const sessionId = req.headers['x-session-id'];
+    if (!sessionId) {
+      return res.status(401).json({ error: 'Session ID required' });
+    }
+
+    const kpis = await kpiIntegration.getExternalKPIs(sessionId);
+    res.json(kpis);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get external KPIs grouped by source application
+app.get('/api/kpis/external/by-source', async (req, res) => {
+  try {
+    const sessionId = req.headers['x-session-id'];
+    if (!sessionId) {
+      return res.status(401).json({ error: 'Session ID required' });
+    }
+
+    const grouped = await kpiIntegration.getKPIsBySource(sessionId);
+    res.json(grouped);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   console.log('Upload endpoint: POST http://localhost:' + PORT + '/api/upload/:dataType');
+  console.log('External KPI endpoint: POST http://localhost:' + PORT + '/api/kpis/external');
 });
 
 module.exports = app;

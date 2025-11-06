@@ -44,6 +44,7 @@ import { KpiEditorComponent } from './components/kpi-editor/kpi-editor.component
 import { ChartEditorComponent } from './components/chart-editor/chart-editor.component';
 import { GoalEditorComponent } from './components/goal-editor/goal-editor.component';
 import { InsightsEditorComponent } from './components/insights-editor/insights-editor.component';
+import { ExternalKpisComponent } from './components/external-kpis/external-kpis.component';
 import { CountUpDirective } from './directives/count-up.directive';
 
 @NgModule({
@@ -87,6 +88,7 @@ import { CountUpDirective } from './directives/count-up.directive';
     CountUpDirective
   ],
   imports: [
+    ExternalKpisComponent,
     BrowserModule,
     CommonModule,
     HttpClientModule,
