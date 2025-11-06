@@ -1,0 +1,102 @@
+<div class="startup-container">
+  <div class="startup-card">
+    <div class="startup-header">
+      <div class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+      </div>
+      <h1>KPI Dashboard</h1>
+      <p class="subtitle">Starting application...</p>
+    </div>
+
+    <div class="startup-body">
+      <!-- Overall Status -->
+      <div class="status-indicator" [ngClass]="bootstrapState.overallStatus">
+        <div class="spinner" *ngIf="bootstrapState.overallStatus === 'initializing'"></div>
+        <div class="status-icon success" *ngIf="bootstrapState.overallStatus === 'ready'">✓</div>
+        <div class="status-icon error" *ngIf="bootstrapState.overallStatus === 'error'">✗</div>
+      </div>
+
+      <!-- Bootstrap Checks -->
+      <div class="checks-list">
+        <div 
+          class="check-item" 
+          *ngFor="let check of bootstrapState.checks"
+          [ngClass]="getStatusClass(check.status)">
+          <div class="check-icon">
+            <span class="icon">{{ getStatusIcon(check.status) }}</span>
+          </div>
+          <div class="check-content">
+            <div class="check-name">{{ check.name }}</div>
+            <div class="check-message">{{ check.message }}</div>
+            <div class="check-details" *ngIf="check.details && check.status === 'error'">
+              <pre>{{ check.details | json }}</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading indicator when no checks yet -->
+        <div class="check-item status-pending" *ngIf="bootstrapState.checks.length === 0">
+          <div class="check-icon">
+            <span class="icon spinner-small"></span>
+          </div>
+          <div class="check-content">
+            <div class="check-name">Initializing...</div>
+            <div class="check-message">Running bootstrap checks (Render free tier may take 30-60s to wake up)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div class="error-container" *ngIf="bootstrapState.overallStatus === 'error' && bootstrapState.error">
+        <div class="error-icon">⚠️</div>
+        <div class="error-message">
+          <h3>Startup Failed</h3>
+          <p>{{ bootstrapState.error }}</p>
+        </div>
+      </div>
+
+      <!-- Success Message -->
+      <div class="success-container" *ngIf="bootstrapState.overallStatus === 'ready'">
+        <div class="success-icon">✓</div>
+        <div class="success-message">
+          <h3>All Systems Ready</h3>
+          <p>Launching application...</p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions" *ngIf="bootstrapState.overallStatus === 'error'">
+        <button 
+          class="btn-retry" 
+          (click)="retry()"
+          [disabled]="isRetrying">
+          <span *ngIf="!isRetrying">🔄 Retry Connection</span>
+          <span *ngIf="isRetrying">Retrying...</span>
+        </button>
+        <button class="btn-secondary" (click)="openBackendInstructions()">
+          📖 View on GitHub
+        </button>
+      </div>
+
+      <!-- Help Text -->
+      <div class="help-text" *ngIf="bootstrapState.overallStatus === 'error'">
+        <h4>Troubleshooting Steps:</h4>
+        <ol>
+          <li><strong>Render Free Tier:</strong> Backend may be sleeping. Wait 30-60 seconds and click "Retry Connection"</li>
+          <li>Check that backend is accessible at: <code>https://kpi-dashboard-backend.onrender.com</code></li>
+          <li>Verify backend health: <code>https://kpi-dashboard-backend.onrender.com/api/health</code></li>
+          <li>Check browser console for additional error details</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="startup-footer">
+      <small>KPI Dashboard v1.0.0 | Mario Muja</small>
+    </div>
+  </div>
+</div>
+

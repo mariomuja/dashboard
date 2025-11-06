@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { StartupComponent } from './components/startup/startup.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { LoginComponent } from './components/login/login.component';
@@ -21,8 +22,10 @@ import { FormulaBuilderComponent } from './components/formula-builder/formula-bu
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: DashboardComponent },
+  { path: '', component: StartupComponent },
+  { path: 'startup', component: StartupComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'oauth-login', component: OAuthLoginComponent },
   { path: 'enterprise-login', component: EnterpriseLoginComponent },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
@@ -39,7 +42,7 @@ const routes: Routes = [
   { path: 'email-scheduler', component: EmailSchedulerComponent, canActivate: [AuthGuard] },
   { path: 'builder', component: DashboardBuilderComponent },
   { path: 'version-history', component: DashboardVersionHistoryComponent },
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '/startup' }
 ];
 
 @NgModule({
