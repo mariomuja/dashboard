@@ -22,7 +22,7 @@
     ],
     "skipLibCheck": true,
     "paths": {
-      "@shared-components/*": ["../angular-shared-components/src/*"]
+      "@shared-components/*": ["../shared-components/src/*"]
     }
   },
   "angularCompilerOptions": {

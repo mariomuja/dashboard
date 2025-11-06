@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,19 +8,23 @@ export class AuthService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.checkAuthentication());
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
 
-  // In production, this should be validated against a backend
-  // For development, using a simple password stored in environment
-  private readonly adminPassword = 'admin123'; // Change this in production!
+  // Demo credentials
+  private readonly demoUsername = 'demo';
+  private readonly demoPassword = 'DemoKPI2025!Secure';
 
   constructor() { }
 
-  login(password: string): boolean {
-    if (password === this.adminPassword) {
+  // Updated login to return Observable to work with shared component
+  login(username: string, password: string): Observable<any> {
+    if (username === this.demoUsername && password === this.demoPassword) {
       sessionStorage.setItem('admin_authenticated', 'true');
       this.isAuthenticatedSubject.next(true);
-      return true;
+      return of({ 
+        success: true,
+        user: { username: this.demoUsername }
+      });
     }
-    return false;
+    return throwError(() => ({ error: { error: 'Invalid credentials' } }));
   }
 
   logout(): void {

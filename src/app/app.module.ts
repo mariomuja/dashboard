@@ -15,7 +15,6 @@ import { RevenueChartComponent } from './components/revenue-chart/revenue-chart.
 import { SalesChartComponent } from './components/sales-chart/sales-chart.component';
 import { ConversionChartComponent } from './components/conversion-chart/conversion-chart.component';
 import { AdminComponent } from './components/admin/admin.component';
-import { LoginComponent } from './components/login/login.component';
 import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
 import { LoadingSkeletonComponent } from './components/loading-skeleton/loading-skeleton.component';
 import { PieChartComponent } from './components/pie-chart/pie-chart.component';
@@ -56,7 +55,6 @@ import { CountUpDirective } from './directives/count-up.directive';
     SalesChartComponent,
     ConversionChartComponent,
     AdminComponent,
-    LoginComponent,
     ThemeToggleComponent,
     LoadingSkeletonComponent,
     PieChartComponent,
