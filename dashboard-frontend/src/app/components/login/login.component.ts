@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { SharedLoginComponent, LoginConfig } from '@shared-components/login';
+import { SharedLoginComponent } from '../shared-login/login.component';
+import { LoginConfig } from '../shared-login/login-config.interface';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -13,7 +14,7 @@ export class LoginComponent {
     appTitle: 'KPI Dashboard',
     redirectAfterLogin: '/dashboard',
     showDeveloperCard: true,
-    photoUrl: 'mario-muja.jpg',
+    photoUrl: 'assets/images/mario-muja.jpg',
     githubRepoUrl: 'https://github.com/mariomuja/dashboard',
     demoCredentials: {
       username: 'demo',
