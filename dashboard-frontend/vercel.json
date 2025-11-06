@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "cd .. && git submodule update --init --recursive && cd dashboard-frontend && npm run build -- --configuration=production",
+  "buildCommand": "npm run build -- --configuration=production",
   "outputDirectory": "dist/kpi-dashboard",
-  "installCommand": "npm install",
+  "installCommand": "git submodule update --init --recursive && npm install",
   "framework": "angular",
   "build": {
     "env": {
