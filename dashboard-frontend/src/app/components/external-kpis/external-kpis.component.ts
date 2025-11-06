@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 
 interface ExternalKPI {
   id: string;
@@ -269,7 +268,8 @@ export class ExternalKpisComponent implements OnInit {
       return;
     }
 
-    const apiUrl = environment.apiUrl || 'http://localhost:3001/api';
+    // Use production API URL for now
+    const apiUrl = 'https://kpi-dashboard-backend.onrender.com/api';
     
     this.http.get<KPIsBySource[]>(`${apiUrl}/kpis/external/by-source`, {
       headers: { 'X-Session-Id': sessionId }

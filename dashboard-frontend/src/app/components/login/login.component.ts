@@ -1,28 +1,49 @@
 import { Component } from '@angular/core';
-import { SharedLoginComponent, LoginConfig } from '@shared-components/login';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [SharedLoginComponent],
-  template: `<shared-login [config]="loginConfig" [authService]="authService"></shared-login>`
+  imports: [CommonModule, FormsModule],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  loginConfig: LoginConfig = {
-    appTitle: 'KPI Dashboard',
-    redirectAfterLogin: '/admin',
-    showDeveloperCard: true,
-    photoUrl: 'mario-muja.jpg',
-    githubRepoUrl: 'https://github.com/mariomuja/dashboard',
-    demoCredentials: {
-      username: 'demo',
-      password: 'DemoKPI2025!Secure'
-    }
-  };
+  username = '';
+  password = '';
+  loading = false;
+  error = '';
 
   constructor(
-    public authService: AuthService
-  ) {}
-}
+    private authService: AuthService,
+    private router: Router
+  ) {
+    // If already authenticated, redirect
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/admin']);
+    }
+  }
 
+  onLogin() {
+    if (!this.username || !this.password) {
+      this.error = 'Please enter username and password';
+      return;
+    }
+
+    this.loading = true;
+    this.error = '';
+
+    this.authService.login(this.username, this.password).subscribe({
+      next: () => {
+        this.router.navigate(['/admin']);
+      },
+      error: (err) => {
+        this.error = 'Login failed. Please check your credentials.';
+        this.loading = false;
+      }
+    });
+  }
+}
