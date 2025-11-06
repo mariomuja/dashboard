@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, shareReplay, catchError } from 'rxjs/operators';
 import { OrganizationService } from './organization.service';
+import { environment } from '../../environments/environment';
 
 export interface KpiData {
   id: string;
@@ -36,7 +37,8 @@ interface DashboardData {
   providedIn: 'root'
 })
 export class DataService {
-  private dataUrl = 'assets/data/dashboard-data.json';
+  private apiUrl = environment.apiUrl;
+  private fallbackDataUrl = 'assets/data/dashboard-data.json';
   private cachedData$: Observable<DashboardData> | null = null;
   private currentOrgId: string | null = null;
 
@@ -56,20 +58,39 @@ export class DataService {
     }
 
     if (!this.cachedData$) {
-      let dataFile = 'assets/data/dashboard-data.json';
+      const sessionId = localStorage.getItem('sessionId');
       
-      // Load organization-specific data if available
-      if (orgId === 'org-2') {
-        dataFile = 'assets/data/dashboard-data-org-2.json';
-      } else if (orgId === 'org-3') {
-        dataFile = 'assets/data/dashboard-data-org-3.json';
+      // Try to load from backend API first
+      if (sessionId) {
+        const headers = { 'x-session-id': sessionId };
+        this.cachedData$ = this.http.get<DashboardData>(`${this.apiUrl}/data/dashboard-data`, { headers }).pipe(
+          catchError(error => {
+            console.error('Failed to load data from API, falling back to local data:', error);
+            return this.loadFallbackData(orgId);
+          }),
+          shareReplay(1)
+        );
+      } else {
+        // No session, use fallback data
+        this.cachedData$ = this.loadFallbackData(orgId);
       }
-      
-      this.cachedData$ = this.http.get<DashboardData>(dataFile).pipe(
-        shareReplay(1)
-      );
     }
     return this.cachedData$;
+  }
+
+  private loadFallbackData(orgId: string): Observable<DashboardData> {
+    let dataFile = this.fallbackDataUrl;
+    
+    // Load organization-specific data if available
+    if (orgId === 'org-2') {
+      dataFile = 'assets/data/dashboard-data-org-2.json';
+    } else if (orgId === 'org-3') {
+      dataFile = 'assets/data/dashboard-data-org-3.json';
+    }
+    
+    return this.http.get<DashboardData>(dataFile).pipe(
+      shareReplay(1)
+    );
   }
 
   reloadData(): void {
