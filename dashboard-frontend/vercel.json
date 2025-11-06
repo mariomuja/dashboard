@@ -1,28 +1,15 @@
 {
   "version": 2,
-  "name": "kpi-dashboard",
-  "builds": [
+  "framework": "angular",
+  "buildCommand": "npm install && npm run build -- --configuration=production",
+  "outputDirectory": "dist/kpi-dashboard/browser",
+  "installCommand": "npm install",
+  "devCommand": "npm start",
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist/kpi-dashboard/browser"
-      }
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|svg|gif|webp|woff|woff2|ttf|eot))",
-      "headers": { "cache-control": "s-maxage=31536000, immutable" },
-      "dest": "/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ],
-  "github": {
-    "silent": true
-  }
+  ]
 }
 
