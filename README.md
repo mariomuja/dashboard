@@ -1,6 +1,17 @@
-# KPI Dashboard 📊
+# 📈 KPI Dashboard - Real-Time Analytics Platform
 
-A modern, feature-rich KPI (Key Performance Indicator) dashboard built with Angular 17 with session-based demo isolation.
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Try_Now!-success?style=for-the-badge)](https://kpi-dashboard.vercel.app)
+[![GitHub](https://img.shields.io/badge/GitHub-mariomuja%2Fdashboard-blue?style=flat-square&logo=github)](https://github.com/mariomuja/dashboard)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.2-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Angular](https://img.shields.io/badge/Angular-17-red?style=flat-square&logo=angular)](https://angular.io/)
+[![Chart.js](https://img.shields.io/badge/Chart.js-4.4-orange?style=flat-square&logo=chart.js)](https://www.chartjs.org/)
+[![Integration](https://img.shields.io/badge/Integrates_With-Bookkeeping_App-blueviolet?style=flat-square)](https://international-bookkeeping.vercel.app)
+
+> **🎯 [Try the Live Demo →](https://kpi-dashboard.vercel.app)**  
+> **Demo Credentials:** Username: `demo` | Password: `DemoUser2025!Secure`  
+> **🔗 Cross-App Magic:** Automatically receives real-time KPIs from [International Bookkeeping](https://international-bookkeeping.vercel.app)
+
+A modern, production-ready KPI dashboard with real-time analytics, cross-application microservices integration, and advanced data visualization. **Demonstrates enterprise-level Angular development and system architecture.**
 
 ## 📸 Application Screenshots
 
