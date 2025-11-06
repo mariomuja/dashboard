@@ -79,6 +79,99 @@ app.get('/', (req, res) => {
   res.send('KPI Dashboard Backend - v2.0 - Session-based isolation enabled');
 });
 
+// ============================================================================
+// AUTHENTICATION & SESSION MANAGEMENT
+// ============================================================================
+
+// Demo login endpoint
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    // Demo credentials validation
+    const DEMO_USERNAME = 'demo';
+    const DEMO_PASSWORD = 'DemoKPI2025!Secure';
+
+    if (username === DEMO_USERNAME && password === DEMO_PASSWORD) {
+      // Create a new isolated session for this demo user
+      const sessionId = await sessionManager.createSession();
+
+      res.json({
+        success: true,
+        sessionId,
+        user: {
+          id: 'demo-user',
+          username: DEMO_USERNAME,
+          name: 'Demo User',
+          email: 'demo@kpi-dashboard.com',
+          role: 'demo'
+        },
+        message: 'Login successful - isolated session created'
+      });
+    } else {
+      res.status(401).json({
+        success: false,
+        error: 'Invalid username or password'
+      });
+    }
+  } catch (error) {
+    console.error('[Auth] Login error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Login failed'
+    });
+  }
+});
+
+// Logout endpoint
+app.post('/api/auth/logout', async (req, res) => {
+  try {
+    const sessionId = req.headers['x-session-id'];
+    
+    if (sessionId) {
+      await sessionManager.cleanupSession(sessionId);
+    }
+
+    res.json({
+      success: true,
+      message: 'Logged out successfully'
+    });
+  } catch (error) {
+    console.error('[Auth] Logout error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Logout failed'
+    });
+  }
+});
+
+// Validate session endpoint
+app.get('/api/auth/validate', async (req, res) => {
+  try {
+    const sessionId = req.headers['x-session-id'];
+    
+    if (!sessionId) {
+      return res.status(401).json({
+        valid: false,
+        error: 'No session ID provided'
+      });
+    }
+
+    const isValid = await sessionManager.validateSession(sessionId);
+    
+    res.json({
+      valid: isValid,
+      sessionId: isValid ? sessionId : null
+    });
+  } catch (error) {
+    console.error('[Auth] Validation error:', error);
+    res.status(500).json({
+      valid: false,
+      error: 'Validation failed'
+    });
+  }
+});
+
 // File upload endpoint with rate limiting
 app.post('/api/upload/dashboard-data', rateLimiter, upload.single('file'), async (req, res) => {
   try {
