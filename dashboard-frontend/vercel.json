@@ -1,6 +1,24 @@
 {
-  "buildCommand": "cd dashboard-frontend && npm install && npm run build -- --configuration=production",
-  "outputDirectory": "dashboard-frontend/dist/kpi-dashboard/browser",
-  "installCommand": "cd dashboard-frontend && npm install"
+  "version": 2,
+  "buildCommand": "npm run build -- --configuration=production",
+  "outputDirectory": "dist/kpi-dashboard/browser",
+  "installCommand": "npm install",
+  "framework": "angular",
+  "build": {
+    "env": {
+      "NODE_VERSION": "22"
+    }
+  },
+  "routes": [
+    {
+      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|svg|gif|webp|woff|woff2|ttf|eot))",
+      "headers": { "cache-control": "s-maxage=31536000, immutable" },
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
 }
 
