@@ -2,6 +2,7 @@ services:
   - type: web
     name: kpi-dashboard-backend
     env: node
+    plan: free
     buildCommand: cd dashboard-backend && npm install
     startCommand: cd dashboard-backend && npm start
     envVars:
