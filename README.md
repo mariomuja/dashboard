@@ -1,8 +1,78 @@
 # KPI Dashboard 📊
 
-![KPI Dashboard Screenshot](docs/images/dashboard-screenshot.png)
+A modern, feature-rich KPI (Key Performance Indicator) dashboard built with Angular 17 with session-based demo isolation.
 
-A modern, feature-rich KPI (Key Performance Indicator) dashboard built with Angular 17.
+## 📸 Application Screenshots
+
+### 📊 Main Dashboard - KPI Overview
+<img src="docs/images/dashboard-screenshot.png" alt="KPI Dashboard" width="700">
+
+*Real-time KPI cards with animated counters, trend indicators, and interactive charts for revenue, sales, and conversion metrics*
+
+---
+
+### 🎯 Advanced Analytics - Forecasting & Cohort Analysis
+<img src="docs/images/advanced-analytics.png" alt="Advanced Analytics" width="700">
+
+*Predictive forecasting, cohort retention analysis, funnel visualization, A/B testing results, and statistical hypothesis testing*
+
+---
+
+### 🧮 Calculated Metrics Builder
+<img src="docs/images/calculated-metrics.png" alt="Calculated Metrics" width="700">
+
+*Visual formula builder for creating custom KPIs with functions, operators, and field references. Supports aggregations and running totals*
+
+---
+
+### 🎨 Dashboard Builder - Drag & Drop Customization
+<img src="docs/images/dashboard-builder.png" alt="Dashboard Builder" width="700">
+
+*Customize your dashboard layout with drag-and-drop grid, widget configuration, and save custom layouts*
+
+---
+
+### 🔌 Data Sources Management
+<img src="docs/images/data-sources.png" alt="Data Sources" width="700">
+
+*Connect to 13+ data sources: PostgreSQL, MySQL, MongoDB, REST APIs, GraphQL, Google Sheets, Salesforce, and more*
+
+---
+
+### ⚙️ ETL Pipeline Configuration
+<img src="docs/images/etl-pipeline.png" alt="ETL Pipeline" width="700">
+
+*Extract, Transform, Load data with validation rules, scheduling, error handling, and monitoring*
+
+---
+
+### 🏢 Multi-Tenancy & User Management
+<img src="docs/images/multi-tenancy.png" alt="Multi-Tenancy" width="700">
+
+*Complete tenant isolation with RBAC, SCIM provisioning, LDAP/AD integration, and SAML SSO*
+
+---
+
+### 📧 Scheduled Reports & Branding
+<img src="docs/images/scheduled-reports.png" alt="Scheduled Reports" width="700">
+
+*Automated email reports with custom branding, scheduling, and white-label customization*
+
+---
+
+### 📋 Audit Trail & Version Control
+<img src="docs/images/audit-trail.png" alt="Audit Trail" width="700">
+
+*Comprehensive activity logging, dashboard version control, rollback capabilities, and compliance tracking*
+
+---
+
+### 🎨 White-Label Branding Customization
+<img src="docs/images/branding-settings.png" alt="Branding Settings" width="700">
+
+*Customize logo, colors, fonts, and inject custom CSS for complete white-label solutions*
+
+---
 
 ## ✨ Key Features
 
