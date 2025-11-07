@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { InsightsConfigService, InsightsConfig } from '../../services/insights-config.service';
 
 @Component({
@@ -49,3 +50,4 @@ export class InsightsEditorComponent implements OnInit {
     this.close.emit();
   }
 }
+

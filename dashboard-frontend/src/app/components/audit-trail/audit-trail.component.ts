@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuditTrailService, AuditEntry } from '../../services/audit-trail.service';
 
 @Component({
   selector: 'app-audit-trail',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './audit-trail.component.html',
   styleUrls: ['./audit-trail.component.css']
 })

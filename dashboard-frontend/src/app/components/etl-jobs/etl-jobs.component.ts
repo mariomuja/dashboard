@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EtlPipelineService, ETLJob, ETLLog } from '../../services/etl-pipeline.service';
 
@@ -131,3 +132,4 @@ export class EtlJobsComponent implements OnInit {
     this.router.navigate(['/admin']);
   }
 }
+

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { GoalConfigService } from '../../services/goal-config.service';
 import { Goal } from '../goal-tracker/goal-tracker.component';
 
@@ -67,3 +68,4 @@ export class GoalEditorComponent implements OnInit {
     this.close.emit();
   }
 }
+

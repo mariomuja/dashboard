@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DashboardVersionControlService, DashboardVersion, VersionComparison } from '../../services/dashboard-version-control.service';
 import { DashboardLayoutService } from '../../services/dashboard-layout.service';
 
 @Component({
   selector: 'app-dashboard-version-history',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './dashboard-version-history.component.html',
   styleUrls: ['./dashboard-version-history.component.css']
 })

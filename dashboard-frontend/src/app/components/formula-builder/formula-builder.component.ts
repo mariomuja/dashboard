@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CalculatedMetricsService, CalculatedMetric, MetricVariable, FormulaValidation } from '../../services/calculated-metrics.service';
 
@@ -294,4 +295,5 @@ export class FormulaBuilderComponent implements OnInit {
     this.router.navigate(['/admin']);
   }
 }
+
 

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CommentsService, Comment } from '../../services/comments.service';
 
 @Component({
@@ -83,4 +84,5 @@ export class CommentsPanelComponent implements OnInit {
     return `${Math.floor(seconds / 86400)}d ago`;
   }
 }
+
 

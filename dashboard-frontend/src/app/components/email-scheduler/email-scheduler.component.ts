@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { OrganizationService } from '../../services/organization.service';
@@ -208,4 +209,5 @@ export class EmailSchedulerComponent implements OnInit {
     this.router.navigate(['/admin']);
   }
 }
+
 

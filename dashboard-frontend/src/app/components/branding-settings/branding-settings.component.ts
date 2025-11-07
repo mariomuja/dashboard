@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { OrganizationService, OrganizationSettings } from '../../services/organization.service';
 
 @Component({
   selector: 'app-branding-settings',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './branding-settings.component.html',
   styleUrls: ['./branding-settings.component.css']
 })

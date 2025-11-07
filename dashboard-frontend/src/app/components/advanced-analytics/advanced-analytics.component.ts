@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AdvancedAnalyticsService } from '../../services/advanced-analytics.service';
 import { DataService } from '../../services/data.service';
@@ -44,6 +46,8 @@ interface ABTestResult {
 
 @Component({
   selector: 'app-advanced-analytics',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './advanced-analytics.component.html',
   styleUrls: ['./advanced-analytics.component.css']
 })
@@ -261,4 +265,6 @@ export class AdvancedAnalyticsComponent implements OnInit {
   goBack(): void {
     this.router.navigate(['/admin']);
   }
+}
+
 }

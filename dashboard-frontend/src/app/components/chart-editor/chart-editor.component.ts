@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ChartConfigService, ChartConfig } from '../../services/chart-config.service';
 import { DataSourceService, DataSource } from '../../services/data-source.service';
 
@@ -194,3 +195,4 @@ export class ChartEditorComponent implements OnInit {
     }
   }
 }
+

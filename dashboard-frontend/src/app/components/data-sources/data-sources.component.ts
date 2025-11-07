@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DataSourceService, DataSource, DataSourceType, DataSourceTemplate } from '../../services/data-source.service';
 
@@ -257,3 +258,4 @@ export class DataSourcesComponent implements OnInit {
     this.router.navigate(['/admin']);
   }
 }
+

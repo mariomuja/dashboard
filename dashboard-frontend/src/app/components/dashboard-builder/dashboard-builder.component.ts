@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { CdkDragDrop, CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
 import { DashboardLayoutService, WidgetConfig } from '../../services/dashboard-layout.service';
@@ -17,6 +20,8 @@ interface ResizeHandle {
 
 @Component({
   selector: 'app-dashboard-builder',
+  standalone: true,
+  imports: [CommonModule, DragDropModule, FormsModule],
   templateUrl: './dashboard-builder.component.html',
   styleUrls: ['./dashboard-builder.component.css'],
   animations: [
@@ -374,4 +379,5 @@ export class DashboardBuilderComponent implements OnInit {
     this.editMode = !this.editMode;
   }
 }
+
 

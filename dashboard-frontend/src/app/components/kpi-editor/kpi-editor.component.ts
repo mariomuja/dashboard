@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KpiConfigService, KPIConfig } from '../../services/kpi-config.service';
 import { DataSourceService, DataSource } from '../../services/data-source.service';
 
@@ -156,3 +157,4 @@ export class KpiEditorComponent implements OnInit {
     }
   }
 }
+
