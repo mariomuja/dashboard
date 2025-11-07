@@ -1,9 +1,19 @@
 import { Component, Input } from '@angular/core';
+import { LoadingSkeletonComponent as SharedLoadingSkeletonComponent, SkeletonType } from '@shared-components/ui';
 
 @Component({
   selector: 'app-loading-skeleton',
-  templateUrl: './loading-skeleton.component.html',
-  styleUrls: ['./loading-skeleton.component.css']
+  standalone: true,
+  imports: [SharedLoadingSkeletonComponent],
+  template: `
+    <div *ngFor="let item of items">
+      <shared-loading-skeleton 
+        [type]="type === 'kpi' ? 'card' : 'rect'" 
+        [width]="type === 'kpi' ? '100%' : '100%'"
+        [height]="type === 'chart' ? '300px' : undefined">
+      </shared-loading-skeleton>
+    </div>
+  `
 })
 export class LoadingSkeletonComponent {
   @Input() type: 'kpi' | 'chart' = 'kpi';

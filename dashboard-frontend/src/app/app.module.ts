@@ -58,8 +58,6 @@ import { CountUpDirective } from './directives/count-up.directive';
     SalesChartComponent,
     ConversionChartComponent,
     AdminComponent,
-    ThemeToggleComponent,
-    LoadingSkeletonComponent,
     PieChartComponent,
     GoalTrackerComponent,
     DateRangePickerComponent,
@@ -90,6 +88,8 @@ import { CountUpDirective } from './directives/count-up.directive';
   ],
   imports: [
     ExternalKpisComponent,
+    ThemeToggleComponent,
+    LoadingSkeletonComponent,
     BrowserModule,
     CommonModule,
     HttpClientModule,

@@ -1,24 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { ThemeService, Theme } from '@shared-components/services';
+import { Component } from '@angular/core';
+import { ThemeToggleComponent as SharedThemeToggleComponent } from '@shared-components/ui';
 
 @Component({
   selector: 'app-theme-toggle',
-  templateUrl: './theme-toggle.component.html',
-  styleUrls: ['./theme-toggle.component.css']
+  standalone: true,
+  imports: [SharedThemeToggleComponent],
+  template: `<shared-theme-toggle [toggleStyle]="'button'" [showLabel]="false"></shared-theme-toggle>`
 })
-export class ThemeToggleComponent implements OnInit {
-  currentTheme: Theme = 'light';
-
-  constructor(private themeService: ThemeService) { }
-
-  ngOnInit(): void {
-    this.themeService.theme$.subscribe(theme => {
-      this.currentTheme = theme;
-    });
-  }
-
-  toggleTheme(): void {
-    this.themeService.toggleTheme();
-  }
+export class ThemeToggleComponent {
+  // Using shared theme toggle component with constructor-based injection
 }
 
