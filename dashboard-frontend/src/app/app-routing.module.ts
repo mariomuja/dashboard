@@ -19,7 +19,7 @@ import { AuditTrailComponent } from './components/audit-trail/audit-trail.compon
 import { TenantManagementComponent } from './components/tenant-management/tenant-management.component';
 import { TempAccessComponent } from './components/temp-access/temp-access.component';
 import { FormulaBuilderComponent } from './components/formula-builder/formula-builder.component';
-import { AuthGuard } from './guards/auth.guard';
+import { authGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   { path: '', component: StartupComponent },
