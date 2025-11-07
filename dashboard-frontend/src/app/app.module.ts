@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgChartsModule } from 'ng2-charts';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { BOOTSTRAP_CONFIG, BootstrapConfig } from '@shared-components/services';
+import { BOOTSTRAP_CONFIG, BootstrapConfig, DOCUMENTATION_CONFIG, DocumentationConfig } from '@shared-components/services';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -120,6 +120,30 @@ import { CountUpDirective } from './directives/count-up.directive';
           authenticated: 'User authenticated with session'
         }
       } as BootstrapConfig
+    },
+    {
+      provide: DOCUMENTATION_CONFIG,
+      useValue: {
+        docsBasePath: '/docs',
+        files: [
+          { filename: 'ADVANCED-ANALYTICS-GUIDE.md', title: 'Advanced Analytics Guide', path: 'docs/ADVANCED-ANALYTICS-GUIDE.md', category: 'Advanced Features', order: 1 },
+          { filename: 'ADVANCED-FEATURES-SUMMARY.md', title: 'Advanced Features Summary', path: 'docs/ADVANCED-FEATURES-SUMMARY.md', category: 'Reference', order: 2 },
+          { filename: 'CALCULATED-METRICS-GUIDE.md', title: 'Calculated Metrics Guide', path: 'docs/CALCULATED-METRICS-GUIDE.md', category: 'Features', order: 3 },
+          { filename: 'COMPLETE-FEATURES-LIST.md', title: 'Complete Features List', path: 'docs/COMPLETE-FEATURES-LIST.md', category: 'Reference', order: 4 },
+          { filename: 'DASHBOARD-BUILDER-GUIDE.md', title: 'Dashboard Builder Guide', path: 'docs/DASHBOARD-BUILDER-GUIDE.md', category: 'Features', order: 5 },
+          { filename: 'DASHBOARD-VERSION-CONTROL-GUIDE.md', title: 'Dashboard Version Control Guide', path: 'docs/DASHBOARD-VERSION-CONTROL-GUIDE.md', category: 'Features', order: 6 },
+          { filename: 'EMAIL-SETUP.md', title: 'Email Setup', path: 'docs/EMAIL-SETUP.md', category: 'Configuration', order: 7 },
+          { filename: 'ENTERPRISE-FEATURES.md', title: 'Enterprise Features', path: 'docs/ENTERPRISE-FEATURES.md', category: 'Enterprise', order: 8 },
+          { filename: 'ENTERPRISE-IDENTITY-GUIDE.md', title: 'Enterprise Identity Guide', path: 'docs/ENTERPRISE-IDENTITY-GUIDE.md', category: 'Enterprise', order: 9 },
+          { filename: 'ETL-PIPELINE-GUIDE.md', title: 'ETL Pipeline Guide', path: 'docs/ETL-PIPELINE-GUIDE.md', category: 'Advanced Features', order: 10 },
+          { filename: 'FEATURE-SUMMARY.md', title: 'Feature Summary', path: 'docs/FEATURE-SUMMARY.md', category: 'Reference', order: 11 },
+          { filename: 'FILE-UPLOAD-GUIDE.md', title: 'File Upload Guide', path: 'docs/FILE-UPLOAD-GUIDE.md', category: 'Features', order: 12 },
+          { filename: 'MULTI-TENANCY-GUIDE.md', title: 'Multi-Tenancy Guide', path: 'docs/MULTI-TENANCY-GUIDE.md', category: 'Enterprise', order: 13 },
+          { filename: 'MULTIPLE-DATA-SOURCES-GUIDE.md', title: 'Multiple Data Sources Guide', path: 'docs/MULTIPLE-DATA-SOURCES-GUIDE.md', category: 'Advanced Features', order: 14 },
+          { filename: 'OAUTH-SETUP.md', title: 'OAuth Setup', path: 'docs/OAUTH-SETUP.md', category: 'Configuration', order: 15 },
+          { filename: 'SCHEDULED-REPORTS-BRANDING-GUIDE.md', title: 'Scheduled Reports & Branding Guide', path: 'docs/SCHEDULED-REPORTS-BRANDING-GUIDE.md', category: 'Features', order: 16 }
+        ]
+      } as DocumentationConfig
     }
   ],
   bootstrap: [AppComponent]
