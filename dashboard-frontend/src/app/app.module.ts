@@ -41,7 +41,7 @@ import { AuditTrailComponent } from './components/audit-trail/audit-trail.compon
 import { TenantManagementComponent } from './components/tenant-management/tenant-management.component';
 import { TempAccessComponent } from './components/temp-access/temp-access.component';
 import { FormulaBuilderComponent } from './components/formula-builder/formula-builder.component';
-import { DocumentationViewerComponent } from './components/documentation-viewer/documentation-viewer.component';
+// DocumentationViewerComponent removed - using shared component instead
 import { KpiEditorComponent } from './components/kpi-editor/kpi-editor.component';
 import { ChartEditorComponent } from './components/chart-editor/chart-editor.component';
 import { GoalEditorComponent } from './components/goal-editor/goal-editor.component';
@@ -82,7 +82,6 @@ import { CountUpDirective } from './directives/count-up.directive';
     CommentsPanelComponent,
     UserManagementComponent,
     EnterpriseLoginComponent,
-    DocumentationViewerComponent,
     KpiEditorComponent,
     ChartEditorComponent,
     GoalEditorComponent,
