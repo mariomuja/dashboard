@@ -19,27 +19,27 @@ import { AuditTrailComponent } from './components/audit-trail/audit-trail.compon
 import { TenantManagementComponent } from './components/tenant-management/tenant-management.component';
 import { TempAccessComponent } from './components/temp-access/temp-access.component';
 import { FormulaBuilderComponent } from './components/formula-builder/formula-builder.component';
-import { authGuard } from './guards/auth.guard';
+import { authGuardSimple } from './guards/auth-simple.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'startup', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginSimpleComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuardSimple] },
   { path: 'oauth-login', component: OAuthLoginComponent },
   { path: 'enterprise-login', component: EnterpriseLoginComponent },
-  { path: 'admin', component: AdminComponent, canActivate: [authGuard] },
-  { path: 'branding', component: BrandingSettingsComponent, canActivate: [authGuard] },
-  { path: 'users', component: UserManagementComponent, canActivate: [authGuard] },
-  { path: 'data-sources', component: DataSourcesComponent, canActivate: [authGuard] },
-  { path: 'etl-jobs', component: EtlJobsComponent, canActivate: [authGuard] },
-  { path: 'analytics', component: AdvancedAnalyticsComponent, canActivate: [authGuard] },
-  { path: 'audit-trail', component: AuditTrailComponent, canActivate: [authGuard] },
-  { path: 'tenants', component: TenantManagementComponent, canActivate: [authGuard] },
-  { path: 'temp-access', component: TempAccessComponent, canActivate: [authGuard] },
-  { path: 'formula-builder', component: FormulaBuilderComponent, canActivate: [authGuard] },
-  { path: '2fa-setup', component: TwoFactorSetupComponent, canActivate: [authGuard] },
-  { path: 'email-scheduler', component: EmailSchedulerComponent, canActivate: [authGuard] },
+  { path: 'admin', component: AdminComponent, canActivate: [authGuardSimple] },
+  { path: 'branding', component: BrandingSettingsComponent, canActivate: [authGuardSimple] },
+  { path: 'users', component: UserManagementComponent, canActivate: [authGuardSimple] },
+  { path: 'data-sources', component: DataSourcesComponent, canActivate: [authGuardSimple] },
+  { path: 'etl-jobs', component: EtlJobsComponent, canActivate: [authGuardSimple] },
+  { path: 'analytics', component: AdvancedAnalyticsComponent, canActivate: [authGuardSimple] },
+  { path: 'audit-trail', component: AuditTrailComponent, canActivate: [authGuardSimple] },
+  { path: 'tenants', component: TenantManagementComponent, canActivate: [authGuardSimple] },
+  { path: 'temp-access', component: TempAccessComponent, canActivate: [authGuardSimple] },
+  { path: 'formula-builder', component: FormulaBuilderComponent, canActivate: [authGuardSimple] },
+  { path: '2fa-setup', component: TwoFactorSetupComponent, canActivate: [authGuardSimple] },
+  { path: 'email-scheduler', component: EmailSchedulerComponent, canActivate: [authGuardSimple] },
   { path: 'builder', component: DashboardBuilderComponent },
   { path: 'version-history', component: DashboardVersionHistoryComponent },
   { path: '**', redirectTo: '/startup' }
