@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { StartupComponent } from './components/startup/startup.component';
+import { StartupSimpleComponent } from './components/startup/startup-simple.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { LoginSimpleComponent } from './components/login/login-simple.component';
@@ -22,8 +22,8 @@ import { FormulaBuilderComponent } from './components/formula-builder/formula-bu
 import { AuthGuardSimple } from './guards/auth-simple.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'startup', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', component: StartupSimpleComponent },
+  { path: 'startup', component: StartupSimpleComponent },
   { path: 'login', component: LoginSimpleComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuardSimple] },
   { path: 'oauth-login', component: OAuthLoginComponent },
