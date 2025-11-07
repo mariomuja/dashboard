@@ -105,19 +105,42 @@ import { CountUpDirective } from './directives/count-up.directive';
       provide: BOOTSTRAP_CONFIG,
       useValue: {
         apiUrl: environment.apiUrl || '/api',
-        timeoutMs: 10000, // 10 seconds for Vercel Serverless cold start
+        timeoutMs: 10000,
         apiEndpoint: '/data/dashboard-data',
         authTokenKey: 'sessionId',
+        checkDatabase: true,
+        validateSession: true,
+        checkPerformance: true,
+        performanceThresholdMs: 2000,
+        criticalEndpoints: [
+          '/data/dashboard-data',
+          '/kpis/external'
+        ],
+        externalIntegrations: [
+          {
+            name: 'Bookkeeping App Integration',
+            endpoint: 'https://international-bookkeeping.vercel.app/api/health',
+            method: 'GET'
+          }
+        ],
         errorMessages: {
-          backendNotResponding: 'Backend server is not responding. The backend may be sleeping on Render free tier. Please wait 30-60 seconds and retry.',
+          backendNotResponding: 'Backend server is not responding',
           backendHealthFailed: 'Backend health check failed',
-          apiEndpointsFailed: 'Failed to reach API endpoints'
+          apiEndpointsFailed: 'Failed to reach critical API endpoints',
+          databaseOffline: 'Neon database connection failed',
+          sessionInvalid: 'Session expired or invalid',
+          performanceSlow: 'API response time is slow (Vercel cold start)',
+          externalIntegrationFailed: 'External integrations unavailable'
         },
         successMessages: {
-          backendConnected: 'Connected to backend',
-          backendHealthy: 'Backend healthy - Dashboard data upload API is running',
-          apiEndpoints: 'API endpoints available and responding',
-          authenticated: 'User authenticated with session'
+          backendConnected: 'Vercel Serverless Functions online',
+          backendHealthy: 'Backend healthy - Dashboard API running',
+          apiEndpoints: 'All serverless functions responding',
+          authenticated: 'User authenticated with session',
+          databaseConnected: 'Neon PostgreSQL connected',
+          sessionValid: 'Session valid',
+          performanceGood: 'Performance optimal',
+          externalIntegrationOk: 'Cross-app integrations available'
         }
       } as BootstrapConfig
     },
