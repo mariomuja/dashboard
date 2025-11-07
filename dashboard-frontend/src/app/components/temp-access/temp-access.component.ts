@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TempAccessService, TempAccessGrant } from '../../services/temp-access.service';
 
 @Component({
   selector: 'app-temp-access',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './temp-access.component.html',
   styleUrls: ['./temp-access.component.css']
 })
