@@ -7,7 +7,7 @@ import { ChartDataPoint } from '../../services/data.service';
   selector: 'app-chart-detail-modal',
   templateUrl: './chart-detail-modal.component.html',
   styleUrls: ['./chart-detail-modal.component.css'],
-  standalone: false,
+  standalone: true,
   animations: [
     trigger('modalAnimation', [
       transition(':enter', [

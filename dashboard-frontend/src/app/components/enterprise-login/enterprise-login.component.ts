@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   selector: 'app-enterprise-login',
   templateUrl: './enterprise-login.component.html',
   styleUrls: ['./enterprise-login.component.css']

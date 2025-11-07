@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EtlPipelineService, ETLJob, ETLLog } from '../../services/etl-pipeline.service';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   selector: 'app-etl-jobs',
   templateUrl: './etl-jobs.component.html',
   styleUrls: ['./etl-jobs.component.css']

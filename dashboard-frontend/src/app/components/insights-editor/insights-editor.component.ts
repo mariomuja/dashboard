@@ -1,8 +1,11 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InsightsConfigService, InsightsConfig } from '../../services/insights-config.service';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   selector: 'app-insights-editor',
   templateUrl: './insights-editor.component.html',
   styleUrls: ['./insights-editor.component.css']

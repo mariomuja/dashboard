@@ -1,8 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommentsService, Comment } from '../../services/comments.service';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   selector: 'app-comments-panel',
   templateUrl: './comments-panel.component.html',
   styleUrls: ['./comments-panel.component.css']

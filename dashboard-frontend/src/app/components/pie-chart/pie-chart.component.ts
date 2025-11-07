@@ -1,8 +1,11 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ChartConfiguration } from 'chart.js';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule],
   selector: 'app-pie-chart',
   templateUrl: './pie-chart.component.html',
   styleUrls: ['./pie-chart.component.css']

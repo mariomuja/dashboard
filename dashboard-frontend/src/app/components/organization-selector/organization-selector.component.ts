@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { OrganizationService, Organization } from '../../services/organization.service';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule],
   selector: 'app-organization-selector',
   templateUrl: './organization-selector.component.html',
   styleUrls: ['./organization-selector.component.css']

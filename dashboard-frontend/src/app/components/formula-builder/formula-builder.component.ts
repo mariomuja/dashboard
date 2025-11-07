@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CalculatedMetricsService, CalculatedMetric, MetricVariable, FormulaValidation } from '../../services/calculated-metrics.service';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   selector: 'app-formula-builder',
   templateUrl: './formula-builder.component.html',
   styleUrls: ['./formula-builder.component.css']

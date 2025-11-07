@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -16,6 +17,8 @@ interface EmailSchedule {
 }
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   selector: 'app-email-scheduler',
   templateUrl: './email-scheduler.component.html',
   styleUrls: ['./email-scheduler.component.css']

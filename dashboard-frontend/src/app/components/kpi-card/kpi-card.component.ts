@@ -1,9 +1,12 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { KpiData } from '../../services/data.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule],
   selector: 'app-kpi-card',
   templateUrl: './kpi-card.component.html',
   styleUrls: ['./kpi-card.component.css'],

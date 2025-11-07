@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DataSourceService, DataSource, DataSourceType, DataSourceTemplate } from '../../services/data-source.service';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   selector: 'app-data-sources',
   templateUrl: './data-sources.component.html',
   styleUrls: ['./data-sources.component.css']

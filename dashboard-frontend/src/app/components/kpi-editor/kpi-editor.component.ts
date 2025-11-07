@@ -1,9 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { KpiConfigService, KPIConfig } from '../../services/kpi-config.service';
 import { DataSourceService, DataSource } from '../../services/data-source.service';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   selector: 'app-kpi-editor',
   templateUrl: './kpi-editor.component.html',
   styleUrls: ['./kpi-editor.component.css']

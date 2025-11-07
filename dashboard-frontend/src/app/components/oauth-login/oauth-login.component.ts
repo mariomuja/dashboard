@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule],
   selector: 'app-oauth-login',
   templateUrl: './oauth-login.component.html',
   styleUrls: ['./oauth-login.component.css']

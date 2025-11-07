@@ -1,10 +1,13 @@
 import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { AiInsightsService, Insight } from '../../services/ai-insights.service';
 import { KpiData } from '../../services/data.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule],
   selector: 'app-insights-panel',
   templateUrl: './insights-panel.component.html',
   styleUrls: ['./insights-panel.component.css'],

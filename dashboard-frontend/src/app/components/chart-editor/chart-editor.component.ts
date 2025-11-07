@@ -1,9 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChartConfigService, ChartConfig } from '../../services/chart-config.service';
 import { DataSourceService, DataSource } from '../../services/data-source.service';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   selector: 'app-chart-editor',
   templateUrl: './chart-editor.component.html',
   styleUrls: ['./chart-editor.component.css']

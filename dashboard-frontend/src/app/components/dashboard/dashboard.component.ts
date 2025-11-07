@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { DataService, KpiData, ChartDataPoint } from '../../services/data.service';
 import { ExportService } from '../../services/export.service';
@@ -14,6 +15,8 @@ import { DateRange } from '../date-range-picker/date-range-picker.component';
 import { Subscription } from 'rxjs';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule],
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
