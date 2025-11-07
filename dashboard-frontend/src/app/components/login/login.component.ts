@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { SharedLoginComponent, LoginConfig } from '@shared-components/login';
 import { AuthService } from '../../services/auth.service';
 
@@ -6,7 +7,10 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-login',
   standalone: true,
   imports: [SharedLoginComponent],
-  template: `<shared-login [config]="loginConfig" [authService]="authService"></shared-login>`
+  template: `<shared-login 
+    [config]="loginConfig" 
+    [authService]="authService"
+    (loginSuccess)="onLoginSuccess()"></shared-login>`
 })
 export class LoginComponent {
   loginConfig: LoginConfig = {
