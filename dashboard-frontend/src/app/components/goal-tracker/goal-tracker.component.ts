@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { AuthService } from '../../services/auth.service';
 
@@ -13,6 +14,8 @@ export interface Goal {
 
 @Component({
   selector: 'app-goal-tracker',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './goal-tracker.component.html',
   styleUrls: ['./goal-tracker.component.css'],
   animations: [
