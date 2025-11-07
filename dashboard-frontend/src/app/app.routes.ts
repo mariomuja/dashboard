@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { StartupSimpleComponent } from './components/startup/startup-simple.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminComponent } from './components/admin/admin.component';
@@ -21,7 +20,7 @@ import { TempAccessComponent } from './components/temp-access/temp-access.compon
 import { FormulaBuilderComponent } from './components/formula-builder/formula-builder.component';
 import { AuthGuardSimple } from './guards/auth-simple.guard';
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: '', component: StartupSimpleComponent },
   { path: 'startup', component: StartupSimpleComponent },
   { path: 'login', component: LoginComponent },
@@ -29,27 +28,19 @@ const routes: Routes = [
   { path: 'oauth-login', component: OAuthLoginComponent },
   { path: 'enterprise-login', component: EnterpriseLoginComponent },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuardSimple] },
-  { path: 'branding', component: BrandingSettingsComponent, canActivate: [AuthGuardSimple] },
-  { path: 'users', component: UserManagementComponent, canActivate: [AuthGuardSimple] },
+  { path: 'dashboard-builder', component: DashboardBuilderComponent, canActivate: [AuthGuardSimple] },
+  { path: 'email-scheduler', component: EmailSchedulerComponent, canActivate: [AuthGuardSimple] },
+  { path: 'two-factor-setup', component: TwoFactorSetupComponent, canActivate: [AuthGuardSimple] },
+  { path: 'branding-settings', component: BrandingSettingsComponent, canActivate: [AuthGuardSimple] },
+  { path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuardSimple] },
+  { path: 'dashboard-version-history', component: DashboardVersionHistoryComponent, canActivate: [AuthGuardSimple] },
   { path: 'data-sources', component: DataSourcesComponent, canActivate: [AuthGuardSimple] },
   { path: 'etl-jobs', component: EtlJobsComponent, canActivate: [AuthGuardSimple] },
-  { path: 'analytics', component: AdvancedAnalyticsComponent, canActivate: [AuthGuardSimple] },
+  { path: 'advanced-analytics', component: AdvancedAnalyticsComponent, canActivate: [AuthGuardSimple] },
   { path: 'audit-trail', component: AuditTrailComponent, canActivate: [AuthGuardSimple] },
-  { path: 'tenants', component: TenantManagementComponent, canActivate: [AuthGuardSimple] },
+  { path: 'tenant-management', component: TenantManagementComponent, canActivate: [AuthGuardSimple] },
   { path: 'temp-access', component: TempAccessComponent, canActivate: [AuthGuardSimple] },
   { path: 'formula-builder', component: FormulaBuilderComponent, canActivate: [AuthGuardSimple] },
-  { path: '2fa-setup', component: TwoFactorSetupComponent, canActivate: [AuthGuardSimple] },
-  { path: 'email-scheduler', component: EmailSchedulerComponent, canActivate: [AuthGuardSimple] },
-  { path: 'builder', component: DashboardBuilderComponent },
-  { path: 'version-history', component: DashboardVersionHistoryComponent },
   { path: '**', redirectTo: '/startup' }
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule { }
-
-
 
