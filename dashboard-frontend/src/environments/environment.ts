@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3001/api'
+  apiUrl: 'https://international-kpi-dashboard.onrender.com/api'
 };
 
