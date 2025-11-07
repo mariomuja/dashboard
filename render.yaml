@@ -12,7 +12,7 @@ services:
       - key: PORT
         value: 10000
       - key: CORS_ORIGIN
-        value: https://dashboard-mario-muja.vercel.app,https://dashboard-git-main-mario-muja.vercel.app
+        value: https://international-kpi-dashboard.vercel.app
       - key: ENABLE_KPI_INTEGRATION
         value: true
     # Temporarily comment out database to use in-memory mode
