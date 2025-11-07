@@ -20,7 +20,7 @@ export class LoginComponent {
     photoUrl: 'assets/images/mario-muja.jpg',
     githubRepoUrl: 'https://github.com/mariomuja/dashboard',
     quickDemoMode: true,
-    showProductionLogin: true,
+    showProductionLogin: false,
     authenticationMethods: ['credentials', 'activeDirectory', 'google', 'microsoft', 'github'],
     demoCredentials: {
       username: 'demo',
