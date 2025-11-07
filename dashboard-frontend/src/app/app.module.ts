@@ -108,6 +108,12 @@ import { CountUpDirective } from './directives/count-up.directive';
         timeoutMs: 10000,
         apiEndpoint: '/data/dashboard-data',
         authTokenKey: 'sessionId',
+        emailNotification: {
+          enabled: true,
+          recipientEmail: 'mario.muja@gmail.com',
+          appName: 'KPI Dashboard',
+          emailEndpoint: '/notify/bootstrap-error'
+        },
         checkDatabase: true,
         validateSession: true,
         checkPerformance: true,
