@@ -87,10 +87,10 @@ import { CountUpDirective } from './directives/count-up.directive';
     ChartEditorComponent,
     GoalEditorComponent,
     InsightsEditorComponent,
-    CountUpDirective,
-    ExternalKpisComponent
+    CountUpDirective
   ],
   imports: [
+    ExternalKpisComponent,
     BrowserModule,
     CommonModule,
     HttpClientModule,
