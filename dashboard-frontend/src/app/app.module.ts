@@ -6,9 +6,11 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgChartsModule } from 'ng2-charts';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { BOOTSTRAP_CONFIG, BootstrapConfig } from '@shared-components/services';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { environment } from '../environments/environment';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { KpiCardComponent } from './components/kpi-card/kpi-card.component';
 import { RevenueChartComponent } from './components/revenue-chart/revenue-chart.component';
@@ -98,7 +100,28 @@ import { CountUpDirective } from './directives/count-up.directive';
     NgChartsModule,
     DragDropModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: BOOTSTRAP_CONFIG,
+      useValue: {
+        apiUrl: environment.apiUrl || '/api',
+        timeoutMs: 10000, // 10 seconds for Vercel Serverless cold start
+        apiEndpoint: '/data/dashboard-data',
+        authTokenKey: 'sessionId',
+        errorMessages: {
+          backendNotResponding: 'Backend server is not responding. The backend may be sleeping on Render free tier. Please wait 30-60 seconds and retry.',
+          backendHealthFailed: 'Backend health check failed',
+          apiEndpointsFailed: 'Failed to reach API endpoints'
+        },
+        successMessages: {
+          backendConnected: 'Connected to backend',
+          backendHealthy: 'Backend healthy - Dashboard data upload API is running',
+          apiEndpoints: 'API endpoints available and responding',
+          authenticated: 'User authenticated with session'
+        }
+      } as BootstrapConfig
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
