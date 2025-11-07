@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TwoFactorAuthService, TwoFactorSetup } from '../../services/two-factor-auth.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-two-factor-setup',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './two-factor-setup.component.html',
   styleUrls: ['./two-factor-setup.component.css']
 })
