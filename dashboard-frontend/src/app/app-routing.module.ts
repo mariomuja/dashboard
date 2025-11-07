@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { StartupComponent } from './components/startup/startup.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminComponent } from './components/admin/admin.component';
-import { LoginComponent } from './components/login/login.component';
+import { LoginSimpleComponent } from './components/login/login-simple.component';
 import { TwoFactorSetupComponent } from './components/two-factor-setup/two-factor-setup.component';
 import { DashboardBuilderComponent } from './components/dashboard-builder/dashboard-builder.component';
 import { EmailSchedulerComponent } from './components/email-scheduler/email-scheduler.component';
@@ -24,7 +24,7 @@ import { authGuard } from './guards/auth.guard';
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'startup', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
+  { path: 'login', component: LoginSimpleComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
   { path: 'oauth-login', component: OAuthLoginComponent },
   { path: 'enterprise-login', component: EnterpriseLoginComponent },
