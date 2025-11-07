@@ -167,17 +167,17 @@
         <div class="modal-body">
           <div class="form-group">
             <label>Name</label>
-            <input type="text" [(ngModel)]="selectedUser.name" class="form-input">
+            <input type="text" [(ngModel)]="selectedUser!.name" class="form-input">
           </div>
           
           <div class="form-group">
             <label>Email</label>
-            <input type="email" [(ngModel)]="selectedUser.email" class="form-input">
+            <input type="email" [(ngModel)]="selectedUser!.email" class="form-input">
           </div>
           
           <div class="form-group">
             <label>Role</label>
-            <select [(ngModel)]="selectedUser.role" class="form-select">
+            <select [(ngModel)]="selectedUser!.role" class="form-select">
               <option value="admin">Admin</option>
               <option value="editor">Editor</option>
               <option value="viewer">Viewer</option>
@@ -186,7 +186,7 @@
           
           <div class="form-group">
             <label>Status</label>
-            <select [(ngModel)]="selectedUser.status" class="form-select">
+            <select [(ngModel)]="selectedUser!.status" class="form-select">
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
@@ -196,27 +196,27 @@
             <h4>Permissions</h4>
             <div class="permissions-grid">
               <label class="permission-item">
-                <input type="checkbox" [(ngModel)]="selectedUser.permissions.canViewDashboards">
+                <input type="checkbox" [(ngModel)]="selectedUser!.permissions.canViewDashboards">
                 <span>View Dashboards</span>
               </label>
               <label class="permission-item">
-                <input type="checkbox" [(ngModel)]="selectedUser.permissions.canEditDashboards">
+                <input type="checkbox" [(ngModel)]="selectedUser!.permissions.canEditDashboards">
                 <span>Edit Dashboards</span>
               </label>
               <label class="permission-item">
-                <input type="checkbox" [(ngModel)]="selectedUser.permissions.canExportData">
+                <input type="checkbox" [(ngModel)]="selectedUser!.permissions.canExportData">
                 <span>Export Data</span>
               </label>
               <label class="permission-item">
-                <input type="checkbox" [(ngModel)]="selectedUser.permissions.canManageUsers">
+                <input type="checkbox" [(ngModel)]="selectedUser!.permissions.canManageUsers">
                 <span>Manage Users</span>
               </label>
               <label class="permission-item">
-                <input type="checkbox" [(ngModel)]="selectedUser.permissions.canManageSettings">
+                <input type="checkbox" [(ngModel)]="selectedUser!.permissions.canManageSettings">
                 <span>Manage Settings</span>
               </label>
               <label class="permission-item">
-                <input type="checkbox" [(ngModel)]="selectedUser.permissions.canAccessAdmin">
+                <input type="checkbox" [(ngModel)]="selectedUser!.permissions.canAccessAdmin">
                 <span>Access Admin</span>
               </label>
             </div>
