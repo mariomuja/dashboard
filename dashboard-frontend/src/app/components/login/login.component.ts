@@ -10,7 +10,7 @@ import { AuthService } from '../../services/auth.service';
   template: `<shared-login 
     [config]="loginConfig" 
     [authService]="authService"
-    (loginSuccess)="onLoginSuccess()"></shared-login>`
+    (loginSuccess)="handleLoginSuccess()"></shared-login>`
 })
 export class LoginComponent {
   loginConfig: LoginConfig = {
