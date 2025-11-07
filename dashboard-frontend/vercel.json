@@ -2,13 +2,14 @@
   "version": 2,
   "buildCommand": "npm run build -- --configuration=production",
   "outputDirectory": "dist/kpi-dashboard",
-  "installCommand": "git submodule update --init --recursive && cd ../shared-components && npm install && cd ../dashboard-frontend && npm install",
+  "installCommand": "npm install",
   "framework": "angular",
   "build": {
     "env": {
-      "NODE_VERSION": "22"
+      "NODE_VERSION": "20"
     }
   },
+  "cleanUrls": true,
   "rewrites": [
     {
       "source": "/api/:path*",
