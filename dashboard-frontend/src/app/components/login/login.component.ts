@@ -29,6 +29,11 @@ export class LoginComponent {
   };
 
   constructor(
-    public authService: AuthService
+    public authService: AuthService,
+    private router: Router
   ) {}
+
+  handleLoginSuccess() {
+    this.router.navigate([this.loginConfig.redirectAfterLogin || '/dashboard']);
+  }
 }
