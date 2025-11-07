@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserManagementService, User, UserInvitation } from '../../services/user-management.service';
 import { OrganizationService } from '../../services/organization.service';
 
 @Component({
   selector: 'app-user-management',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.css']
 })
