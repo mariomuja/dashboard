@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://kpi-dashboard-backend.onrender.com/api'
+  apiUrl: '/api'  // Vercel Serverless Functions on same domain
 };
 
