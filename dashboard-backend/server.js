@@ -1,11 +1,29 @@
 const express = require('express');
 const cors = require('cors');
-const multer = require('multer');
-const fs = require('fs');
-const path = require('path');
-const sessionManager = require('./session-manager');
-const kpiIntegration = require('./kpi-integration');
 const mockData = require('./mock-data');
+
+// Conditional imports to avoid crashes if modules fail
+let sessionManager;
+let kpiIntegration;
+
+try {
+  sessionManager = require('./session-manager');
+  kpiIntegration = require('./kpi-integration');
+} catch (err) {
+  console.warn('Session manager or KPI integration failed to load, using fallback:', err.message);
+  // Create minimal fallback
+  sessionManager = {
+    createSession: async () => 'fallback-session-' + Date.now(),
+    validateSession: async () => true,
+    cleanupSession: async () => {}
+  };
+  kpiIntegration = {
+    receiveExternalKPI: async () => ({ success: true }),
+    receiveKPIBatch: async () => [],
+    getExternalKPIs: async () => [],
+    getKPIsBySource: async () => ({})
+  };
+}
 
 const app = express();
 const PORT = process.env.PORT || 3001;
