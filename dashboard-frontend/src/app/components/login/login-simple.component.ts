@@ -10,6 +10,32 @@ import { AuthService } from '../../services/auth.service';
   imports: [CommonModule, FormsModule],
   template: `
     <div class="login-container">
+      <!-- Developer Card -->
+      <div class="developer-card">
+        <div class="developer-photo">
+          <img src="assets/images/mario-muja.jpg" alt="Mario Muja" />
+        </div>
+        <h2>Welcome to KPI Dashboard</h2>
+        <p class="developer-description">
+          A comprehensive business intelligence platform built by <strong>Mario Muja</strong>. 
+          This application provides real-time KPI monitoring, advanced analytics, and AI-powered insights 
+          for data-driven decision making.
+        </p>
+        <div class="features-list">
+          <div class="feature-item">📊 Real-time KPI Tracking</div>
+          <div class="feature-item">🎯 Goal Management</div>
+          <div class="feature-item">🤖 AI-Powered Insights</div>
+          <div class="feature-item">📈 Advanced Analytics</div>
+        </div>
+        <a href="https://github.com/mariomuja/dashboard" target="_blank" class="github-link">
+          <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+          </svg>
+          View Source Code on GitHub
+        </a>
+      </div>
+
+      <!-- Login Card -->
       <div class="login-card">
         <h1>KPI Dashboard</h1>
         <p class="subtitle">Real-time Business Intelligence</p>
@@ -24,11 +50,6 @@ import { AuthService } from '../../services/auth.service';
         </button>
         
         <p class="error-message" *ngIf="error">{{error}}</p>
-        
-        <div class="developer-info">
-          <p>Developed by Mario Muja</p>
-          <a href="https://github.com/mariomuja/dashboard" target="_blank">View on GitHub</a>
-        </div>
       </div>
     </div>
   `,
@@ -37,9 +58,78 @@ import { AuthService } from '../../services/auth.service';
       display: flex;
       justify-content: center;
       align-items: center;
+      gap: 30px;
       min-height: 100vh;
       background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
-      padding: 20px;
+      padding: 40px 20px;
+    }
+    .developer-card {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 450px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .developer-photo {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid #3a7bd5;
+    }
+    .developer-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .developer-card h2 {
+      text-align: center;
+      color: #333;
+      margin: 0 0 20px 0;
+      font-size: 24px;
+    }
+    .developer-description {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+    .developer-description strong {
+      color: #3a7bd5;
+    }
+    .features-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+    .feature-item {
+      background: #f5f5f5;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+      color: #555;
+    }
+    .github-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: #24292e;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .github-link:hover {
+      background: #1a1f23;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
     .login-card {
       background: white;
@@ -97,15 +187,10 @@ import { AuthService } from '../../services/auth.service';
       text-align: center;
       margin-top: 15px;
     }
-    .developer-info {
-      margin-top: 30px;
-      text-align: center;
-      color: #666;
-      font-size: 14px;
-    }
-    .developer-info a {
-      color: #3a7bd5;
-      text-decoration: none;
+    @media (max-width: 968px) {
+      .login-container {
+        flex-direction: column;
+      }
     }
   `]
 })
