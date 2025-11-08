@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SharedStartupShellComponent, StartupConfig } from '../../shared/startup';
+import { SharedStartupShellComponent, StartupConfig } from '@mario-muja/angular-shared-components';
 
 @Component({
   selector: 'app-startup',

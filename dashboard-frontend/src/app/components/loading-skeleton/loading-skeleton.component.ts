@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoadingSkeletonComponent as SharedLoadingSkeletonComponent, SkeletonType } from '../../shared/ui';
+import { LoadingSkeletonComponent as SharedLoadingSkeletonComponent, SkeletonType } from '@mario-muja/angular-shared-components';
 
 @Component({
   selector: 'app-loading-skeleton',
