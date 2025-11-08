@@ -15,7 +15,7 @@
     "start:bookkeeping": "node server-bookkeeping.js",
     "start:all": "concurrently \"npm start\" \"npm run start:server\" \"npm run start:email\" \"npm run start:oauth\" \"npm run start:ldap\" \"npm run start:scim\" \"npm run start:saml\" \"npm run start:datasources\" \"npm run start:etl\" \"npm run start:bookkeeping\"",
     "build": "ng build",
-    "vercel-build": "cd .. && git submodule update --init --recursive --force && cd shared-components && npm install --legacy-peer-deps && npm run build && cd ../dashboard-frontend && npm install && ng build --configuration production",
+    "vercel-build": "npm install && ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -35,7 +35,7 @@
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
-    "@mario-muja/angular-shared-components": "file:../shared-components/mario-muja-angular-shared-components-1.0.0.tgz",
+    "@mario-muja/angular-shared-components": "file:./mario-muja-angular-shared-components-1.0.0.tgz",
     "@types/express-session": "^1.18.2",
     "@types/marked": "^5.0.2",
     "@types/node-cron": "^3.0.11",
