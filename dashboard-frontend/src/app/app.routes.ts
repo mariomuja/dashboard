@@ -21,7 +21,7 @@ import { FormulaBuilderComponent } from './components/formula-builder/formula-bu
 import { AuthGuardSimple } from './guards/auth-simple.guard';
 
 export const routes: Routes = [
-  { path: '', component: StartupSimpleComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'startup', component: StartupSimpleComponent },
   { path: 'login', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuardSimple] },
