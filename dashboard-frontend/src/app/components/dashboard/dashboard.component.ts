@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { DataService, KpiData, ChartDataPoint } from '../../services/data.service';
 import { ExportService } from '../../services/export.service';
@@ -13,10 +14,45 @@ import { Goal } from '../goal-tracker/goal-tracker.component';
 import { AuthService } from '../../services/auth.service';
 import { DateRange } from '../date-range-picker/date-range-picker.component';
 import { Subscription } from 'rxjs';
+import { OrganizationSelectorComponent } from '../organization-selector/organization-selector.component';
+import { DateRangePickerComponent } from '../date-range-picker/date-range-picker.component';
+import { LoadingSkeletonComponent } from '../loading-skeleton/loading-skeleton.component';
+import { KpiCardComponent } from '../kpi-card/kpi-card.component';
+import { RevenueChartComponent } from '../revenue-chart/revenue-chart.component';
+import { SalesChartComponent } from '../sales-chart/sales-chart.component';
+import { ConversionChartComponent } from '../conversion-chart/conversion-chart.component';
+import { PieChartComponent } from '../pie-chart/pie-chart.component';
+import { GoalTrackerComponent } from '../goal-tracker/goal-tracker.component';
+import { InsightsPanelComponent } from '../insights-panel/insights-panel.component';
+import { ExternalKpisComponent } from '../external-kpis/external-kpis.component';
+import { CommentsPanelComponent } from '../comments-panel/comments-panel.component';
+import { KpiEditorComponent } from '../kpi-editor/kpi-editor.component';
+import { ChartEditorComponent } from '../chart-editor/chart-editor.component';
+import { GoalEditorComponent } from '../goal-editor/goal-editor.component';
+import { InsightsEditorComponent } from '../insights-editor/insights-editor.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    OrganizationSelectorComponent,
+    DateRangePickerComponent,
+    LoadingSkeletonComponent,
+    KpiCardComponent,
+    RevenueChartComponent,
+    SalesChartComponent,
+    ConversionChartComponent,
+    PieChartComponent,
+    GoalTrackerComponent,
+    InsightsPanelComponent,
+    ExternalKpisComponent,
+    CommentsPanelComponent,
+    KpiEditorComponent,
+    ChartEditorComponent,
+    GoalEditorComponent,
+    InsightsEditorComponent
+  ],
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
