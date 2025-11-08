@@ -1,12 +1,13 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { ChartDataPoint } from '../../services/data.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgChartsModule],
   selector: 'app-conversion-chart',
   templateUrl: './conversion-chart.component.html',
   styleUrls: ['./conversion-chart.component.css']
@@ -97,4 +98,6 @@ export class ConversionChartComponent implements OnInit, OnChanges {
     };
   }
 }
+
+
 

@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { LoadingSkeletonComponent as SharedLoadingSkeletonComponent, SkeletonType } from '@shared-components/ui';
 
 @Component({
   selector: 'app-loading-skeleton',
   standalone: true,
-  imports: [SharedLoadingSkeletonComponent],
+  imports: [CommonModule, SharedLoadingSkeletonComponent],
   template: `
     <div *ngFor="let item of items">
       <shared-loading-skeleton 

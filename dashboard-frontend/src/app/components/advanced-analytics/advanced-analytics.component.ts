@@ -266,5 +266,3 @@ export class AdvancedAnalyticsComponent implements OnInit {
     this.router.navigate(['/admin']);
   }
 }
-
-}
