@@ -20,10 +20,7 @@
       "ES2022",
       "dom"
     ],
-    "skipLibCheck": true,
-    "paths": {
-      "@shared-components/*": ["../shared-components/src/*"]
-    }
+    "skipLibCheck": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

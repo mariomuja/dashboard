@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ThemeToggleComponent as SharedThemeToggleComponent } from '@shared-components/ui';
+import { ThemeToggleComponent as SharedThemeToggleComponent } from '../../shared/ui';
 
 @Component({
   selector: 'app-theme-toggle',

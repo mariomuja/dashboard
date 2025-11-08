@@ -1,0 +1,96 @@
+<div class="startup-container">
+  <div class="startup-card">
+    <div class="startup-header">
+      <div class="logo" *ngIf="config.logoSvg" [innerHTML]="config.logoSvg"></div>
+      <h1>{{ config.appName }}</h1>
+      <p class="subtitle">{{ config.initializingSubtitle || 'Starting application...' }}</p>
+    </div>
+
+    <div class="startup-body">
+      <!-- Overall Status -->
+      <div class="status-indicator" [ngClass]="bootstrapState.overallStatus">
+        <div class="spinner" *ngIf="bootstrapState.overallStatus === 'initializing'"></div>
+        <div class="status-icon success" *ngIf="bootstrapState.overallStatus === 'ready'">✓</div>
+        <div class="status-icon error" *ngIf="bootstrapState.overallStatus === 'error'">✗</div>
+      </div>
+
+      <!-- Bootstrap Checks -->
+      <div class="checks-list">
+        <div 
+          class="check-item" 
+          *ngFor="let check of bootstrapState.checks"
+          [ngClass]="getStatusClass(check.status)">
+          <div class="check-icon">
+            <span class="icon">{{ getStatusIcon(check.status) }}</span>
+          </div>
+          <div class="check-content">
+            <div class="check-name">{{ check.name }}</div>
+            <div class="check-message">{{ check.message }}</div>
+            <div class="check-details" *ngIf="check.details && check.status === 'error'">
+              <pre>{{ check.details | json }}</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading indicator when no checks yet -->
+        <div class="check-item status-pending" *ngIf="bootstrapState.checks.length === 0">
+          <div class="check-icon">
+            <span class="icon spinner-small"></span>
+          </div>
+          <div class="check-content">
+            <div class="check-name">Initializing...</div>
+            <div class="check-message">Running bootstrap checks</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div class="error-container" *ngIf="bootstrapState.overallStatus === 'error' && bootstrapState.error">
+        <div class="error-icon">⚠️</div>
+        <div class="error-message">
+          <h3>Startup Failed</h3>
+          <p>{{ bootstrapState.error }}</p>
+          <p *ngIf="bootstrapState.developerNotified" class="developer-notified">
+            ✅ <strong>Developer Notified:</strong> The developer has been automatically notified about this issue via email and will investigate.
+          </p>
+        </div>
+      </div>
+
+      <!-- Success Message -->
+      <div class="success-container" *ngIf="bootstrapState.overallStatus === 'ready'">
+        <div class="success-icon">✓</div>
+        <div class="success-message">
+          <h3>All Systems Ready</h3>
+          <p>Launching application...</p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions" *ngIf="bootstrapState.overallStatus === 'error'">
+        <button 
+          class="btn-retry" 
+          (click)="retry()"
+          [disabled]="isRetrying">
+          <span *ngIf="!isRetrying">🔄 {{ config.retryLabel || 'Retry Connection' }}</span>
+          <span *ngIf="isRetrying">Retrying...</span>
+        </button>
+        <button class="btn-secondary" (click)="openInstructions()" *ngIf="config.instructionsUrl">
+          📖 {{ config.instructionsLabel || 'Setup Instructions' }}
+        </button>
+      </div>
+
+      <!-- Help Text -->
+      <div class="help-text" *ngIf="bootstrapState.overallStatus === 'error' && config.helpSteps && config.helpSteps.length > 0">
+        <h4>Troubleshooting Steps:</h4>
+        <ol>
+          <li *ngFor="let step of config.helpSteps" [innerHTML]="step"></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="startup-footer">
+      <small>{{ config.versionText || 'Version 1.0.0' }}</small>
+    </div>
+  </div>
+</div>
+
