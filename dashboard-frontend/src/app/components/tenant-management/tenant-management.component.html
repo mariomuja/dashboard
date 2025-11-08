@@ -50,15 +50,15 @@
         <div class="tenant-details">
           <div class="detail-row">
             <span class="detail-label">Max Users:</span>
-            <span class="detail-value">{{ tenant.settings?.maxUsers || 'Unlimited' }}</span>
+            <span class="detail-value">{{ tenant.settings.maxUsers || 'Unlimited' }}</span>
           </div>
           <div class="detail-row">
             <span class="detail-label">Storage:</span>
-            <span class="detail-value">{{ tenant.settings?.maxStorage || 0 }} GB</span>
+            <span class="detail-value">{{ tenant.settings.maxStorage || 0 }} GB</span>
           </div>
           <div class="detail-row">
             <span class="detail-label">Features:</span>
-            <span class="detail-value">{{ tenant.settings?.allowedFeatures?.length || 0 }} enabled</span>
+            <span class="detail-value">{{ tenant.settings.allowedFeatures?.length || 0 }} enabled</span>
           </div>
           <div class="detail-row">
             <span class="detail-label">Created:</span>

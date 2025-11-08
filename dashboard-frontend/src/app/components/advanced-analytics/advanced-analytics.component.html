@@ -104,7 +104,7 @@
               <span class="pred-index">Step {{ i + 1 }}:</span>
               <span class="pred-value">{{ pred.toFixed(2) }}</span>
               <span class="pred-confidence" *ngIf="forecastResult.confidence">
-                ({{ forecastResult.confidence.lower[i]?.toFixed(2) }} - {{ forecastResult.confidence.upper[i]?.toFixed(2) }})
+                ({{ forecastResult.confidence.lower[i].toFixed(2) }} - {{ forecastResult.confidence.upper[i].toFixed(2) }})
               </span>
             </div>
           </div>
