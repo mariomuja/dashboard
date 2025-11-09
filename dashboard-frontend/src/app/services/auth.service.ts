@@ -18,43 +18,41 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  // Updated login to call backend API and create isolated session
+  // Auto-login without credentials - everyone can access the dashboard
   login(username: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login`, { username, password }).pipe(
-      tap((response: any) => {
-        if (response.success && response.sessionId) {
-          // Store session ID for API calls
-          localStorage.setItem('sessionId', response.sessionId);
-          localStorage.setItem('user', JSON.stringify(response.user));
-          sessionStorage.setItem('admin_authenticated', 'true');
-          this.isAuthenticatedSubject.next(true);
-          console.log('[Auth] Session created:', response.sessionId);
-        }
-      }),
-      catchError(error => {
-        console.error('[Auth] Login failed:', error);
-        return throwError(() => error);
-      })
-    );
+    // Auto-authenticate without backend validation
+    const sessionId = 'demo-session-' + Date.now();
+    const user = {
+      id: 'demo-user',
+      username: username || 'demo',
+      name: 'Demo User',
+      email: 'demo@kpidashboard.com',
+      role: 'admin'
+    };
+
+    // Store session locally
+    localStorage.setItem('sessionId', sessionId);
+    localStorage.setItem('user', JSON.stringify(user));
+    sessionStorage.setItem('admin_authenticated', 'true');
+    this.isAuthenticatedSubject.next(true);
+    
+    console.log('[Auth] Auto-authenticated user:', username);
+    
+    // Return successful response immediately
+    return of({
+      success: true,
+      sessionId: sessionId,
+      user: user
+    });
   }
 
   logout(): void {
-    const sessionId = localStorage.getItem('sessionId');
-    
-    if (sessionId) {
-      // Call backend to cleanup session
-      const headers = { 'x-session-id': sessionId };
-      this.http.post(`${this.apiUrl}/auth/logout`, {}, { headers }).subscribe({
-        next: () => console.log('[Auth] Session cleaned up'),
-        error: (err) => console.error('[Auth] Logout error:', err)
-      });
-    }
-
     // Clear local storage
     localStorage.removeItem('sessionId');
     localStorage.removeItem('user');
     sessionStorage.removeItem('admin_authenticated');
     this.isAuthenticatedSubject.next(false);
+    console.log('[Auth] User logged out');
   }
 
   isAuthenticated(): boolean {
