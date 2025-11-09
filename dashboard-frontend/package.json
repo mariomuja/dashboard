@@ -35,7 +35,7 @@
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
-    "@mariomuja/angular-shared-components": "^1.0.6",
+    "@mariomuja/angular-shared-components": "file:../shared-components/mario-muja-angular-shared-components-1.0.0.tgz",
     "axios": "^1.6.2",
     "chart.js": "^4.4.0",
     "cors": "^2.8.5",

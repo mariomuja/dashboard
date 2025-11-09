@@ -82,6 +82,7 @@ export interface AuditStatistics {
   successCount: number;
   failureCount: number;
   warningCount: number;
+  successRate: number;
   uniqueUsers: number;
   topActions: { action: string; count: number }[];
   topUsers: { userId: string; username: string; count: number }[];
@@ -219,11 +220,16 @@ export class AuditTrailService {
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);
 
+    const successRate = entries.length > 0 
+      ? (successCount / entries.length) * 100 
+      : 0;
+
     return {
       totalEntries: entries.length,
       successCount,
       failureCount,
       warningCount,
+      successRate,
       uniqueUsers,
       topActions,
       topUsers
