@@ -1,129 +1,163 @@
-// Dashboard data endpoint for Vercel Serverless
-module.exports = (req, res) => {
+// Dashboard data endpoint - using PostgreSQL database for KPI values
+const { getPool } = require('../_db');
+
+module.exports = async (req, res) => {
+  // Enable CORS
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
+
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Mock data for dashboard
-  const dashboardData = {
-    kpi: {
-      week: [
-        { id: '1', title: 'Total Revenue', value: '$125,430', change: 12.5, trend: 'up', icon: 'dollar', color: '#10b981' },
-        { id: '2', title: 'Active Users', value: '8,432', change: 8.2, trend: 'up', icon: 'users', color: '#3b82f6' },
-        { id: '3', title: 'Conversion Rate', value: '3.24%', change: -2.1, trend: 'down', icon: 'percent', color: '#f59e0b' },
-        { id: '4', title: 'Satisfaction', value: '4.8/5.0', change: 0.3, trend: 'up', icon: 'star', color: '#8b5cf6' }
-      ],
-      month: [
-        { id: '1', title: 'Total Revenue', value: '$125,430', change: 12.5, trend: 'up', icon: 'dollar', color: '#10b981' },
-        { id: '2', title: 'Active Users', value: '8,432', change: 8.2, trend: 'up', icon: 'users', color: '#3b82f6' },
-        { id: '3', title: 'Conversion Rate', value: '3.24%', change: -2.1, trend: 'down', icon: 'percent', color: '#f59e0b' },
-        { id: '4', title: 'Satisfaction', value: '4.8/5.0', change: 0.3, trend: 'up', icon: 'star', color: '#8b5cf6' }
-      ],
-      year: [
-        { id: '1', title: 'Total Revenue', value: '$125,430', change: 12.5, trend: 'up', icon: 'dollar', color: '#10b981' },
-        { id: '2', title: 'Active Users', value: '8,432', change: 8.2, trend: 'up', icon: 'users', color: '#3b82f6' },
-        { id: '3', title: 'Conversion Rate', value: '3.24%', change: -2.1, trend: 'down', icon: 'percent', color: '#f59e0b' },
-        { id: '4', title: 'Satisfaction', value: '4.8/5.0', change: 0.3, trend: 'up', icon: 'star', color: '#8b5cf6' }
-      ]
-    },
-    revenue: {
-      week: [
-        { label: 'Mon', value: 8500 },
-        { label: 'Tue', value: 9200 },
-        { label: 'Wed', value: 8800 },
-        { label: 'Thu', value: 9500 },
-        { label: 'Fri', value: 10200 },
-        { label: 'Sat', value: 7800 },
-        { label: 'Sun', value: 6900 }
-      ],
-      month: [
-        { label: 'Week 1', value: 45000 },
-        { label: 'Week 2', value: 48000 },
-        { label: 'Week 3', value: 52000 },
-        { label: 'Week 4', value: 62000 }
-      ],
-      year: [
-        { label: 'Jan', value: 45000 },
-        { label: 'Feb', value: 48000 },
-        { label: 'Mar', value: 52000 },
-        { label: 'Apr', value: 54000 },
-        { label: 'May', value: 58000 },
-        { label: 'Jun', value: 62000 },
-        { label: 'Jul', value: 65000 },
-        { label: 'Aug', value: 68000 },
-        { label: 'Sep', value: 70000 },
-        { label: 'Oct', value: 72000 },
-        { label: 'Nov', value: 75000 },
-        { label: 'Dec', value: 78000 }
-      ]
-    },
-    sales: {
-      week: [
-        { label: 'Mon', value: 120 },
-        { label: 'Tue', value: 150 },
-        { label: 'Wed', value: 135 },
-        { label: 'Thu', value: 160 },
-        { label: 'Fri', value: 180 },
-        { label: 'Sat', value: 95 },
-        { label: 'Sun', value: 85 }
-      ],
-      month: [
-        { label: 'Week 1', value: 320 },
-        { label: 'Week 2', value: 450 },
-        { label: 'Week 3', value: 380 },
-        { label: 'Week 4', value: 610 }
-      ],
-      year: [
-        { label: 'Jan', value: 320 },
-        { label: 'Feb', value: 450 },
-        { label: 'Mar', value: 380 },
-        { label: 'Apr', value: 520 },
-        { label: 'May', value: 490 },
-        { label: 'Jun', value: 610 },
-        { label: 'Jul', value: 680 },
-        { label: 'Aug', value: 720 },
-        { label: 'Sep', value: 650 },
-        { label: 'Oct', value: 780 },
-        { label: 'Nov', value: 820 },
-        { label: 'Dec', value: 950 }
-      ]
-    },
-    conversion: {
-      week: [
-        { label: 'Mon', value: 3.2 },
-        { label: 'Tue', value: 3.5 },
-        { label: 'Wed', value: 3.1 },
-        { label: 'Thu', value: 3.8 },
-        { label: 'Fri', value: 4.1 },
-        { label: 'Sat', value: 2.9 },
-        { label: 'Sun', value: 2.7 }
-      ],
-      month: [
-        { label: 'Week 1', value: 2.8 },
-        { label: 'Week 2', value: 3.2 },
-        { label: 'Week 3', value: 3.5 },
-        { label: 'Week 4', value: 3.9 }
-      ],
-      year: [
-        { label: 'Jan', value: 2.5 },
-        { label: 'Feb', value: 2.8 },
-        { label: 'Mar', value: 3.1 },
-        { label: 'Apr', value: 3.0 },
-        { label: 'May', value: 3.3 },
-        { label: 'Jun', value: 3.5 },
-        { label: 'Jul', value: 3.7 },
-        { label: 'Aug', value: 3.8 },
-        { label: 'Sep', value: 3.6 },
-        { label: 'Oct', value: 3.9 },
-        { label: 'Nov', value: 4.1 },
-        { label: 'Dec', value: 4.3 }
-      ]
-    }
-  };
+  try {
+    const pool = getPool();
 
-  res.status(200).json(dashboardData);
+    // Try to fetch KPI data from database
+    try {
+      const kpiResult = await pool.query(`
+        SELECT 
+          k.id, k.name, k.unit, k.display_format as "displayFormat",
+          kv.value, kv.timestamp
+        FROM kpis k
+        LEFT JOIN kpi_values kv ON k.id = kv.kpi_id
+        WHERE k.is_active = true
+        ORDER BY k.created_at, kv.timestamp DESC
+        LIMIT 20
+      `);
+
+      if (kpiResult.rows.length > 0) {
+        // Transform database data to dashboard format
+        const kpiData = {
+          week: [],
+          month: [],
+          year: []
+        };
+
+        kpiResult.rows.slice(0, 4).forEach((row, idx) => {
+          const kpi = {
+            id: row.id,
+            title: row.name,
+            value: formatValue(parseFloat(row.value), row.unit, row.displayFormat),
+            change: Math.random() * 20 - 5, // TODO: Calculate actual change
+            trend: Math.random() > 0.5 ? 'up' : 'down',
+            icon: 'chart',
+            color: ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6'][idx % 4]
+          };
+          kpiData.week.push(kpi);
+          kpiData.month.push(kpi);
+          kpiData.year.push(kpi);
+        });
+
+        console.log(`[Dashboard Data] Fetched ${kpiResult.rows.length} KPIs from database`);
+
+        return res.status(200).json({
+          kpi: kpiData,
+          revenue: generateTimeSeriesData(),
+          sales: generateTimeSeriesData(),
+          conversion: generateConversionData()
+        });
+      }
+    } catch (dbError) {
+      console.warn('[Dashboard Data] Database query failed, using fallback data:', dbError.message);
+    }
+
+    // Fallback to demo data if database is empty or unavailable
+    const dashboardData = {
+      kpi: {
+        week: [
+          { id: '1', title: 'Total Revenue', value: '$125,430', change: 12.5, trend: 'up', icon: 'dollar', color: '#10b981' },
+          { id: '2', title: 'Active Users', value: '8,432', change: 8.2, trend: 'up', icon: 'users', color: '#3b82f6' },
+          { id: '3', title: 'Conversion Rate', value: '3.24%', change: -2.1, trend: 'down', icon: 'percent', color: '#f59e0b' },
+          { id: '4', title: 'Satisfaction', value: '4.8/5.0', change: 0.3, trend: 'up', icon: 'star', color: '#8b5cf6' }
+        ],
+        month: [
+          { id: '1', title: 'Total Revenue', value: '$125,430', change: 12.5, trend: 'up', icon: 'dollar', color: '#10b981' },
+          { id: '2', title: 'Active Users', value: '8,432', change: 8.2, trend: 'up', icon: 'users', color: '#3b82f6' },
+          { id: '3', title: 'Conversion Rate', value: '3.24%', change: -2.1, trend: 'down', icon: 'percent', color: '#f59e0b' },
+          { id: '4', title: 'Satisfaction', value: '4.8/5.0', change: 0.3, trend: 'up', icon: 'star', color: '#8b5cf6' }
+        ],
+        year: [
+          { id: '1', title: 'Total Revenue', value: '$125,430', change: 12.5, trend: 'up', icon: 'dollar', color: '#10b981' },
+          { id: '2', title: 'Active Users', value: '8,432', change: 8.2, trend: 'up', icon: 'users', color: '#3b82f6' },
+          { id: '3', title: 'Conversion Rate', value: '3.24%', change: -2.1, trend: 'down', icon: 'percent', color: '#f59e0b' },
+          { id: '4', title: 'Satisfaction', value: '4.8/5.0', change: 0.3, trend: 'up', icon: 'star', color: '#8b5cf6' }
+        ]
+      },
+      revenue: generateTimeSeriesData(),
+      sales: generateTimeSeriesData(),
+      conversion: generateConversionData()
+    };
+
+    console.log('[Dashboard Data] Using fallback demo data');
+    res.status(200).json(dashboardData);
+  } catch (error) {
+    console.error('[Dashboard Data] Error:', error);
+    res.status(500).json({
+      error: 'Failed to fetch dashboard data',
+      message: error.message
+    });
+  }
 };
 
+function formatValue(value, unit, format) {
+  if (format === 'currency') {
+    return `$${value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+  } else if (format === 'percentage') {
+    return `${value.toFixed(2)}%`;
+  } else if (unit) {
+    return `${value} ${unit}`;
+  }
+  return value.toString();
+}
 
+function generateTimeSeriesData() {
+  return {
+    week: [
+      { label: 'Mon', value: Math.floor(Math.random() * 5000) + 5000 },
+      { label: 'Tue', value: Math.floor(Math.random() * 5000) + 5000 },
+      { label: 'Wed', value: Math.floor(Math.random() * 5000) + 5000 },
+      { label: 'Thu', value: Math.floor(Math.random() * 5000) + 5000 },
+      { label: 'Fri', value: Math.floor(Math.random() * 5000) + 5000 },
+      { label: 'Sat', value: Math.floor(Math.random() * 5000) + 5000 },
+      { label: 'Sun', value: Math.floor(Math.random() * 5000) + 5000 }
+    ],
+    month: Array.from({ length: 4 }, (_, i) => ({
+      label: `Week ${i + 1}`,
+      value: Math.floor(Math.random() * 20000) + 40000
+    })),
+    year: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map(month => ({
+      label: month,
+      value: Math.floor(Math.random() * 30000) + 45000
+    }))
+  };
+}
 
-
+function generateConversionData() {
+  return {
+    week: [
+      { label: 'Mon', value: (Math.random() * 2 + 2).toFixed(1) },
+      { label: 'Tue', value: (Math.random() * 2 + 2).toFixed(1) },
+      { label: 'Wed', value: (Math.random() * 2 + 2).toFixed(1) },
+      { label: 'Thu', value: (Math.random() * 2 + 2).toFixed(1) },
+      { label: 'Fri', value: (Math.random() * 2 + 2).toFixed(1) },
+      { label: 'Sat', value: (Math.random() * 2 + 2).toFixed(1) },
+      { label: 'Sun', value: (Math.random() * 2 + 2).toFixed(1) }
+    ],
+    month: Array.from({ length: 4 }, (_, i) => ({
+      label: `Week ${i + 1}`,
+      value: (Math.random() * 2 + 2).toFixed(1)
+    })),
+    year: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map(month => ({
+      label: month,
+      value: (Math.random() * 2 + 2).toFixed(1)
+    }))
+  };
+}
