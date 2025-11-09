@@ -66,3 +66,4 @@ SELECT
 FROM generate_series(30, 0, -1) AS i, kpi_margin
 ON CONFLICT DO NOTHING;
 
+
