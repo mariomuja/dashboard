@@ -3,6 +3,43 @@
   background-color: #f5f5f5;
 }
 
+/* Clean Header Styles */
+.clean-header {
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.clean-header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.clean-header-title h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.25rem 0;
+}
+
+.clean-header-title p {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.clean-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 /* External KPIs Section */
 .external-kpis-section {
   margin: 2rem 0;
@@ -237,6 +274,59 @@
     align-items: flex-start;
   }
 
+  /* Mobile Header Optimizations */
+  .clean-header {
+    padding: 1rem;
+  }
+
+  .clean-header-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .clean-header-title h1 {
+    font-size: 1.5rem;
+  }
+
+  .clean-header-title p {
+    font-size: 0.8125rem;
+  }
+
+  .clean-header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .period-selector {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .period-selector button {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
+    min-height: 44px;
+  }
+
+  .export-dropdown {
+    width: 100%;
+  }
+
+  .export-dropdown button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    min-height: 44px;
+  }
+
+  .mat-btn {
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
+  }
+
   .kpi-grid {
     grid-template-columns: 1fr;
   }
@@ -244,6 +334,50 @@
   .chart-container,
   .chart-container-full {
     padding: 1rem;
+  }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+  .clean-header {
+    padding: 0.875rem;
+  }
+
+  .clean-header-title h1 {
+    font-size: 1.375rem;
+  }
+
+  .clean-header-title p {
+    font-size: 0.8125rem;
+  }
+
+  .clean-header-actions {
+    gap: 0.625rem;
+  }
+
+  .period-selector button {
+    font-size: 0.875rem;
+    padding: 0.625rem 0.75rem;
+  }
+}
+
+/* Android Chrome Specific Optimizations */
+@media (max-width: 768px) {
+  /* Prevent zoom on focus */
+  input, select, textarea, button {
+    font-size: 16px !important;
+  }
+
+  /* Better touch targets */
+  button, .mat-btn, .period-btn {
+    min-height: 44px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Prevent text inflation */
+  body {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 }
 
