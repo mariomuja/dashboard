@@ -47,6 +47,8 @@ export interface KPIConfig {
 })
 export class KpiConfigService {
   private readonly STORAGE_KEY = 'dashboard_kpi_configs';
+  private readonly VERSION_KEY = 'dashboard_kpi_version';
+  private readonly CURRENT_VERSION = '2.0'; // Incremented to force reset
   private configsSubject: BehaviorSubject<KPIConfig[]>;
   public configs$: Observable<KPIConfig[]>;
 
@@ -54,9 +56,28 @@ export class KpiConfigService {
     private dataSourceService: DataSourceService,
     private http: HttpClient
   ) {
+    this.checkVersionAndReset();
     this.configsSubject = new BehaviorSubject<KPIConfig[]>(this.loadConfigs());
     this.configs$ = this.configsSubject.asObservable();
     this.migrateStaticToDatasource();
+  }
+  
+  // Check version and reset localStorage if needed
+  private checkVersionAndReset(): void {
+    const storedVersion = localStorage.getItem(this.VERSION_KEY);
+    
+    if (storedVersion !== this.CURRENT_VERSION) {
+      console.log('[KPI Config] Version mismatch - resetting localStorage');
+      console.log(`[KPI Config] Old version: ${storedVersion}, New version: ${this.CURRENT_VERSION}`);
+      
+      // Clear old KPI configs
+      localStorage.removeItem(this.STORAGE_KEY);
+      
+      // Set new version
+      localStorage.setItem(this.VERSION_KEY, this.CURRENT_VERSION);
+      
+      console.log('[KPI Config] localStorage reset complete - fresh KPIs will be initialized');
+    }
   }
   
   // Migrate old static KPIs to use datasource
