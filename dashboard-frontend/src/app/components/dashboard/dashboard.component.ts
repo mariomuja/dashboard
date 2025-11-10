@@ -25,11 +25,6 @@ import { PieChartComponent } from '../pie-chart/pie-chart.component';
 import { GoalTrackerComponent } from '../goal-tracker/goal-tracker.component';
 import { InsightsPanelComponent } from '../insights-panel/insights-panel.component';
 import { ExternalKpisComponent } from '../external-kpis/external-kpis.component';
-import { CommentsPanelComponent } from '../comments-panel/comments-panel.component';
-import { KpiEditorComponent } from '../kpi-editor/kpi-editor.component';
-import { ChartEditorComponent } from '../chart-editor/chart-editor.component';
-import { GoalEditorComponent } from '../goal-editor/goal-editor.component';
-import { InsightsEditorComponent } from '../insights-editor/insights-editor.component';
 
 @Component({
   standalone: true,
@@ -46,12 +41,7 @@ import { InsightsEditorComponent } from '../insights-editor/insights-editor.comp
     PieChartComponent,
     GoalTrackerComponent,
     InsightsPanelComponent,
-    ExternalKpisComponent,
-    CommentsPanelComponent,
-    KpiEditorComponent,
-    ChartEditorComponent,
-    GoalEditorComponent,
-    InsightsEditorComponent
+    ExternalKpisComponent
   ],
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -78,12 +68,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   selectedPeriod: 'week' | 'month' | 'year' = 'month';
   isLoading = true;
   showExportMenu = false;
-  showKpiEditor = false;
-  showChartEditor = false;
-  showGoalEditor = false;
-  showInsightsEditor = false;
-  editingKpiId?: string;
-  editingChartId?: string;
   customDateRange: DateRange | null = null;
   widgets: WidgetConfig[] = [];
   private orgSubscription?: Subscription;
@@ -316,28 +300,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return kpi.id;
   }
 
-  openKpiEditor(kpiId?: string): void {
-    this.editingKpiId = kpiId;
-    this.showKpiEditor = true;
-  }
-
-  onKpiEdit(kpiConfigId: string): void {
-    this.openKpiEditor(kpiConfigId);
-  }
-
-  createNewKpi(): void {
-    this.openKpiEditor();
-  }
-
-  closeKpiEditor(): void {
-    this.showKpiEditor = false;
-    this.editingKpiId = undefined;
-  }
-
-  onKpiSaved(): void {
-    this.loadKpiConfigs();
-  }
-
   // Chart Configuration Methods
   async loadChartConfigs(): Promise<void> {
     this.chartConfigs = this.chartConfigService.getVisibleConfigs();
@@ -353,66 +315,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return this.chartConfigMap.get(chartName);
   }
 
-  openChartEditor(chartId?: string): void {
-    this.editingChartId = chartId;
-    this.showChartEditor = true;
-  }
-
-  onChartEdit(chartConfigId: string): void {
-    this.openChartEditor(chartConfigId);
-  }
-
-  createNewChart(): void {
-    this.openChartEditor();
-  }
-
-  closeChartEditor(): void {
-    this.showChartEditor = false;
-    this.editingChartId = undefined;
-  }
-
-  onChartSaved(): void {
-    this.loadChartConfigs();
-    this.loadData(); // Reload chart data
-  }
-
   // Goal Configuration Methods
   loadGoals(): void {
     this.goals = this.goalConfigService.getGoals();
-  }
-
-  openGoalEditor(): void {
-    this.showGoalEditor = true;
-  }
-
-  onGoalEdit(configId: string): void {
-    this.openGoalEditor();
-  }
-
-  closeGoalEditor(): void {
-    this.showGoalEditor = false;
-  }
-
-  onGoalSaved(): void {
-    this.loadGoals();
-  }
-
-  // AI Insights Configuration Methods
-  openInsightsEditor(): void {
-    this.showInsightsEditor = true;
-  }
-
-  onInsightsEdit(configId: string): void {
-    this.openInsightsEditor();
-  }
-
-  closeInsightsEditor(): void {
-    this.showInsightsEditor = false;
-  }
-
-  onInsightsSaved(): void {
-    // Insights will regenerate automatically on next KPI data change
-    console.log('Insights configuration saved');
   }
 }
 

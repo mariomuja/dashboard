@@ -7,22 +7,6 @@
         <p>Monitor your key performance indicators</p>
       </div>
       <div class="clean-header-actions">
-        <button 
-          *ngIf="authService.isAuthenticated()"
-          class="mat-btn mat-btn-outlined" 
-          (click)="createNewKpi()" 
-          title="Create New KPI">
-          ➕ New KPI
-        </button>
-        
-        <button 
-          *ngIf="authService.isAuthenticated()"
-          class="mat-btn mat-btn-outlined" 
-          (click)="createNewChart()" 
-          title="Create New Chart">
-          📊 New Chart
-        </button>
-        
         <app-organization-selector></app-organization-selector>
         
         <div class="period-selector" role="group" aria-label="Select time period">
@@ -76,9 +60,6 @@
           </div>
         </div>
 
-        <button class="mat-icon-btn" routerLink="/dashboard-builder" aria-label="Customize dashboard" title="Customize">
-          🎨
-        </button>
         <button class="mat-icon-btn" routerLink="/admin" aria-label="Admin panel" title="Admin">
           ⚙️
         </button>
@@ -111,9 +92,7 @@
             <div class="kpi-grid">
               <app-kpi-card 
                 *ngFor="let kpi of kpiData" 
-                [kpi]="kpi"
-                [kpiConfigId]="getKpiConfigId(kpi)"
-                (edit)="onKpiEdit($event)"></app-kpi-card>
+                [kpi]="kpi"></app-kpi-card>
             </div>
           </div>
 
@@ -122,9 +101,7 @@
             <div class="chart-container">
               <app-revenue-chart 
                 [data]="revenueData" 
-                [period]="selectedPeriod"
-                [chartConfigId]="getChartConfigId('Revenue Trend')"
-                (edit)="onChartEdit($event)"></app-revenue-chart>
+                [period]="selectedPeriod"></app-revenue-chart>
             </div>
           </div>
 
@@ -133,9 +110,7 @@
             <div class="chart-container">
               <app-sales-chart 
                 [data]="salesData" 
-                [period]="selectedPeriod"
-                [chartConfigId]="getChartConfigId('Sales Volume')"
-                (edit)="onChartEdit($event)"></app-sales-chart>
+                [period]="selectedPeriod"></app-sales-chart>
             </div>
           </div>
 
@@ -144,9 +119,7 @@
             <div class="chart-container">
               <app-conversion-chart 
                 [data]="conversionData" 
-                [period]="selectedPeriod"
-                [chartConfigId]="getChartConfigId('Conversion Funnel')"
-                (edit)="onChartEdit($event)"></app-conversion-chart>
+                [period]="selectedPeriod"></app-conversion-chart>
             </div>
           </div>
 
@@ -154,26 +127,20 @@
           <div *ngIf="widget.type === 'pie'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
             <div class="chart-container">
               <app-pie-chart 
-                title="Revenue by Category"
-                [chartConfigId]="getChartConfigId('Revenue by Category')"
-                (edit)="onChartEdit($event)"></app-pie-chart>
+                title="Revenue by Category"></app-pie-chart>
             </div>
           </div>
 
           <!-- Goals Tracker -->
           <div *ngIf="widget.type === 'goals'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
             <app-goal-tracker
-              [goals]="goals"
-              [goalConfigId]="'goal-config-1'"
-              (edit)="onGoalEdit($event)"></app-goal-tracker>
+              [goals]="goals"></app-goal-tracker>
           </div>
 
           <!-- AI Insights Panel -->
           <div *ngIf="widget.type === 'insights'" [ngStyle]="getWidgetStyle(widget)" class="widget-item">
             <app-insights-panel 
-              [kpiData]="kpiData"
-              [insightsConfigId]="'insights-config-1'"
-              (edit)="onInsightsEdit($event)"></app-insights-panel>
+              [kpiData]="kpiData"></app-insights-panel>
           </div>
         </ng-container>
       </div>
@@ -188,37 +155,4 @@
       <app-external-kpis></app-external-kpis>
     </section>
   </main>
-
-  <!-- Comments Panel (Global) -->
-  <app-comments-panel></app-comments-panel>
-
-  <!-- KPI Editor Modal -->
-  <app-kpi-editor 
-    *ngIf="showKpiEditor"
-    [kpiId]="editingKpiId"
-    (close)="closeKpiEditor()"
-    (saved)="onKpiSaved()"></app-kpi-editor>
-
-  <!-- Chart Editor Modal -->
-  <app-chart-editor 
-    *ngIf="showChartEditor"
-    [chartId]="editingChartId"
-    (close)="closeChartEditor()"
-    (saved)="onChartSaved()"></app-chart-editor>
-
-  <!-- Goal Editor Modal -->
-  <app-goal-editor 
-    *ngIf="showGoalEditor"
-    (close)="closeGoalEditor()"
-    (saved)="onGoalSaved()"></app-goal-editor>
-
-  <!-- AI Insights Editor Modal -->
-  <app-insights-editor 
-    *ngIf="showInsightsEditor"
-    (close)="closeInsightsEditor()"
-    (saved)="onInsightsSaved()"></app-insights-editor>
 </div>
-
-
-
-
