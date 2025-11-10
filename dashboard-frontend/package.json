@@ -15,7 +15,7 @@
     "start:bookkeeping": "node server-bookkeeping.js",
     "start:all": "concurrently \"npm start\" \"npm run start:server\" \"npm run start:email\" \"npm run start:oauth\" \"npm run start:ldap\" \"npm run start:scim\" \"npm run start:saml\" \"npm run start:datasources\" \"npm run start:etl\" \"npm run start:bookkeeping\"",
     "build": "ng build",
-    "vercel-build": "npm install && ng build --configuration production",
+    "vercel-build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
