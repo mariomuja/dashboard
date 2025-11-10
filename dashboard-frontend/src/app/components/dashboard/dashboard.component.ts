@@ -281,11 +281,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
         id: config.id,
         title: config.name,
         value: this.kpiConfigService.formatValue(result.value, config.formatting),
+        numericValue: result.value, // Store raw numeric value for countUp
         change: result.change || 0,
         trend: result.trend || 'stable',
         icon: config.icon || '📊',
         color: this.getTrendColor(result.trend || 'stable')
       };
+      
+      console.log('[Dashboard] KPI loaded:', config.name, '- Numeric:', result.value, '- Formatted:', kpiData.value);
       
       // Store mapping using KPI data ID (which is the config ID)
       this.kpiConfigMap.set(kpiData.id, config.id);

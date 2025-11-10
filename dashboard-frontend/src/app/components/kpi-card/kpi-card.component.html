@@ -32,7 +32,14 @@
   </div>
   <div class="kpi-content">
     <h3 class="kpi-title">{{ kpi.title }}</h3>
-    <p class="kpi-value" [style.color]="kpi.color" [appCountUp]="+kpi.value"></p>
+    <p class="kpi-value" [style.color]="kpi.color">
+      <ng-container *ngIf="kpi.numericValue !== undefined; else showFormatted">
+        <span [appCountUp]="kpi.numericValue"></span>
+        <span *ngIf="hasPrefix(kpi.value)">{{ getPrefix(kpi.value) }}</span>
+        <span *ngIf="hasSuffix(kpi.value)">{{ getSuffix(kpi.value) }}</span>
+      </ng-container>
+      <ng-template #showFormatted>{{ kpi.value }}</ng-template>
+    </p>
   </div>
 </div>
 

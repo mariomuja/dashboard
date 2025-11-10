@@ -39,6 +39,36 @@ export class KpiCardComponent {
       this.edit.emit(this.kpiConfigId);
     }
   }
+  
+  // Helper methods for formatting
+  hasPrefix(value: string): boolean {
+    if (!value) return false;
+    return value.startsWith('$') || value.startsWith('€') || value.startsWith('£');
+  }
+  
+  getPrefix(value: string): string {
+    if (!value) return '';
+    if (value.startsWith('$')) return '$';
+    if (value.startsWith('€')) return '€';
+    if (value.startsWith('£')) return '£';
+    return '';
+  }
+  
+  hasSuffix(value: string): boolean {
+    if (!value) return false;
+    return value.endsWith('%') || value.endsWith('/5') || value.includes('/');
+  }
+  
+  getSuffix(value: string): string {
+    if (!value) return '';
+    if (value.endsWith('%')) return '%';
+    if (value.includes('/5')) return '/5';
+    if (value.includes('/')) {
+      const match = value.match(/\/\d+$/);
+      return match ? match[0] : '';
+    }
+    return '';
+  }
 }
 
 

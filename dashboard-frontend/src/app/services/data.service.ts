@@ -8,7 +8,8 @@ import { environment } from '../../environments/environment';
 export interface KpiData {
   id: string;
   title: string;
-  value: string;
+  value: string; // Formatted value for display (e.g., "$128,346")
+  numericValue?: number; // Raw numeric value for countUp animation
   change: number;
   trend: 'up' | 'down' | 'stable';
   icon: string;
