@@ -158,16 +158,15 @@ function formatValue(value, unit, format) {
     return '0';
   }
   
-  if (format === 'currency') {
+  // Use unit for determining format
+  if (unit === 'currency') {
     return `$${Math.round(value).toLocaleString('en-US')}`;
-  } else if (format === 'percentage') {
+  } else if (unit === 'percentage') {
     return `${value.toFixed(2)}%`;
-  } else if (format === 'rating') {
+  } else if (unit === 'rating') {
     return `${value.toFixed(1)}/5`;
-  } else if (format === 'number') {
+  } else if (unit === 'number') {
     return Math.round(value).toLocaleString('en-US');
-  } else if (unit) {
-    return `${Math.round(value).toLocaleString('en-US')} ${unit}`;
   }
   return Math.round(value).toLocaleString('en-US');
 }

@@ -141,3 +141,4 @@ If still seeing NaN after following these steps:
 2. Share browser console errors
 3. Run verification queries and share output
 
+

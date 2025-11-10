@@ -68,3 +68,4 @@ TRUNCATE TABLE users CASCADE;
 
 Then run the seed script again.
 
+

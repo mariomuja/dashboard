@@ -1,0 +1,66 @@
+===============================================
+WICHTIG: Vercel Environment Variable Setup
+===============================================
+
+Das Dashboard zeigt NaN, weil DATABASE_URL in Vercel fehlt!
+
+✅ LÖSUNG: DATABASE_URL in Vercel setzen
+-----------------------------------------
+
+1. Gehe zu: https://vercel.com
+2. Wähle Projekt: kpi-dashboard-eight
+3. Klicke: Settings → Environment Variables
+4. Klicke: "Add New"
+5. Füge ein:
+   
+   Name:  DATABASE_URL
+   Value: postgresql://neondb_owner:npg_T2PupfxKc7Zt@ep-silent-unit-add8qh6r-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require
+   
+   Environments: ✓ Production ✓ Preview ✓ Development
+
+6. Klicke: "Save"
+7. Redeploy: Deployments → Latest → ⋯ → Redeploy
+
+===============================================
+VERIFIZIERUNG
+===============================================
+
+Nach dem Redeploy:
+
+1. Öffne: https://kpi-dashboard-eight.vercel.app/api/health/database
+   
+   Sollte zeigen:
+   {
+     "status": "healthy",
+     "database": "connected",
+     "kpis": 4,
+     "kpiValues": 28
+   }
+
+2. Öffne: https://kpi-dashboard-eight.vercel.app
+   
+   KPIs sollten zeigen:
+   - Total Revenue: ~$128,000
+   - Active Users: ~8,000
+   - Conversion Rate: ~3.95%
+   - Customer Satisfaction: ~4.9/5
+
+===============================================
+DATENBANK STATUS
+===============================================
+
+Die Datenbank ist bereits befüllt:
+✓ 1 Dashboard
+✓ 4 KPIs (Total Revenue, Active Users, Conversion Rate, Customer Satisfaction)
+✓ 28 KPI-Werte (7 Tage × 4 KPIs)
+
+Dashboard ID: cdc19103-5b3d-45af-841e-d292455de49c
+
+Aktuelle Werte (letzte Prüfung):
+- Total Revenue: $128,346
+- Active Users: 8,021
+- Conversion Rate: 3.95%
+- Customer Satisfaction: 5.0/5
+
+===============================================
+
