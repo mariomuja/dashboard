@@ -3,26 +3,36 @@
 }
 
 .date-range-btn {
-  padding: 0.5rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 40px;
+  padding: 0 1rem;
   border-radius: 0.5rem;
   font-weight: 500;
-  border: 1px solid #d1d5db;
+  font-size: 0.9375rem;
+  border: 1px solid #e5e7eb;
   cursor: pointer;
-  transition: all 0.2s;
-  background-color: white;
+  transition: all 0.15s ease;
+  background: white;
   color: #374151;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  white-space: nowrap;
+}
+
+.date-range-btn:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.date-range-btn:active {
+  transform: scale(0.98);
 }
 
 body.dark-mode .date-range-btn {
   background-color: #1e293b;
   border-color: #334155;
   color: #cbd5e1;
-}
-
-.date-range-btn:hover {
-  background-color: #f9fafb;
-  border-color: #3b82f6;
 }
 
 body.dark-mode .date-range-btn:hover {

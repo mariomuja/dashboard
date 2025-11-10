@@ -6,17 +6,31 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.625rem 1rem;
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border-color);
+  padding: 0 1rem;
+  height: 40px;
+  background: white;
+  border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
-  color: var(--text-primary);
+  color: #374151;
   font-weight: 500;
+  font-size: 0.9375rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s ease;
+  white-space: nowrap;
 }
 
 .org-btn:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.dark-theme .org-btn {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.dark-theme .org-btn:hover {
   background-color: var(--hover-bg);
   border-color: #6366f1;
 }
