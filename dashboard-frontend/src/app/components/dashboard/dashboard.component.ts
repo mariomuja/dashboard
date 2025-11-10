@@ -411,16 +411,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // Insights will regenerate automatically on next KPI data change
     console.log('Insights configuration saved');
   }
-  
-  // Reset localStorage to fix NaN issues
-  resetLocalStorage(): void {
-    if (confirm('This will reset all cached configurations and reload the page.\n\nThis fixes NaN issues by clearing old data.\n\nContinue?')) {
-      console.log('[Dashboard] Resetting localStorage...');
-      localStorage.clear();
-      console.log('[Dashboard] localStorage cleared, reloading...');
-      window.location.reload();
-    }
-  }
 }
 
 

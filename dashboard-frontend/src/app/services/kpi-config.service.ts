@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { DataSourceService } from './data-source.service';
 import { HttpClient } from '@angular/common/http';
 
@@ -201,56 +201,52 @@ export class KpiConfigService {
   }
 
   private async fetchFromDataSource(config: KPIConfig): Promise<any> {
-    const sourceId = config.dataSource.sourceId;
+    console.log('[KPI Config] Fetching data for:', config.name);
     
     // Try to fetch from dashboard API endpoint
     try {
       const apiUrl = '/api/data/dashboard-data';
-      const response = await this.http.get<any>(apiUrl).toPromise();
+      console.log('[KPI Config] Calling API:', apiUrl);
+      
+      const response = await firstValueFrom(this.http.get<any>(apiUrl));
+      console.log('[KPI Config] API Response:', response);
       
       if (response && response.kpi && response.kpi.week) {
-        // Find matching KPI by name
+        console.log('[KPI Config] Available KPIs:', response.kpi.week.map((k: any) => k.title));
+        
+        // Find matching KPI by name (exact match or contains)
         const kpiData = response.kpi.week.find((k: any) => 
           k.title === config.name || 
-          k.title.includes(config.name) || 
-          config.name.includes(k.title)
+          k.title.toLowerCase().includes(config.name.toLowerCase()) || 
+          config.name.toLowerCase().includes(k.title.toLowerCase())
         );
         
         if (kpiData) {
-          console.log('[KPI Config] Found data for', config.name, ':', kpiData);
+          const parsedValue = this.parseValue(kpiData.value);
+          console.log('[KPI Config] ✓ Found match for', config.name, '→', kpiData.title, '=', parsedValue);
+          
           return {
-            value: this.parseValue(kpiData.value),
+            value: parsedValue,
             change: kpiData.change || 0,
-            trend: kpiData.trend || 'stable'
+            trend: kpiData.trend || 'up'
           };
+        } else {
+          console.warn('[KPI Config] ✗ No match found for:', config.name);
         }
+      } else {
+        console.error('[KPI Config] Invalid API response structure');
       }
     } catch (error) {
-      console.error('[KPI Config] Error fetching from API:', error);
+      console.error('[KPI Config] API Error:', error);
     }
 
-    // Fallback to data source if configured
-    if (sourceId) {
-      const dataSource = this.dataSourceService.getDataSource(sourceId);
-      if (dataSource) {
-        // TODO: Implement actual data source connection
-        console.warn('[KPI Config] Data source connection not yet implemented');
-      }
-    }
-
-    // Last resort: return mock data
-    return new Promise((resolve) => {
-      const mockValue = Math.floor(Math.random() * 10000);
-      const previousValue = Math.floor(mockValue * (0.9 + Math.random() * 0.2));
-      const change = ((mockValue - previousValue) / previousValue) * 100;
-      
-      resolve({
-        value: mockValue,
-        previousValue: previousValue,
-        change: parseFloat(change.toFixed(1)),
-        trend: change >= 0 ? 'up' : 'down'
-      });
-    });
+    // If no data found, return zero (not NaN)
+    console.warn('[KPI Config] Returning default value for:', config.name);
+    return {
+      value: 0,
+      change: 0,
+      trend: 'stable' as 'up' | 'down'
+    };
   }
   
   // Parse value from string (e.g., "$125,430" -> 125430)
