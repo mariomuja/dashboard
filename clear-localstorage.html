@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Dashboard localStorage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .instruction {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 4px solid #2196F3;
+            margin: 20px 0;
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px 10px 0;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+        .success {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            display: none;
+        }
+        .info {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Dashboard localStorage Cleaner</h1>
+        
+        <div class="instruction">
+            <strong>Anleitung:</strong><br>
+            1. Klicken Sie auf "Dashboard öffnen"<br>
+            2. Wenn das Dashboard geöffnet ist, klicken Sie auf "localStorage löschen"<br>
+            3. Laden Sie die Dashboard-Seite neu (Ctrl+F5)
+        </div>
+
+        <div id="status" class="info">
+            <strong>Status:</strong> Bereit zum Löschen
+        </div>
+
+        <button onclick="openDashboard()">📊 Dashboard öffnen</button>
+        <button onclick="clearAndReload()">🗑️ localStorage löschen & neu laden</button>
+
+        <div id="success" class="success">
+            ✅ localStorage erfolgreich gelöscht!<br>
+            Das Dashboard wird jetzt neu geladen...
+        </div>
+
+        <hr style="margin: 30px 0;">
+
+        <h3>Alternative: Manuell im Browser</h3>
+        <p>Wenn das Tool nicht funktioniert, können Sie den localStorage auch manuell löschen:</p>
+        <ol>
+            <li>Öffnen Sie das Dashboard: <code>https://international-kpi-dashboard.vercel.app</code></li>
+            <li>Drücken Sie <code>F12</code> (Developer Tools)</li>
+            <li>Gehen Sie zum Tab <strong>Console</strong></li>
+            <li>Kopieren Sie diesen Befehl und drücken Sie Enter:</li>
+        </ol>
+        <pre style="background: #f5f5f5; padding: 10px; border-radius: 4px;">localStorage.clear(); location.reload();</pre>
+    </div>
+
+    <script>
+        const DASHBOARD_URL = 'https://international-kpi-dashboard.vercel.app';
+        let dashboardWindow = null;
+
+        function openDashboard() {
+            dashboardWindow = window.open(DASHBOARD_URL, 'dashboard');
+            document.getElementById('status').innerHTML = '<strong>Status:</strong> Dashboard wird geöffnet...';
+            
+            setTimeout(() => {
+                document.getElementById('status').innerHTML = '<strong>Status:</strong> ✅ Dashboard geöffnet. Klicken Sie jetzt auf "localStorage löschen"';
+            }, 2000);
+        }
+
+        function clearAndReload() {
+            // Try to clear localStorage for the dashboard domain
+            try {
+                // Open dashboard if not already open
+                if (!dashboardWindow || dashboardWindow.closed) {
+                    dashboardWindow = window.open(DASHBOARD_URL, 'dashboard');
+                }
+
+                // Show instructions
+                document.getElementById('status').innerHTML = 
+                    '<strong>Wichtig:</strong> Wechseln Sie zum Dashboard-Tab und drücken Sie <code>F12</code>, ' +
+                    'dann führen Sie in der Console aus:<br>' +
+                    '<code style="display:block; margin-top:10px; padding:10px; background:white;">localStorage.clear(); location.reload();</code>';
+
+                // Also try to inject a script (will only work if same origin)
+                setTimeout(() => {
+                    if (dashboardWindow && !dashboardWindow.closed) {
+                        try {
+                            dashboardWindow.localStorage.clear();
+                            dashboardWindow.location.reload();
+                            document.getElementById('success').style.display = 'block';
+                        } catch (e) {
+                            console.log('Cannot access localStorage across domains (expected)');
+                        }
+                    }
+                }, 1000);
+
+            } catch (e) {
+                alert('Bitte verwenden Sie die manuelle Methode:\n\n' +
+                      '1. Öffnen Sie das Dashboard\n' +
+                      '2. Drücken Sie F12\n' +
+                      '3. Console Tab öffnen\n' +
+                      '4. Eingeben: localStorage.clear(); location.reload();');
+            }
+        }
+
+        // Alternative: Create a bookmarklet
+        function createBookmarklet() {
+            const bookmarkletCode = "javascript:(function(){localStorage.clear();location.reload();})();";
+            alert('Ziehen Sie diesen Link in Ihre Lesezeichen-Leiste:\n\n' + bookmarkletCode);
+        }
+    </script>
+</body>
+</html>
+

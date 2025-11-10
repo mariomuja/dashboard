@@ -343,16 +343,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // Map chart configs to IDs
     this.chartConfigs.forEach(config => {
       this.chartConfigMap.set(config.name, config.id);
-      console.log('Mapped chart:', config.name, '→', config.id);
     });
-    
-    console.log('Chart config map:', this.chartConfigMap);
   }
 
   getChartConfigId(chartName: string): string | undefined {
-    const id = this.chartConfigMap.get(chartName);
-    console.log('Getting chart ID for:', chartName, '→', id);
-    return id;
+    return this.chartConfigMap.get(chartName);
   }
 
   openChartEditor(chartId?: string): void {
@@ -415,6 +410,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   onInsightsSaved(): void {
     // Insights will regenerate automatically on next KPI data change
     console.log('Insights configuration saved');
+  }
+  
+  // Reset localStorage to fix NaN issues
+  resetLocalStorage(): void {
+    if (confirm('This will reset all cached configurations and reload the page.\n\nThis fixes NaN issues by clearing old data.\n\nContinue?')) {
+      console.log('[Dashboard] Resetting localStorage...');
+      localStorage.clear();
+      console.log('[Dashboard] localStorage cleared, reloading...');
+      window.location.reload();
+    }
   }
 }
 

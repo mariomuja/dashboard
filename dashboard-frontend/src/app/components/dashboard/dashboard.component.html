@@ -23,6 +23,14 @@
           📊 New Chart
         </button>
         
+        <button 
+          class="mat-btn mat-btn-outlined" 
+          (click)="resetLocalStorage()" 
+          title="Reset localStorage (fixes NaN issues)"
+          style="background: #ff9800; color: white;">
+          🔄 Reset Cache
+        </button>
+        
         <app-organization-selector></app-organization-selector>
         
         <div class="period-selector" role="group" aria-label="Select time period">
