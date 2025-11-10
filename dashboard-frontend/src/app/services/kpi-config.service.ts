@@ -251,18 +251,35 @@ export class KpiConfigService {
   
   // Parse value from string (e.g., "$125,430" -> 125430)
   private parseValue(value: any): number {
+    console.log('[KPI Config] parseValue input:', value, 'type:', typeof value);
+    
+    if (value === null || value === undefined) {
+      console.warn('[KPI Config] parseValue: null/undefined input');
+      return 0;
+    }
+    
     if (typeof value === 'number') {
+      console.log('[KPI Config] parseValue: already a number:', value);
       return value;
     }
+    
     if (typeof value === 'string') {
-      // Remove currency symbols, commas, percentage signs, etc.
+      // Remove currency symbols, commas, percentage signs, whitespace
       const cleaned = value.replace(/[$,€£¥%\s]/g, '');
+      console.log('[KPI Config] parseValue: cleaned string:', cleaned);
+      
       // Extract the number (handle "/5" for ratings)
       const match = cleaned.match(/^([\d.]+)/);
       if (match) {
-        return parseFloat(match[1]);
+        const parsed = parseFloat(match[1]);
+        console.log('[KPI Config] parseValue: extracted number:', parsed);
+        return parsed;
+      } else {
+        console.warn('[KPI Config] parseValue: no number found in:', value);
       }
     }
+    
+    console.warn('[KPI Config] parseValue: returning 0 for:', value);
     return 0;
   }
 
