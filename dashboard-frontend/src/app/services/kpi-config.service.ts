@@ -56,6 +56,30 @@ export class KpiConfigService {
   ) {
     this.configsSubject = new BehaviorSubject<KPIConfig[]>(this.loadConfigs());
     this.configs$ = this.configsSubject.asObservable();
+    this.migrateStaticToDatasource();
+  }
+  
+  // Migrate old static KPIs to use datasource
+  private migrateStaticToDatasource(): void {
+    const configs = this.getConfigs();
+    let needsSave = false;
+    
+    configs.forEach(config => {
+      if (config.dataSource.type === 'static') {
+        console.log('[KPI Config] Migrating', config.name, 'from static to datasource');
+        config.dataSource = {
+          type: 'datasource',
+          query: '/api/data/dashboard-data'
+        };
+        config.updatedAt = new Date();
+        needsSave = true;
+      }
+    });
+    
+    if (needsSave) {
+      this.saveConfigs(configs);
+      console.log('[KPI Config] Migration completed for', configs.length, 'KPIs');
+    }
   }
 
   // Get all KPI configs
@@ -157,31 +181,72 @@ export class KpiConfigService {
 
   private async fetchFromDataSource(config: KPIConfig): Promise<any> {
     const sourceId = config.dataSource.sourceId;
-    if (!sourceId) {
-      return { value: 0 };
-    }
-
-    const dataSource = this.dataSourceService.getDataSource(sourceId);
-    if (!dataSource) {
-      return { value: 0 };
-    }
-
-    // For now, return mock data
-    // In production, this would connect to the actual data source
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const mockValue = Math.floor(Math.random() * 10000);
-        const previousValue = Math.floor(mockValue * (0.9 + Math.random() * 0.2));
-        const change = ((mockValue - previousValue) / previousValue) * 100;
+    
+    // Try to fetch from dashboard API endpoint
+    try {
+      const apiUrl = '/api/data/dashboard-data';
+      const response = await this.http.get<any>(apiUrl).toPromise();
+      
+      if (response && response.kpi && response.kpi.week) {
+        // Find matching KPI by name
+        const kpiData = response.kpi.week.find((k: any) => 
+          k.title === config.name || 
+          k.title.includes(config.name) || 
+          config.name.includes(k.title)
+        );
         
-        resolve({
-          value: mockValue,
-          previousValue: previousValue,
-          change: parseFloat(change.toFixed(1)),
-          trend: change >= 0 ? 'up' : 'down'
-        });
-      }, 500);
+        if (kpiData) {
+          console.log('[KPI Config] Found data for', config.name, ':', kpiData);
+          return {
+            value: this.parseValue(kpiData.value),
+            change: kpiData.change || 0,
+            trend: kpiData.trend || 'stable'
+          };
+        }
+      }
+    } catch (error) {
+      console.error('[KPI Config] Error fetching from API:', error);
+    }
+
+    // Fallback to data source if configured
+    if (sourceId) {
+      const dataSource = this.dataSourceService.getDataSource(sourceId);
+      if (dataSource) {
+        // TODO: Implement actual data source connection
+        console.warn('[KPI Config] Data source connection not yet implemented');
+      }
+    }
+
+    // Last resort: return mock data
+    return new Promise((resolve) => {
+      const mockValue = Math.floor(Math.random() * 10000);
+      const previousValue = Math.floor(mockValue * (0.9 + Math.random() * 0.2));
+      const change = ((mockValue - previousValue) / previousValue) * 100;
+      
+      resolve({
+        value: mockValue,
+        previousValue: previousValue,
+        change: parseFloat(change.toFixed(1)),
+        trend: change >= 0 ? 'up' : 'down'
+      });
     });
+  }
+  
+  // Parse value from string (e.g., "$125,430" -> 125430)
+  private parseValue(value: any): number {
+    if (typeof value === 'number') {
+      return value;
+    }
+    if (typeof value === 'string') {
+      // Remove currency symbols, commas, percentage signs, etc.
+      const cleaned = value.replace(/[$,€£¥%\s]/g, '');
+      // Extract the number (handle "/5" for ratings)
+      const match = cleaned.match(/^([\d.]+)/);
+      if (match) {
+        return parseFloat(match[1]);
+      }
+    }
+    return 0;
   }
 
   // Extract value from JSON using path
@@ -234,8 +299,8 @@ export class KpiConfigService {
           description: 'Total revenue for the current period',
           icon: '💰',
           dataSource: {
-            type: 'static',
-            staticValue: 124500
+            type: 'datasource',
+            query: '/api/data/dashboard-data'
           },
           formatting: {
             prefix: '$',
@@ -251,12 +316,12 @@ export class KpiConfigService {
           visible: true
         },
         {
-          name: 'Total Orders',
-          description: 'Number of orders',
-          icon: '📦',
+          name: 'Active Users',
+          description: 'Currently active users',
+          icon: '👥',
           dataSource: {
-            type: 'static',
-            staticValue: 1250
+            type: 'datasource',
+            query: '/api/data/dashboard-data'
           },
           formatting: {
             decimals: 0,
@@ -275,12 +340,12 @@ export class KpiConfigService {
           description: 'Percentage of visitors who convert',
           icon: '📈',
           dataSource: {
-            type: 'static',
-            staticValue: 3.2
+            type: 'datasource',
+            query: '/api/data/dashboard-data'
           },
           formatting: {
             suffix: '%',
-            decimals: 1,
+            decimals: 2,
             format: 'percentage'
           },
           trend: {
@@ -292,15 +357,16 @@ export class KpiConfigService {
           visible: true
         },
         {
-          name: 'Active Users',
-          description: 'Currently active users',
-          icon: '👥',
+          name: 'Customer Satisfaction',
+          description: 'Average customer satisfaction rating',
+          icon: '⭐',
           dataSource: {
-            type: 'static',
-            staticValue: 8456
+            type: 'datasource',
+            query: '/api/data/dashboard-data'
           },
           formatting: {
-            decimals: 0,
+            suffix: '/5',
+            decimals: 1,
             format: 'number'
           },
           trend: {
