@@ -44,3 +44,4 @@ vercel deploy --prebuilt --prod
 **Aktueller Status:** Das .vercel Verzeichnis zeigt auf das **falsche** Projekt (`dashboard-frontend`).  
 **Bitte führen Sie die obigen Schritte aus**, dann funktioniert prebuilt deployment zum richtigen Projekt!
 
+

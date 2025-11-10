@@ -57,3 +57,4 @@ ORDER BY k.created_at, kv.timestamp DESC;
 -- You should see 4 KPIs with 2 values each (8 rows total)
 
 
+

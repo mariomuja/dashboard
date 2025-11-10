@@ -42,3 +42,4 @@ Write-Host "  2. Which scope? -> [Your Vercel account]" -ForegroundColor White
 Write-Host "  3. Link to existing project? -> Y" -ForegroundColor White
 Write-Host "  4. Project name? -> kpi-dashboard-eight" -ForegroundColor White
 
+

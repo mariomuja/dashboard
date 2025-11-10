@@ -67,3 +67,4 @@ Nach Deployment:
 
 Diese zeigen GENAU, warum KPIs NaN zeigen!
 
+
