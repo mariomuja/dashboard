@@ -24,7 +24,6 @@ import { ConversionChartComponent } from '../conversion-chart/conversion-chart.c
 import { PieChartComponent } from '../pie-chart/pie-chart.component';
 import { GoalTrackerComponent } from '../goal-tracker/goal-tracker.component';
 import { InsightsPanelComponent } from '../insights-panel/insights-panel.component';
-import { ExternalKpisComponent } from '../external-kpis/external-kpis.component';
 
 @Component({
   standalone: true,
@@ -40,8 +39,7 @@ import { ExternalKpisComponent } from '../external-kpis/external-kpis.component'
     ConversionChartComponent,
     PieChartComponent,
     GoalTrackerComponent,
-    InsightsPanelComponent,
-    ExternalKpisComponent
+    InsightsPanelComponent
   ],
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
